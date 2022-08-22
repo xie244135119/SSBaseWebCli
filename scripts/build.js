@@ -7,8 +7,10 @@ const chalk = require("chalk");
 const ora = require("ora");
 const dayjs = require("dayjs");
 const spinner = ora();
+// config
+const LOG_PREFIX = "Webpack4";
 
-spinner.start(chalk.blue("【webpack4】构建中..."));
+spinner.start(chalk.blue(`${LOG_PREFIX} building...`));
 const toJsonOptionsObject = {
   // all log
   all: false,
@@ -44,7 +46,7 @@ const toJsonOptionsObject = {
   /** Add errors */
   errors: true,
   /** Add details to errors (like resolving log) */
-  errorDetails: true,
+  errorDetails: false,
   /** Exclude assets from being displayed in stats */
   // excludeAssets: (assetName) => {
   //     console.log(' assetName ', assetName)
@@ -100,32 +102,58 @@ const getPackageSize = (assets) => {
 };
 const combileHandler = (_, stats) => {
   const statJsonObj = stats.toJson(toJsonOptionsObject);
+
+  if (stats.hasErrors() || stats.hasWarnings()) {
+    const printlog = (logs, error = false) => {
+      logs.forEach((log) => {
+        const lines = log.split("\n");
+        lines.forEach((line, index) => {
+          if (index < 2) {
+            if (error) {
+              console.log(chalk.red(line));
+            } else {
+              console.log(chalk.yellow(line));
+            }
+          } else {
+            console.log(line);
+          }
+        });
+        console.log();
+      });
+    };
+    printlog(statJsonObj.warnings);
+    printlog(statJsonObj.errors, true);
+  }
+
   if (stats.hasErrors()) {
-    statJsonObj.errors?.forEach((e) => {
-      console.log(e);
-    });
     spinner.fail(
-      chalk.redBright(
-        `【webpack4】构建失败【${dayjs(statJsonObj.builtAt).format()}】，${statJsonObj.errors?.length}个错误`
-      )
+      chalk.bgRedBright(" ERROR ") +
+        chalk.redBright(
+          ` ${LOG_PREFIX} failed to build with ${statJsonObj.errors?.length} errors at ${dayjs(
+            statJsonObj.builtAt
+          ).format()} (${statJsonObj.warnings?.length} types of warnings)`
+        )
     );
     exit();
     return;
   }
-  //
-  const warning = stats.compilation.warnings || [];
-  warning.forEach((e) => {
-    console.log(e);
-  });
 
   spinner.succeed(
-    chalk.greenBright(
-      `【webpack4】构建成功 ${dayjs(statJsonObj.builtAt).format()}，${getPackageSize(statJsonObj.assets)}M，耗费${
-        statJsonObj.time / 1000
-      }s，${warning.length}个警告`
-    )
+    chalk.bgGreenBright(" DONE ") +
+      chalk.greenBright(
+        ` ${LOG_PREFIX} build successfully in ${statJsonObj.time / 1000}s at ${dayjs(statJsonObj.builtAt).format()} (${
+          statJsonObj.warnings?.length
+        } types of warnings)`
+      )
   );
-  spinner.info(chalk.blueBright(`【webpack4】输出目录 ${stats.compilation.outputOptions.path}`));
+  spinner.info(
+    chalk.bgBlueBright(" OUTPUT ") +
+      chalk.blueBright(
+        ` ${LOG_PREFIX} output to directory: ${stats.compilation.outputOptions.path}，${getPackageSize(
+          statJsonObj.assets
+        )}M`
+      )
+  );
   exit();
 };
 const compile = webpack(targeConfig);
@@ -143,5 +171,9 @@ process.on("uncaughtException", (e) => {
 });
 process.on("unhandledRejection", (e) => {
   console.error(" unhandledRejection:", e);
+  exit();
+});
+process.on("SIGINT", function () {
+  console.error(" exit ");
   exit();
 });

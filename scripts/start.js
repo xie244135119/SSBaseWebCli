@@ -2,7 +2,6 @@ process.env.BABEL_ENV = "development";
 process.env.NODE_ENV = "development";
 
 const fs = require("fs");
-const path = require("path");
 const webpack = require("webpack");
 const webDevServer = require("webpack-dev-server");
 const loadsh = require("lodash");
@@ -15,6 +14,8 @@ const spawn = require("cross-spawn");
 const dayjs = require("dayjs");
 const spinner = ora();
 const paths = require("../webpack/paths");
+// config
+const LOG_PREFIX = "Webpack4";
 
 const toJsonOptionsObject = {
   // all log
@@ -51,7 +52,7 @@ const toJsonOptionsObject = {
   /** Add errors */
   errors: true,
   /** Add details to errors (like resolving log) */
-  errorDetails: true,
+  errorDetails: false,
   /** Exclude assets from being displayed in stats */
   // excludeAssets: (assetName) => {
   //     console.log(' assetName ', assetName)
@@ -99,27 +100,48 @@ const toJsonOptionsObject = {
   providedExports: false
 };
 const combileHandler = (_, stats) => {
-  spinner.stop();
   const statJsonObj = stats.toJson(toJsonOptionsObject);
+
+  if (stats.hasErrors() || stats.hasWarnings()) {
+    const printlog = (logs, error = false) => {
+      logs.forEach((log) => {
+        const lines = log.split("\n");
+        lines.forEach((line, index) => {
+          if (index < 2) {
+            if (error) {
+              console.log(chalk.red(line));
+            } else {
+              console.log(chalk.yellow(line));
+            }
+          } else {
+            console.log(line);
+          }
+        });
+        console.log();
+      });
+    };
+    printlog(statJsonObj.warnings);
+    printlog(statJsonObj.errors, true);
+  }
+
   if (stats.hasErrors()) {
-    statJsonObj.errors?.forEach((e) => {
-      console.log(e);
-    });
     spinner.fail(
-      chalk.redBright(`编译失败【${dayjs(statJsonObj.builtAt).format()}】，${statJsonObj.errors?.length}个错误`)
+      chalk.bgRedBright(" ERROR ") +
+        chalk.redBright(
+          ` ${LOG_PREFIX} failed to compile with ${statJsonObj.errors?.length} errors at ${dayjs(
+            statJsonObj.builtAt
+          ).format()} (${statJsonObj.warnings?.length} types of warnings)`
+        )
     );
     return;
   }
-  //
-  const warning = stats.compilation.warnings || [];
-  warning.forEach((e) => {
-    console.log(e);
-  });
-
   spinner.succeed(
-    chalk.greenBright(
-      `编译成功 ${dayjs(statJsonObj.builtAt).format()}：${statJsonObj.time / 1000}s，${warning.length}个警告`
-    )
+    chalk.bgGreenBright(" DONE ") +
+      chalk.greenBright(
+        ` ${LOG_PREFIX} compiled successfully in ${statJsonObj.time / 1000}s at ${dayjs(
+          statJsonObj.builtAt
+        ).format()} (${statJsonObj.warnings?.length} types of warnings)`
+      )
   );
 };
 // console.log(' 基础配置信息 ', targeConfig);
@@ -130,27 +152,25 @@ const server = new webDevServer(compile, targeConfig.devServer);
 const devServerUtil = require("../webpack/devServerUtil");
 devServerUtil.getActivePort(targeConfig.devServer.host, targeConfig.devServer.port).then((port) => {
   server.listen(port, targeConfig.devServer.host, () => {
-    spinner.stop();
     console.log(
-      chalk.blue(`project is running at http://${targeConfig.devServer.host}:${targeConfig.devServer.port}/`)
+      chalk.blue(`Project is running at http://${targeConfig.devServer.host}:${targeConfig.devServer.port}/`)
     );
   });
 });
 
-compile.hooks.compile.tap("compile", () => {
-  spinner.start(chalk.blue("编译中..."));
+compile.hooks.compilation.tap("compilation", () => {
+  spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
 });
 
 compile.hooks.done.tap("done", (e) => {
+  spinner.stop();
   combileHandler(null, e);
 });
 
 const configfileWatchHandler = (event, filename) => {
   console.log(chalk.yellow(`${filename} exist ${event}`));
   if (event === "change") {
-    //
     exit();
-    //
     spawn.sync("node", [paths.scriptPath + "/start.js"], {
       stdio: "inherit"
     });
@@ -164,18 +184,19 @@ const exit = () => {
   spinner?.stop();
   // close server
   server?.close();
-  // close webpack
-  // compile.close();
+  process.exit();
 };
 
 // uncaughtExceptionMonitor
 process.on("uncaughtException", (e) => {
   console.error("uncaughtExceptionMonitor:", e);
   exit();
-  process.exit();
 });
 process.on("unhandledRejection", (e) => {
   console.error(" unhandledRejection:", e);
   exit();
-  process.exit();
+});
+process.on("SIGINT", function () {
+  console.error(" exit ");
+  exit();
 });
