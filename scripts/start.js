@@ -14,8 +14,7 @@ const spawn = require("cross-spawn");
 const dayjs = require("dayjs");
 const spinner = ora();
 const paths = require("../webpack/paths");
-// config
-const LOG_PREFIX = "Webpack4";
+const LOG_PREFIX = require(paths.packageJsonPath).cliType;
 
 const toJsonOptionsObject = {
   // all log

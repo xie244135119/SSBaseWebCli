@@ -7,8 +7,8 @@ const chalk = require("chalk");
 const ora = require("ora");
 const dayjs = require("dayjs");
 const spinner = ora();
-// config
-const LOG_PREFIX = "Webpack4";
+const paths = require("../webpack/paths");
+const LOG_PREFIX = require(paths.packageJsonPath).cliType;
 
 spinner.start(chalk.blue(`${LOG_PREFIX} building...`));
 const toJsonOptionsObject = {

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "projectdescription",
   "main": "index.js",
+  "author": "projectauthor",
+  "license": "ISC",
+  "cliType": "projectcliType",
   "scripts": {
     "prepare": "husky install",
     "dev": "npm start",
@@ -23,8 +26,6 @@
       "stylelint --fix"
     ]
   },
-  "author": "projectauthor",
-  "license": "ISC",
   "dependencies": {
     "axios": "0.21.1",
     "dayjs": "1.11.5",
