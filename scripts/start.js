@@ -13,10 +13,12 @@ const dayjs = require('dayjs');
 const paths = require('../webpack/paths');
 const baseConfig = require('../webpack/webpack.config');
 const devConfig = require('../webpack/webpack.config.dev');
+const devServerUtil = require('../webpack/devServerUtil');
 //
 const targeConfig = loadsh.merge(baseConfig, devConfig);
-const spinner = ora();
 const LOG_PREFIX = require(paths.packageJsonPath).cliType;
+const spinner = ora();
+spinner.spinner = 'runner';
 
 let fswatcher1 = null;
 let fswatcher2 = null;
@@ -135,40 +137,55 @@ const combileHandler = (_, stats) => {
   }
 
   if (stats.hasErrors()) {
-    spinner.fail(
-      chalk.bgRedBright(' ERROR ') +
-        chalk.redBright(
-          ` ${LOG_PREFIX} failed to compile with ${statJsonObj.errors?.length} errors at ${dayjs(
-            statJsonObj.builtAt
-          ).format()} (${statJsonObj.warnings?.length} types of warnings)`
+    spinner.fail(chalk.blue(`${LOG_PREFIX}`));
+    console.log(
+      chalk.hex('#0A3438')(`  Compiled failed at ${dayjs(statJsonObj.builtAt).format()}`)
+    );
+    console.log();
+    console.log(
+      chalk.bgRed(' ERROR ') +
+        chalk.red(
+          ` failed to compile with ${statJsonObj.errors?.length} errors (${statJsonObj.warnings?.length} types of warnings)`
         )
     );
     return;
   }
-  spinner.succeed(
-    chalk.bgGreenBright(' DONE ') +
-      chalk.greenBright(
-        ` ${LOG_PREFIX} compiled successfully in ${statJsonObj.time / 1000}s at ${dayjs(
-          statJsonObj.builtAt
-        ).format()} (${statJsonObj.warnings?.length} types of warnings)`
+
+  spinner.succeed(chalk.blue(`${LOG_PREFIX}`));
+  console.log(
+    chalk.hex('#0A3438')(`  Compiled successfully at ${dayjs(statJsonObj.builtAt).format()}`)
+  );
+  console.log();
+  console.log(
+    chalk.bgGreen(' DONE ') +
+      chalk.green(
+        ` Compiled successfully in ${statJsonObj.time / 1000}s (${
+          statJsonObj.warnings?.length
+        } types of warnings)`
       )
   );
 };
-// console.log(' 基础配置信息 ', targeConfig);
+
 const compile = webpack(targeConfig);
-//
 // watching.compiler
 const server = new WebDevServer(compile, targeConfig.devServer);
-const devServerUtil = require('../webpack/devServerUtil');
 //
 devServerUtil.getActivePort(targeConfig.devServer.host, targeConfig.devServer.port).then((port) => {
-  server.listen(port, targeConfig.devServer.host, () => {
-    console.log(
-      chalk.blue(
-        `Project is running at http://${targeConfig.devServer.host}:${targeConfig.devServer.port}/`
-      )
-    );
-  });
+  let reStart = false;
+  if (spinner.isSpinning) {
+    reStart = true;
+  }
+  console.log(
+    chalk.blue(
+      `Project is running at http://${targeConfig.devServer.host}:${targeConfig.devServer.port}/`
+    )
+  );
+  console.log();
+  server.listen(port, targeConfig.devServer.host);
+  if (reStart) {
+    spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
+    console.log();
+  }
 });
 
 const exit = () => {
@@ -176,8 +193,11 @@ const exit = () => {
   server?.close();
 };
 
-compile.hooks.compilation.tap('compilation', () => {
-  spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
+compile.hooks.compile.tap('beforeCompile', () => {
+  if (!spinner.isSpinning) {
+    spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
+    console.log();
+  }
 });
 
 compile.hooks.done.tap('done', (e) => {

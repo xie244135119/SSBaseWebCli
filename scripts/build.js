@@ -1,14 +1,22 @@
-process.env.BABEL_ENV = "production";
-process.env.NODE_ENV = "production";
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
-const webpack = require("webpack");
-const targeConfig = require("../webpack/webpack.config");
-const chalk = require("chalk");
-const ora = require("ora");
-const dayjs = require("dayjs");
-const spinner = ora();
-const paths = require("../webpack/paths");
+const webpack = require('webpack');
+const chalk = require('chalk');
+const ora = require('ora');
+const dayjs = require('dayjs');
+//
+const paths = require('../webpack/paths');
+const targeConfig = require('../webpack/webpack.config');
+//
 const LOG_PREFIX = require(paths.packageJsonPath).cliType;
+const spinner = ora();
+spinner.spinner = 'runner';
+
+const exit = () => {
+  spinner?.stop();
+  process.exit();
+};
 
 spinner.start(chalk.blue(`${LOG_PREFIX} building...`));
 const toJsonOptionsObject = {
@@ -16,7 +24,7 @@ const toJsonOptionsObject = {
   all: false,
   assets: true,
   /** Sort assets by a field */
-  assetsSort: "size",
+  assetsSort: 'size',
   /** Add built at time information */
   builtAt: true,
   /** Add information about cached (not built) modules */
@@ -87,16 +95,14 @@ const toJsonOptionsObject = {
   /** Show which exports of a module are used */
   usedExports: false,
   /** Filter warnings to be shown */
-  // warningsFilter: string | RegExp | Array<string | RegExp> | ((warning: string) => boolean) | undefined;
+  // warningsFilter: null;
   /** Show performance hint when file size exceeds `performance.maxAssetSize` */
   performance: true,
   /** Show the exports of the modules */
   providedExports: false
 };
 const getPackageSize = (assets) => {
-  const totalsize = assets.reduce((prev, cur) => {
-    return prev + cur.size;
-  }, 0);
+  const totalsize = assets.reduce((prev, cur) => prev + cur.size, 0);
   const convertM = (totalsize / (1024 * 1024)).toFixed(2);
   return convertM;
 };
@@ -106,7 +112,7 @@ const combileHandler = (_, stats) => {
   if (stats.hasErrors() || stats.hasWarnings()) {
     const printlog = (logs, error = false) => {
       logs.forEach((log) => {
-        const lines = log.split("\n");
+        const lines = log.split('\n');
         lines.forEach((line, index) => {
           if (index < 2) {
             if (error) {
@@ -127,7 +133,7 @@ const combileHandler = (_, stats) => {
 
   if (stats.hasErrors()) {
     spinner.fail(
-      chalk.bgRedBright(" ERROR ") +
+      chalk.bgRedBright(' ERROR ') +
         chalk.redBright(
           ` ${LOG_PREFIX} failed to build with ${statJsonObj.errors?.length} errors at ${dayjs(
             statJsonObj.builtAt
@@ -139,19 +145,19 @@ const combileHandler = (_, stats) => {
   }
 
   spinner.succeed(
-    chalk.bgGreenBright(" DONE ") +
+    chalk.bgGreenBright(' DONE ') +
       chalk.greenBright(
-        ` ${LOG_PREFIX} build successfully in ${statJsonObj.time / 1000}s at ${dayjs(statJsonObj.builtAt).format()} (${
-          statJsonObj.warnings?.length
-        } types of warnings)`
+        ` ${LOG_PREFIX} build successfully in ${statJsonObj.time / 1000}s at ${dayjs(
+          statJsonObj.builtAt
+        ).format()} (${statJsonObj.warnings?.length} types of warnings)`
       )
   );
   spinner.info(
-    chalk.bgBlueBright(" OUTPUT ") +
+    chalk.bgBlueBright(' OUTPUT ') +
       chalk.blueBright(
-        ` ${LOG_PREFIX} output to directory: ${stats.compilation.outputOptions.path}，${getPackageSize(
+        ` ${LOG_PREFIX} ${stats.compilation.outputOptions.path}【${getPackageSize(
           statJsonObj.assets
-        )}M`
+        )}】M`
       )
   );
   exit();
@@ -159,21 +165,16 @@ const combileHandler = (_, stats) => {
 const compile = webpack(targeConfig);
 compile.run(combileHandler);
 
-const exit = () => {
-  spinner?.stop();
-  process.exit();
-};
-
 // uncaughtExceptionMonitor
-process.on("uncaughtException", (e) => {
-  console.error("uncaughtExceptionMonitor:", e);
+process.on('uncaughtException', (e) => {
+  console.error('uncaughtExceptionMonitor:', e);
   exit();
 });
-process.on("unhandledRejection", (e) => {
-  console.error(" unhandledRejection:", e);
+process.on('unhandledRejection', (e) => {
+  console.error(' unhandledRejection:', e);
   exit();
 });
-process.on("SIGINT", function () {
-  console.error(" exit ");
+process.on('SIGINT', () => {
+  console.error(' exit ');
   exit();
 });

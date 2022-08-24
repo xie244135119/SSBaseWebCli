@@ -13,8 +13,7 @@
     "build": "node ./scripts/build.js",
     "publish": "./scripts/product_publish.sh",
     "lint": "eslint --ext js,jsx src --fix",
-    "lint-staged": "lint-staged",
-    "test": "cross-env NODE_ENV=development webpack serve --progress --config ./webpack/webpack.config.dev.js"
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
@@ -37,7 +36,6 @@
     "react-router-redux": "4.0.8"
   },
   "devDependencies": {
-    "prop-types": "15.8.1",
     "@babel/core": "7.13.8",
     "@babel/eslint-parser": "7.18.9",
     "@babel/plugin-proposal-class-properties": "7.13.0",
@@ -76,6 +74,7 @@
     "mockjs": "1.1.0",
     "ora": "5.4.1",
     "prettier": "2.5.1",
+    "prop-types": "15.8.1",
     "style-loader": "2.0.0",
     "style-resources-loader": "1.5.0",
     "stylelint": "14.10.0",
