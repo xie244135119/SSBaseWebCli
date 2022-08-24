@@ -11,28 +11,39 @@ module.exports = {
     // 允许require和define为全局变量
     amd: true
   },
-  extends: [
-    // 默认推荐的规则
-    "eslint:recommended",
-    // react项目推荐的规则
-    "plugin:react/recommended"
-  ],
-  plugins: ["react"],
+  extends: ['airbnb', 'airbnb/hooks'],
+  plugins: ['react'],
   // 指定解析器
-  parser: "babel-eslint",
+  parser: '@babel/eslint-parser',
   // 解析器选项
   parserOptions: {
-    sourceType: "module",
+    sourceType: 'module',
     ecmaFeatures: {
       jsx: true
     }
   },
-  // 特定规则
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: './webpack/webpack.config.js'
+      }
+    }
+  },
+  // // 特定规则
   rules: {
-    "no-unused-expressions": "warn",
-    "no-unused-vars": "warn",
-    "no-debugger": "error",
-    "no-unreachable": "warn",
-    "react/prop-types": [1]
+    'comma-dangle': ['error', 'never'],
+    'no-continue': 'warn',
+    'object-curly-newline': 'off',
+    'import/no-dynamic-require': 'off',
+    'operator-linebreak': 'off',
+    'global-require': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'import/no-extraneous-dependencies': 'off'
+    // "no-unused-expressions": "warn",
+    // "no-unused-vars": "warn",
+    // "no-debugger": "error",
+    // "no-unreachable": "warn",
+    // "react/prop-types": [1]
   }
 };

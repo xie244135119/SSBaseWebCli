@@ -1,15 +1,16 @@
-const path = require("path");
+const path = require('path');
+
 const directorypath = process.cwd();
 
 const reslovePath = (relativePath) => path.join(directorypath, relativePath);
 
 module.exports = {
   // project directory path
-  directoryPath: reslovePath("."),
+  directoryPath: reslovePath('.'),
   // package.json path
-  packageJsonPath: reslovePath("package.json"),
+  packageJsonPath: reslovePath('package.json'),
   // webapack config path
-  webpackPath: reslovePath("/webpack"),
+  webpackPath: reslovePath('/webpack'),
   // script path
-  scriptPath: reslovePath("/scripts")
+  scriptPath: reslovePath('/scripts')
 };

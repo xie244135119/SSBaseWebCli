@@ -1,5 +1,3 @@
-
-
 import qs from 'qs';
 
 /**
@@ -18,5 +16,3 @@ const getQueryByUrl = (href = window.location.href) => {
 export default {
   getQueryByUrl
 };
-
-

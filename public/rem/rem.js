@@ -9,7 +9,7 @@ function setRem() {
     html.style.fontSize = oWidth / UIWidth * 100 + 'px';
 }
 
-const appElement = document.getElementById("app");
+const appElement = document.getElementById("root");
 appElement.style.width = `${window.innerWidth}px`;
 appElement.style.height = `${window.innerHeight}px`;
 

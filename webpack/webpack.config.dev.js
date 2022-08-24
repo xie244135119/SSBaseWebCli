@@ -1,8 +1,11 @@
 // const path = require('path');
+const baseConfig = require('./webpack.config');
+//
 module.exports = {
-  mode: "development",
+  ...baseConfig,
+  mode: 'development',
   //
-  devtool: "cheap-module-source-map",
+  devtool: 'cheap-module-source-map',
   // webpackDevServer配置
   devServer: {
     // 启动目录
@@ -13,7 +16,7 @@ module.exports = {
     //
     hot: false,
     // 入口文件
-    index: "index.html",
+    index: 'index.html',
     // 此路径下的文件可以直接访问
     // publicPath: '/',
     // 启动之前
@@ -28,11 +31,11 @@ module.exports = {
     //   progress: true,
     //   reconnect: true,
     // },
-    clientLogLevel: "none",
+    clientLogLevel: 'none',
     //
     noInfo: true,
     // iframe模式  false 为ifame模式, true 为内联模式
-    inline: false,
+    inline: true,
     // 懒性模式 << 未发现有用
     lazy: false,
     // 不再弹出信息 <替代使用stats 字段>
@@ -42,25 +45,25 @@ module.exports = {
     // 出错弹窗显示
     overlay: {
       // errors: true,
-      errors: false,
+      errors: true,
       warnings: false
     },
-    host: "0.0.0.0",
-    port: 28890,
+    host: '0.0.0.0',
+    port: 8000,
     // 代理
     proxy: {
       // '/api/v1/cruise/device/list': 'http://192.168.1.202:8933/',
-      "/webapi/dataSupport": {
-        target: "http://10.2.2.246:11140",
-        pathRewrite: { "/webapi/dataSupport": "" }
+      '/webapi/dataSupport': {
+        target: 'http://10.2.2.246:11140',
+        pathRewrite: { '/webapi/dataSupport': '' }
       },
-      "/webapi/alertManager": {
-        target: "http://10.2.2.246:11180",
-        pathRewrite: { "/webapi/alertManager": "" }
+      '/webapi/alertManager': {
+        target: 'http://10.2.2.246:11180',
+        pathRewrite: { '/webapi/alertManager': '' }
       },
-      "/webapi/userManage": {
-        target: "http://10.2.2.246:11150",
-        pathRewrite: { "/webapi/userManage": "" }
+      '/webapi/userManage': {
+        target: 'http://10.2.2.246:11150',
+        pathRewrite: { '/webapi/userManage': '' }
       }
     },
     // 仅错误信息提示

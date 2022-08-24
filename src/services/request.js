@@ -5,9 +5,8 @@
  * LastEditTime  2022-08-19 09:16:31
  * Description
  */
-import Axios from "axios";
-// import Prism from "./prism";
-import { getMockData } from "./mock";
+import Axios from 'axios';
+import { getMockData } from './mock';
 
 /**
  * 错误处理
@@ -17,30 +16,30 @@ const errorHandle = () => {};
 /**
  * 取消处理
  */
-const CancelToken = Axios.CancelToken;
+const { CancelToken } = Axios;
 const source = CancelToken.source();
 
 /**
  * 通过全局唯一实例 与默认请求做区分
  */
 const axiosIntance = Axios.create({
-  baseURL: "",
+  baseURL: '',
   timeout: 20 * 1000,
   // timeout: 2*1000,
-  timeoutErrorMessage: "网络出点小差，请稍等重试",
+  timeoutErrorMessage: '网络出点小差，请稍等重试',
   withCredentials: false,
-  responseType: "json",
+  responseType: 'json',
   validateStatus: (httpCode) => {
-    if (httpCode == 401) {
-      console.log(" 请求api httpCode 超时 ");
+    if (httpCode === 401) {
+      // console.log(' 请求api httpCode 超时 ');
       // Prism.removeUserToken();
     }
     return httpCode >= 200 && httpCode < 300;
   },
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
     // Authorization: Prism.getUserToken(),
-    "X-AppKey": "ISOPApp"
+    'X-AppKey': 'ISOPApp'
     // ...Prism.headers()
   },
 
@@ -50,17 +49,13 @@ const axiosIntance = Axios.create({
 /**
  * 请求处理
  */
-axiosIntance.interceptors.request.use((config) => {
-  return config;
-});
+axiosIntance.interceptors.request.use((config) => config);
 
 /**
  * 响应处理
  */
 axiosIntance.interceptors.response.use(
-  (res) => {
-    return res.data;
-  },
+  (res) => res.data,
   (error) => {
     // 如果开启mock数据
     if (window.ENV?.useMock) {
@@ -70,12 +65,12 @@ axiosIntance.interceptors.response.use(
         if (aParams) {
           aParams = JSON.parse(aParams);
         }
-        const _aUrl = new URL(error.config.url);
-        aUrl = _aUrl.pathname;
+        const url = new URL(error.config.url);
+        aUrl = url.pathname;
       } catch (e) {
         //
       }
-      console.log(" aUrl ", error.config, aUrl, aParams);
+      // console.log(' aUrl ', error.config, aUrl, aParams);
       return Promise.resolve(getMockData(aUrl, aParams));
     }
     errorHandle();
