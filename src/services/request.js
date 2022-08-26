@@ -38,9 +38,7 @@ const axiosIntance = Axios.create({
   },
   headers: {
     'Content-Type': 'application/json',
-    // Authorization: Prism.getUserToken(),
-    'X-AppKey': 'ISOPApp'
-    // ...Prism.headers()
+    'X-AppKey': 'demo'
   },
 
   cancelToken: source.token
