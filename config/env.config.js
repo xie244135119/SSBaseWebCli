@@ -1,8 +1,3 @@
-
-
 window.ENV = (() => ({
   // runtime config
-
 }))();
-
-

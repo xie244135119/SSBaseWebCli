@@ -48,7 +48,7 @@ const getStyleLoaders = (extraLoaders = []) => {
 module.exports = {
   mode: 'production',
   entry: {
-    index: './src/index.js'
+    indexentiy: './src/index.js'
   },
   // 错误信息
   stats: 'verbose',
@@ -58,9 +58,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].bundle.js',
-    chunkFilename: '[name].[hash].chunk.js',
+    chunkFilename: '[id].chunk.js',
     //
-    // publicPath: '/',
+    publicPath: '/',
     sourcePrefix: ''
   },
   performance: {
@@ -83,37 +83,34 @@ module.exports = {
     // gzip
     minimize: isEnvProduction,
     chunkIds: 'named',
+    runtimeChunk: 'single',
     // minimize: true,
     splitChunks: {
+      // async initial all
       chunks: 'all',
       // maxSize: 0,
       maxAsyncRequests: 5,
       maxInitialRequests: 3,
       // split chunk minist
       minChunks: 1,
-      // 100 kb
-      minSize: 30 * 1024,
-      // 8M
-      maxSize: 8 * 1024 * 1024,
+      // 30 kb
+      // minSize: 30 * 1024,
+      minSize: 30000,
       //
       name: true,
       //
       cacheGroups: {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
-          priority: -10
-          // filename: '[name].chunk.js'
+          priority: -10,
+          chunks: 'all'
         },
         default: {
           minChunks: 2,
           priority: -20,
           reuseExistingChunk: true
-          // filename: '[name].chunk.js'
         }
       }
-    },
-    runtimeChunk: {
-      // name: 'manifest',
     }
   },
 
@@ -268,9 +265,10 @@ module.exports = {
         // 出错报错
         failOnError: true
       })
-    // !isEnvProduction && new AnalyzerWebpackPlugin({
-    //   analyzerHost: '0.0.0.0',
-    //   analyzerPort: 28888,
-    // }),
+    // !isEnvProduction &&
+    //   new AnalyzerWebpackPlugin({
+    //     analyzerHost: '0.0.0.0',
+    //     analyzerPort: 28888
+    //   })
   ].filter(Boolean)
 };

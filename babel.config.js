@@ -1,7 +1,7 @@
 module.exports = {
   presets: [
     [
-      "@babel/preset-env",
+      '@babel/preset-env',
       {
         // modules: false,
         // "targets": {  }
@@ -10,28 +10,28 @@ module.exports = {
         // exclude: ['three.interaction']
       }
     ],
-    "@babel/preset-react"
+    '@babel/preset-react'
   ],
   plugins: [
     [
-      "@babel/plugin-proposal-decorators",
+      '@babel/plugin-proposal-decorators',
       {
         legacy: true
       }
     ],
-    ["@babel/plugin-proposal-class-properties"],
+    ['@babel/plugin-proposal-class-properties'],
     [
-      "@babel/plugin-transform-runtime",
+      '@babel/plugin-transform-runtime',
       {
         regenerator: true
       }
     ],
     [
-      "import",
+      'import',
       {
-        libraryName: "antd",
-        libraryDirectory: "lib", // libraryDirectory 默认为 lib
-        style: "css"
+        libraryName: 'antd',
+        libraryDirectory: 'lib', // libraryDirectory 默认为 lib
+        style: 'css'
       }
     ]
   ]

@@ -39,11 +39,7 @@ module.exports = {
     'global-require': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
-    'import/no-extraneous-dependencies': 'off'
-    // "no-unused-expressions": "warn",
-    // "no-unused-vars": "warn",
-    // "no-debugger": "error",
-    // "no-unreachable": "warn",
-    // "react/prop-types": [1]
+    'import/no-extraneous-dependencies': 'off',
+    'implicit-arrow-linebreak': 'off'
   }
 };
