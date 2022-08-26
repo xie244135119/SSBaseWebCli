@@ -40,6 +40,9 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
     'import/no-extraneous-dependencies': 'off',
-    'implicit-arrow-linebreak': 'off'
+    'implicit-arrow-linebreak': 'off',
+    'no-underscore-dangle': 'off',
+    'no-param-reassign': ['error', { props: false }],
+    'class-methods-use-this': 'off'
   }
 };
