@@ -1,7 +1,7 @@
 export default [
   {
     path: '/directory',
-    component: './pages/Help/directory'
+    component: './pages/directory/index'
   },
   {
     path: '/',

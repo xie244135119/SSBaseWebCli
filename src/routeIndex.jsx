@@ -1,12 +1,18 @@
 import React from 'react';
 import path from 'path';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
-// import path from 'path';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import RouteConfig from '../config/router.config';
 import DefaultSetting from './defaultSetting';
+import CreateStore from '@/store/store';
 
 export default class RouteIndex {
+  /**
+   * global store
+   */
+  static globalStore = CreateStore();
+
   /**
    * 获取组件地址
    * @param {*} aPaths 一组路径
@@ -22,15 +28,16 @@ export default class RouteIndex {
         return <Redirect key={item.path} exact from={compaths} to={item.redirect} />;
       }
       if (!item.path && item.component) {
-        return <Route component={require(`${item.component}`).default} />;
+        return <Route key={item.path} component={require(`${item.component}`).default} />;
       }
       const RouteComponent = React.lazy(() => import(`${item.component}`));
       return (
-        <Route path={compaths}>
+        <Route key={compaths} path={compaths}>
           <RouteComponent>
             {item.children?.length > 0
               ? this.getRoutes(item.children, [...parentLevels, item])
               : null}
+            {item.routes?.length > 0 ? this.getRoutes(item.routes, [...parentLevels, item]) : null}
           </RouteComponent>
         </Route>
       );
@@ -41,13 +48,18 @@ export default class RouteIndex {
    * @returns
    */
   static getRenderRoutes = () => {
+    this.globalStore.subscribe(() => {
+      console.log(' 存储器 ', this.globalStore.getState());
+    });
     const routerRender = (
       <React.Suspense fallback={<div>加载中...</div>}>
-        <BrowserRouter
-          basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
-        >
-          <Switch>{this.getRoutes(RouteConfig)}</Switch>
-        </BrowserRouter>
+        <Provider store={this.globalStore}>
+          <BrowserRouter
+            basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
+          >
+            <Switch>{this.getRoutes(RouteConfig)}</Switch>
+          </BrowserRouter>
+        </Provider>
       </React.Suspense>
     );
     return routerRender;

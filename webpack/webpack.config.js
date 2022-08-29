@@ -6,7 +6,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -159,11 +158,15 @@ module.exports = {
           }
         ]
       },
+      // {
+      //   test: /\.css$/,
+      //   // exclude: /(node_modules)/,
+      //   include: /(node_modules)/,
+      //   use: ['style-loader', 'css-loader']
+      // },
       {
         test: /\.css$/,
-        // exclude: /(node_modules)/,
-        include: /(node_modules)/,
-        use: ['style-loader', 'css-loader']
+        use: getStyleLoaders()
       },
       {
         test: /\.(sass|scss)$/,
@@ -175,10 +178,16 @@ module.exports = {
               sourceMap: !isEnvProduction
             }
           },
+          // {
+          //   loader: 'sass-resources-loader',
+          //   options: {
+          //     resources: ['./src/index.less', './src/styles/vars.less']
+          //   }
+          // }
           {
-            loader: 'sass-resources-loader',
+            loader: 'style-resources-loader',
             options: {
-              resources: ['./src/index.less', './src/styles/vars.less']
+              patterns: ['./src/styles/vars.scss']
             }
           }
         ])
@@ -231,6 +240,7 @@ module.exports = {
 
       appMountId: 'root',
       title: '项目Web 标准化模板',
+      scripts: ['config/env.config.js', 'public/rem/rem.js'],
       minify: !isEnvProduction
         ? false
         : {
@@ -249,10 +259,6 @@ module.exports = {
             //
             minifyJS: true
           }
-    }),
-    new HtmlWebpackTagsPlugin({
-      append: true,
-      scripts: ['config/env.config.js', 'public/rem/rem.js']
     }),
     isEnvProduction && new MiniCssExtractPlugin(),
     !isEnvProduction &&

@@ -43,6 +43,9 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     'no-underscore-dangle': 'off',
     'no-param-reassign': ['error', { props: false }],
-    'class-methods-use-this': 'off'
+    'class-methods-use-this': 'off',
+    'no-confusing-arrow': 'off',
+    'react/jsx-key': 'error',
+    'function-paren-newline': 'off'
   }
 };
