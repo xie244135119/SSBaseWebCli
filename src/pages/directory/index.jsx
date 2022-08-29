@@ -23,7 +23,7 @@ function Index(props) {
               history.push(item.path);
             }}
           >
-            {item.name}
+            {item.name || item.path}
           </span>
           {recursive(item.children, index + 1)}
         </div>
@@ -37,14 +37,15 @@ function Index(props) {
             history.push(item.path);
           }}
         >
-          {item.name}
+          {item.name || item.path}
         </span>
-      ));
+      )
+    );
 
   return (
     <div className={styles.background}>
-      <h2>文件目录</h2>
-      <h4>
+      <h2 style={{ margin: 0 }}>文件目录</h2>
+      <h4 style={{ margin: '15px 0px 0px' }}>
         版本号：
         {DefautSetting.WEB_DEV_VERSION}
       </h4>
