@@ -205,7 +205,31 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'public', to: 'public' },
-        { from: 'config/env.config.js', to: 'config/env.config.js' }
+        { from: 'config/env.config.js', to: 'config/env.config.js' },
+        {
+          from: 'node_modules/cesium/Build/Cesium/Workers',
+          to: 'static/cesium/Workers'
+        },
+        {
+          from: 'node_modules/cesium/Build/Cesium/ThirdParty',
+          to: 'static/cesium/ThirdParty'
+        },
+        {
+          from: 'node_modules/cesium/Build/Cesium/Assets',
+          to: 'static/cesium/Assets'
+        },
+        {
+          from: 'node_modules/cesium/Build/Cesium/Widgets',
+          to: 'static/cesium/Widgets'
+        },
+        {
+          from: 'node_modules/three/examples/js/libs/draco/',
+          to: 'static/three/draco'
+        },
+        {
+          from: 'node_modules/three/examples/js/libs/basis/',
+          to: 'static/three/basis'
+        }
       ]
     }),
     new CleanWebpackPlugin(),

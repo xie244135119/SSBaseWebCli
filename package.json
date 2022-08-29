@@ -37,7 +37,11 @@
     "axios": "0.21.1",
     "dayjs": "1.11.5",
     "lodash": "4.17.21",
-    "qs": "6.11.0"
+    "qs": "6.11.0",
+    "cesium": "1.96.0",
+    "stats.js": "0.17.0",
+    "three": "0.143.0",
+    "tween.js": "16.6.0"
   },
   "devDependencies": {
     "@babel/core": "7.13.8",
