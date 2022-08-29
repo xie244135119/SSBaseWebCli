@@ -1,23 +1,14 @@
-// const path = require('path');
-const baseConfig = require('./webpack.config');
-//
 module.exports = {
-  // ...baseConfig,
   mode: 'development',
   //
   devtool: 'cheap-module-source-map',
-  // webpackDevServer配置
+  // webpackDevServer config
   devServer: {
-    // 启动目录
     // contentBase: path.resolve(__dirname, 'dist'),
-    // contentBase: path.resolve(__dirname, 'src'),
-    // 是否压缩
     compress: true,
     //
     hot: false,
-    // 入口文件
     index: 'index.html',
-    // 此路径下的文件可以直接访问
     // publicPath: '/',
     // 启动之前
     // after: (app) => {

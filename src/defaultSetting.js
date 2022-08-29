@@ -1,6 +1,6 @@
 export default {
   //
-  title: '项目标准化模板',
+  title: '',
   // 发布版本号
   WEB_VERSION: 'v1.0',
   // 调试版本号

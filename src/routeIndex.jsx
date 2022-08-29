@@ -49,7 +49,7 @@ export default class RouteIndex {
    */
   static getRenderRoutes = () => {
     this.globalStore.subscribe(() => {
-      console.log(' 存储器 ', this.globalStore.getState());
+      //
     });
     const routerRender = (
       <React.Suspense fallback={<div>加载中...</div>}>

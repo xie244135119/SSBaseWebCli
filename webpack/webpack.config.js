@@ -1,5 +1,5 @@
 const path = require('path');
-
+//
 const isEnvProduction = process.env.NODE_ENV === 'production';
 //
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -32,7 +32,6 @@ const getStyleLoaders = (extraLoaders = []) => {
           localIdentName: isEnvProduction ? '[hash:base64]' : '[path][name]__[local]',
           localIdentContext: path.resolve(__dirname, '../src/'),
           localIdentHashPrefix: 'hash',
-          // 直接命名导出
           namedExport: false
         }
       }
@@ -49,11 +48,8 @@ module.exports = {
   entry: {
     indexentiy: './src/index.js'
   },
-  // 错误信息
   stats: 'verbose',
-  //
   devtool: 'none',
-  //
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].[hash].bundle.js',
@@ -64,18 +60,16 @@ module.exports = {
   },
   performance: {
     hints: 'warning',
-    // 文件暂定 2M的大小 单位字节
     maxAssetSize: 2 * 1024 * 1024,
-    // 入口大小，单位字节， 暂定1M
     maxEntrypointSize: 1 * 1024 * 1024
   },
   watch: true,
   watchOptions: {
-    // 延迟指定时间后更新
+    //
     aggregateTimeout: 300,
     //
     ignored: '/node_modules/',
-    // 定期轮询时间
+    //
     poll: 1000
   },
   optimization: {
@@ -114,7 +108,6 @@ module.exports = {
   },
 
   target: 'web',
-  // 模块
   module: {
     rules: [
       {
@@ -130,7 +123,6 @@ module.exports = {
             options: {
               limit: 10 * 1024,
               name: 'static/[hash].[ext]'
-              // name: 'static/[name].[ext]',
             }
           }
         ]
@@ -158,12 +150,6 @@ module.exports = {
           }
         ]
       },
-      // {
-      //   test: /\.css$/,
-      //   // exclude: /(node_modules)/,
-      //   include: /(node_modules)/,
-      //   use: ['style-loader', 'css-loader']
-      // },
       {
         test: /\.css$/,
         use: getStyleLoaders()
@@ -178,12 +164,6 @@ module.exports = {
               sourceMap: !isEnvProduction
             }
           },
-          // {
-          //   loader: 'sass-resources-loader',
-          //   options: {
-          //     resources: ['./src/index.less', './src/styles/vars.less']
-          //   }
-          // }
           {
             loader: 'style-resources-loader',
             options: {
@@ -213,17 +193,12 @@ module.exports = {
     ]
   },
   resolve: {
-    // 自动解析扩展，方便引入文件时不需要写上扩展
     extensions: ['.js', '.jsx', '.json'],
-    // 别名解析
     alias: {
       '@': path.resolve(__dirname, '../src/')
     },
-    // 从哪个字段解析模块
     mainFields: ['es2015', 'browser', 'module', 'main'],
-    // 解析目录使用的文件名
     mainFiles: ['index'],
-    // modules 模块对应的目录
     modules: ['node_modules']
   },
   plugins: [
@@ -240,7 +215,7 @@ module.exports = {
 
       appMountId: 'root',
       title: '项目Web 标准化模板',
-      scripts: ['config/env.config.js', 'public/rem/rem.js'],
+      scripts: ['config/env.config.js'],
       minify: !isEnvProduction
         ? false
         : {
@@ -266,9 +241,7 @@ module.exports = {
         extensions: ['js', 'jsx', 'tsx'],
         exclude: 'node_modules',
         fix: true,
-        // 弹出警告
         emitWarning: true,
-        // 出错报错
         failOnError: true
       })
     // !isEnvProduction &&
