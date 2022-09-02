@@ -215,7 +215,7 @@ module.exports = {
 
       appMountId: 'root',
       title: '项目Web 标准化模板',
-      scripts: ['config/env.config.js'],
+      scripts: ['./config/env.config.js'],
       minify: !isEnvProduction
         ? false
         : {
