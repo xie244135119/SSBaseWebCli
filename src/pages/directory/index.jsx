@@ -11,7 +11,7 @@ function Index(props) {
 
   const recursive = (items = [{}], index = 0) =>
     items.map((item) =>
-      item.children?.length > 0 ? (
+      (item.children || item.routes)?.length > 0 ? (
         <div
           key={item.path}
           style={{ display: 'flex', flexDirection: 'column', marginLeft: index * 15 }}
@@ -25,7 +25,7 @@ function Index(props) {
           >
             {item.name || item.path}
           </span>
-          {recursive(item.children, index + 1)}
+          {recursive(item.children || item.routes, index + 1)}
         </div>
       ) : (
         <span

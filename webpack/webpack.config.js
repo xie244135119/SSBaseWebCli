@@ -152,7 +152,20 @@ module.exports = {
       },
       {
         test: /\.css$/,
+        exclude: /(node_modules)/,
         use: getStyleLoaders()
+      },
+      {
+        test: /\.css$/,
+        include: /(node_modules)/,
+        use: [
+          !isEnvProduction
+            ? 'style-loader'
+            : {
+                loader: MiniCssExtractPlugin.loader
+              },
+          'css-loader'
+        ]
       },
       {
         test: /\.(sass|scss)$/,

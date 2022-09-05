@@ -76,7 +76,7 @@ export default class RouteIndex {
       const RouteComponent = AsyncComponent(import(`${item.component}`));
       console.log(' RouteComponent ', RouteComponent);
       return (
-        <Route key={compaths} path={compaths}>
+        <Route key={compaths} path={compaths} exact={(item.children || []).length === 0}>
           <RouteComponent>
             {item.children?.length > 0
               ? this.getRoutes(item.children, [...parentLevels, item])
