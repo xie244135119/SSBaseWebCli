@@ -25,3 +25,38 @@ npm run build or (yarn build)
 | 文件路径                |  文件说明  |
 | :---------------------- | :--------: |
 | public/assets/xxxx.xlsx | xxx 映射表 |
+
+
+### 6，引入Cesium.js 
+##### 1，npm add cesium 
+##### 2, CopyWebpackPlugin 引入
+                <!-- {
+                    from: 'node_modules/cesium/Build/Cesium/Workers',
+                    to: 'static/cesium/Workers'
+                },
+                {
+                    from: 'node_modules/cesium/Build/Cesium/ThirdParty',
+                    to: 'static/cesium/ThirdParty'
+                },
+                {
+                    from: 'node_modules/cesium/Build/Cesium/Assets',
+                    to: 'static/cesium/Assets'
+                },
+                {
+                    from: 'node_modules/cesium/Build/Cesium/Widgets',
+                    to: 'static/cesium/Widgets'
+                }, -->
+
+### 7，引入three.js
+#####  npm add three
+#####                 
+<!-- {
+                    from: 'node_modules/three/examples/js/libs/draco/',
+                    to: 'static/three/draco',
+                },
+                {
+                    from: 'node_modules/three/examples/js/libs/basis/',
+                    to: 'static/three/basis',
+                } -->
+
+
