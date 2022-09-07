@@ -7,7 +7,6 @@
   "license": "ISC",
   "cliType": "projectcliType",
   "scripts": {
-    "prepare": "husky install",
     "dev": "npm start",
     "start": "node ./scripts/start.js",
     "build": "node ./scripts/build.js",
