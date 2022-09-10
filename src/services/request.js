@@ -68,7 +68,6 @@ axiosIntance.interceptors.response.use(
       } catch (e) {
         //
       }
-      // console.log(' aUrl ', error.config, aUrl, aParams);
       return Promise.resolve(getMockData(aUrl, aParams));
     }
     errorHandle();
@@ -77,3 +76,13 @@ axiosIntance.interceptors.response.use(
 );
 
 export default axiosIntance;
+
+const webrequest = Axios.create({
+  // timeout: 2*1000,
+  timeoutErrorMessage: '网络出点小差，请稍等重试',
+  withCredentials: false,
+  responseType: 'json'
+});
+webrequest.interceptors.response.use((res) => res.data);
+
+export { webrequest };
