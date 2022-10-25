@@ -5,9 +5,21 @@ const webpack = require('webpack');
 const chalk = require('chalk');
 const ora = require('ora');
 const dayjs = require('dayjs');
+const loadsh = require('lodash');
 //
 const paths = require('../webpack/paths');
-const targeConfig = require('../webpack/webpack.config');
+const baseConfig = require('../webpack/webpack.config.base');
+const devConfig = require('../webpack/webpack.config.prod');
+const targeConfig = loadsh.mergeWith(
+  baseConfig,
+  devConfig,
+  (value, srcValue, key, object, source) => {
+    const arrayKeys = ['plugins'];
+    if (arrayKeys.indexOf(key) !== -1) {
+      return (value || []).concat(srcValue || []);
+    }
+  }
+);
 //
 const LOG_PREFIX = require(paths.packageJsonPath).cliType;
 const spinner = ora();

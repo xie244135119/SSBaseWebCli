@@ -1,52 +1,96 @@
 const path = require('path');
-//
-const isEnvProduction = process.env.NODE_ENV === 'production';
-//
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const isDev = process.env.BABEL_ENV === 'development';
 
 /**
- * 处理通用的解析
+ * style loader
  */
-const getStyleLoaders = (extraLoaders = []) => {
+const getStyleLoaders = (extraLoaders = [], sourceMap = false) => {
   //
   let loaders = [
-    // 开发环境
-    !isEnvProduction && 'style-loader',
-    // 生产环境
-    isEnvProduction && {
-      loader: MiniCssExtractPlugin.loader
-    },
+    sourceMap
+      ? 'style-loader'
+      : {
+          loader: MiniCssExtractPlugin.loader
+        },
     {
       loader: 'css-loader',
       options: {
         import: true,
-        sourceMap: !isEnvProduction,
+        sourceMap,
         modules: {
           compileType: 'module',
           mode: 'local',
-          localIdentName: isEnvProduction ? '[hash:base64]' : '[path][name]__[local]',
+          localIdentName: '[path][name]__[local]',
           localIdentContext: path.resolve(__dirname, '../src/'),
           localIdentHashPrefix: 'hash',
           namedExport: false
         }
       }
     }
-  ].filter(Boolean);
+  ];
   if (typeof extraLoaders === 'object' && extraLoaders.length > 0) {
     loaders = loaders.concat(extraLoaders);
   }
   return loaders;
 };
 
+/**
+ * less loader
+ */
+const getLessRule = (sourceMap = false) => ({
+  test: /\.less$/,
+  exclude: /(node_modules)/,
+  use: getStyleLoaders(
+    [
+      {
+        loader: 'less-loader',
+        options: {
+          sourceMap: sourceMap
+        }
+      },
+      {
+        loader: 'style-resources-loader',
+        options: {
+          patterns: ['./src/styles/vars.less']
+        }
+      }
+    ],
+    sourceMap
+  )
+});
+
+/**
+ * scss loader
+ */
+const getScssRule = (sourceMap = false) => ({
+  test: /\.(sass|scss)$/,
+  exclude: /(node_modules)/,
+  use: getStyleLoaders(
+    [
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap
+        }
+      },
+      {
+        loader: 'style-resources-loader',
+        options: {
+          patterns: ['./src/styles/vars.scss']
+        }
+      }
+    ],
+    sourceMap
+  )
+});
 module.exports = {
   mode: 'production',
   entry: {
-    indexentiy: './src/index.js'
+    index: './src/index.js'
   },
   stats: 'verbose',
   devtool: 'none',
@@ -72,7 +116,7 @@ module.exports = {
     //
     poll: 1000
   },
-  // optimization: {
+  //  optimization: {
   //   // gzip
   //   minimize: isEnvProduction,
   //   chunkIds: 'named',
@@ -157,14 +201,9 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /(node_modules)/,
-        use: getStyleLoaders()
-      },
-      {
-        test: /\.css$/,
         include: /(node_modules)/,
         use: [
-          !isEnvProduction
+          isDev
             ? 'style-loader'
             : {
                 loader: MiniCssExtractPlugin.loader
@@ -173,41 +212,12 @@ module.exports = {
         ]
       },
       {
-        test: /\.(sass|scss)$/,
+        test: /\.css$/,
         exclude: /(node_modules)/,
-        use: getStyleLoaders([
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: !isEnvProduction
-            }
-          },
-          {
-            loader: 'style-resources-loader',
-            options: {
-              patterns: ['./src/styles/vars.scss']
-            }
-          }
-        ])
+        use: getStyleLoaders([], isDev)
       },
-      {
-        test: /\.less$/,
-        exclude: /(node_modules)/,
-        use: getStyleLoaders([
-          {
-            loader: 'less-loader',
-            options: {
-              sourceMap: !isEnvProduction
-            }
-          },
-          {
-            loader: 'style-resources-loader',
-            options: {
-              patterns: ['./src/index.less', './src/styles/vars.less']
-            }
-          }
-        ])
-      }
+      getLessRule(isDev),
+      getScssRule(isDev)
     ]
   },
   resolve: {
@@ -227,48 +237,30 @@ module.exports = {
       ]
     }),
     new CleanWebpackPlugin(),
+    !isDev &&
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].[hash].css'
+      }),
     new HtmlWebpackPlugin({
       template: require('html-webpack-template'),
       inject: false,
 
       appMountId: 'root',
-      title: '项目Web 标准化模板',
+      title: '项目Web标准化模板',
       scripts: ['/config/env.config.js'],
-      minify: !isEnvProduction
+      minify: isDev
         ? false
         : {
             // remove comment
             removeComments: true,
             // remove empty attribute
             removeEmptyAttributes: true,
-            //
             removeRedundantAttributes: true,
-            //
             collapseWhitespace: false,
-            //
             removeStyleLinkTypeAttributes: true,
-            //
             minifyCSS: true,
-            //
             minifyJS: true
           }
-    }),
-    isEnvProduction &&
-      new MiniCssExtractPlugin({
-        filename: 'css/[name].[hash].css'
-      }),
-    !isEnvProduction &&
-      new ESLintPlugin({
-        extensions: ['js', 'jsx', 'tsx'],
-        exclude: 'node_modules',
-        fix: true,
-        emitWarning: true,
-        failOnError: true
-      })
-    // !isEnvProduction &&
-    //   new AnalyzerWebpackPlugin({
-    //     analyzerHost: '0.0.0.0',
-    //     analyzerPort: 28888
-    //   })
-  ].filter(Boolean)
+    })
+  ].filter((item) => item)
 };

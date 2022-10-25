@@ -1,3 +1,7 @@
+const webpack = require('webpack');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = {
   mode: 'development',
   //
@@ -7,7 +11,7 @@ module.exports = {
     // contentBase: path.resolve(__dirname, 'dist'),
     compress: true,
     //
-    hot: false,
+    hot: true,
     index: 'index.html',
     // publicPath: '/',
     // 启动之前
@@ -34,5 +38,19 @@ module.exports = {
     proxy: {},
     stats: false,
     historyApiFallback: true
-  }
+  },
+  plugins: [
+    new ESLintPlugin({
+      extensions: ['js', 'jsx', 'tsx'],
+      exclude: 'node_modules',
+      fix: true,
+      emitWarning: true,
+      failOnError: true
+    }),
+    new webpack.HotModuleReplacementPlugin()
+    //   new AnalyzerWebpackPlugin({
+    //     analyzerHost: '0.0.0.0',
+    //     analyzerPort: 28888
+    //   })
+  ]
 };

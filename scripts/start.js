@@ -161,9 +161,18 @@ let runingServer = null;
 
 // update port
 const runCombile = () => {
-  const baseConfig = require('../webpack/webpack.config');
+  const baseConfig = require('../webpack/webpack.config.base');
   const devConfig = require('../webpack/webpack.config.dev');
-  const targeConfig = loadsh.merge(baseConfig, devConfig);
+  const targeConfig = loadsh.mergeWith(
+    baseConfig,
+    devConfig,
+    (value, srcValue, key, object, source) => {
+      const arrayKeys = ['plugins'];
+      if (arrayKeys.indexOf(key) !== -1) {
+        return (value || []).concat(srcValue || []);
+      }
+    }
+  );
 
   const HOST = targeConfig.devServer.host || process.env.HOST || '0.0.0.0';
   const createCompile = (port) => {

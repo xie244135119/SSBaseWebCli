@@ -27,8 +27,7 @@ export default class RouteIndex {
       if (item.redirect) {
         return <Redirect key={item.path} exact from={compaths} to={item.redirect} />;
       }
-      // const RouteComponent = React.lazy(() => import(`${item.component}`));
-      const RouteComponent = require(`${item.component}`).default;
+      const RouteComponent = React.lazy(() => import(`${item.component}`));
       if (!item.path && item.component) {
         return <Route key={item.path} component={RouteComponent} />;
       }

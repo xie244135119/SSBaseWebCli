@@ -109,11 +109,11 @@ class SocketJs {
       this._webSocket = null;
     }
 
-    // 重连 不超过三次
+    // re connect
     if (this._retryConnecCount >= 3) {
       return;
     }
-    console.log(` websocket retry ${this._retryConnecCount}次`);
+    console.info(` websocket retry ${this._retryConnecCount}次`);
     this._retryConnecCount += 1;
     this._initWebSocket(aWsurl);
   };
