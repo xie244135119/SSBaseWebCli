@@ -9,7 +9,7 @@ module.exports = {
     'function-calc-no-unspaced-operator': true,
     'function-no-unknown': true,
     'block-no-empty': true,
-    'unit-allowed-list': ['em', 'rem', 's', '%', 'px'],
+    'unit-allowed-list': ['em', 'rem', 's', '%', 'px', 'vw', 'vh'],
     'no-duplicate-selectors': true,
     'order/properties-order': [
       'position',

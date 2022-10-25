@@ -52,8 +52,8 @@ module.exports = {
   devtool: 'none',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].[contenthash].bundle.js',
-    chunkFilename: '[name].[contenthash].chunk.js',
+    filename: '[name].[hash].bundle.js',
+    chunkFilename: 'js/[name].[hash].chunk.js',
     //
     publicPath: '/',
     sourcePrefix: ''
@@ -72,40 +72,45 @@ module.exports = {
     //
     poll: 1000
   },
-  optimization: {
-    // gzip
-    minimize: isEnvProduction,
-    chunkIds: 'named',
-    runtimeChunk: 'single',
-    // minimize: true,
-    splitChunks: {
-      // async initial all
-      chunks: 'all',
-      // maxSize: 0,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      // split chunk minist
-      minChunks: 1,
-      // 30 kb
-      // minSize: 30 * 1024,
-      minSize: 30000,
-      //
-      name: true,
-      //
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          chunks: 'all'
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
-        }
-      }
-    }
-  },
+  // optimization: {
+  //   // gzip
+  //   minimize: isEnvProduction,
+  //   chunkIds: 'named',
+  //   runtimeChunk: 'single',
+  //   splitChunks: {
+  //     // async initial all
+  //     chunks: 'all',
+  //     // maxSize: 0,
+  //     // maxAsyncRequests: 5,
+  //     // maxInitialRequests: 3,
+  //     // split chunk minist
+  //     minChunks: 3,
+  //     // 30 kb
+  //     // minSize: 30 * 1024,
+  //     minSize: 30 * 1024,
+  //     //
+  //     name: false,
+  //     cacheGroups: {
+  //       vendors: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         priority: -10,
+  //         chunks: 'all'
+  //       },
+  //       css: {
+  //         name: 'css',
+  //         test: /\.css$/,
+  //         minChunks: 1,
+  //         enforce: true,
+  //         priority: -5
+  //       },
+  //       default: {
+  //         minChunks: 2,
+  //         priority: -20,
+  //         reuseExistingChunk: true
+  //       }
+  //     }
+  //   }
+  // },
 
   target: 'web',
   module: {
@@ -228,7 +233,7 @@ module.exports = {
 
       appMountId: 'root',
       title: '项目Web 标准化模板',
-      scripts: ['./config/env.config.js'],
+      scripts: ['/config/env.config.js'],
       minify: !isEnvProduction
         ? false
         : {
@@ -248,7 +253,10 @@ module.exports = {
             minifyJS: true
           }
     }),
-    isEnvProduction && new MiniCssExtractPlugin(),
+    isEnvProduction &&
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].[hash].css'
+      }),
     !isEnvProduction &&
       new ESLintPlugin({
         extensions: ['js', 'jsx', 'tsx'],

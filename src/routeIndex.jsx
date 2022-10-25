@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import React from 'react';
 import path from 'path';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
@@ -7,45 +6,6 @@ import { Provider } from 'react-redux';
 import RouteConfig from '../config/router.config';
 import DefaultSetting from './defaultSetting';
 import CreateStore from '@/store/store';
-
-function AsyncComponent(aAsyncComponent = new Promise()) {
-  // function AsyncLoadComponent(props) {
-  //   const [RouteCompnent, setRouteComponent] = useState(null);
-
-  //   useEffect(() => {
-  //     aAsyncComponent.then((res) => {
-  //       setRouteComponent(res.default);
-  //     });
-  //   }, []);
-  //   console.log(' 组件加载成功 ', RouteCompnent);
-  //   // eslint-disable-next-line react/jsx-props-no-spreading
-  //   return RouteCompnent ? <RouteCompnent {...props} /> : null;
-  // }
-
-  class AsyncLoadComponent extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        RouteCompnent: null
-      };
-    }
-
-    componentDidMount() {
-      aAsyncComponent.then((res) => {
-        this.setState({ RouteCompnent: res.default });
-      });
-    }
-
-    render() {
-      const { RouteCompnent } = this.state;
-      console.log(' RouteCompnent ', RouteCompnent);
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      return RouteCompnent ? <RouteCompnent {...this.props} /> : null;
-    }
-  }
-
-  return AsyncLoadComponent;
-}
 
 export default class RouteIndex {
   /**
@@ -67,21 +27,21 @@ export default class RouteIndex {
       if (item.redirect) {
         return <Redirect key={item.path} exact from={compaths} to={item.redirect} />;
       }
-      if (!item.path && item.component) {
-        return <Route key={item.path} component={require(`${item.component}`).default} />;
-      }
       // const RouteComponent = React.lazy(() => import(`${item.component}`));
-      // const RouteComponent = React.lazy(() => import('./pages/ansycindex'));
-      // return <RouteComponent key={item.path} />;
-      const RouteComponent = AsyncComponent(import(`${item.component}`));
-      console.log(' RouteComponent ', RouteComponent);
+      const RouteComponent = require(`${item.component}`).default;
+      if (!item.path && item.component) {
+        return <Route key={item.path} component={RouteComponent} />;
+      }
       return (
-        <Route key={compaths} path={compaths} exact={(item.children || []).length === 0}>
+        <Route
+          key={compaths}
+          path={compaths}
+          exact={(item.children || item.routes || []).length === 0}
+        >
           <RouteComponent>
-            {item.children?.length > 0
-              ? this.getRoutes(item.children, [...parentLevels, item])
+            {(item.children || item.routes)?.length > 0
+              ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
               : null}
-            {item.routes?.length > 0 ? this.getRoutes(item.routes, [...parentLevels, item]) : null}
           </RouteComponent>
         </Route>
       );

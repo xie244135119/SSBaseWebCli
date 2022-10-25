@@ -1,73 +1,61 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-// import RouteIndex from '../../routeIndex';
-import { withRouter } from 'react-router-dom';
+import path from 'path';
+import { useHistory } from 'react-router-dom';
 import styles from './index.less';
-import DefautSetting from '@/defaultSetting';
 import RouteConfig from '../../../config/router.config';
 
-function Index(props) {
-  //
-
-  const recursive = (items = [{}], index = 0) =>
-    items.map((item) =>
-      (item.children || item.routes)?.length > 0 ? (
+function Index() {
+  const history = useHistory();
+  const getPath = (items = []) =>
+    items.reduce((prev, cur) => {
+      const text = path.join(prev, cur.path || '');
+      return text;
+    }, '');
+  const recursive = (items = [{}], index = 0, parentItems = []) =>
+    items.map((item, key) => {
+      if (item.redirect) {
+        return null;
+      }
+      const itemPath = getPath([...parentItems, item]);
+      return (item.children || item.routes)?.length > 0 ? (
         <div
-          key={item.path}
+          key={`${item.path + key}`}
           style={{ display: 'flex', flexDirection: 'column', marginLeft: index * 15 }}
         >
           <span
             className={styles.pagetitle}
             onClick={() => {
-              const { history } = props;
-              history.push(item.path);
+              history.push(itemPath);
             }}
           >
-            {item.name || item.path}
+            {item.name ? `${item.name}(${itemPath})` : itemPath}
           </span>
-          {recursive(item.children || item.routes, index + 1)}
+          {recursive(item.children || item.routes, index + 1, [...parentItems, item])}
         </div>
       ) : (
         <span
-          key={item.path}
+          key={`${item.path + key}`}
           className={styles.pagetitle}
           style={{ marginLeft: index * 15 }}
           onClick={() => {
-            const { history } = props;
-            history.push(item.path);
+            history.push(itemPath);
           }}
         >
-          {item.name || item.path}
+          {item.name ? `${item.name}(${itemPath})` : itemPath}
         </span>
-      )
-    );
+      );
+    });
 
   return (
     <div className={styles.background}>
       <h2 style={{ margin: 0 }}>文件目录</h2>
       <h4 style={{ margin: '15px 0px 0px' }}>
         版本号：
-        {DefautSetting.WEB_DEV_VERSION}
+        {window.ENV.WEB_VERSION}
       </h4>
       {recursive(RouteConfig)}
     </div>
   );
 }
 
-export default withRouter(Index);
-
-Index.propTypes = {
-  // 路由
-  history: PropTypes.objectOf(
-    PropTypes.shape({
-      push: () => {}
-    })
-  )
-};
-
-Index.defaultProps = {
-  history: {
-    push: () => {},
-    length: 0
-  }
-};
+export default Index;

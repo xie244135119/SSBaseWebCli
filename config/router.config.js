@@ -8,26 +8,23 @@ export default [
     redirect: '/directory'
   },
   {
-    name: '主页',
-    path: '/app',
-    component: './pages/app',
-    routes: [
+    name: '一级主页',
+    path: '/parent',
+    component: './pages/parent',
+    children: [
       {
-        name: '异步主页',
-        path: './ansycindex',
-        component: './pages/ansycindex'
+        name: '二级主页',
+        path: '/child2',
+        component: './pages/child',
+        children: [
+          {
+            name: '三级主页',
+            path: './child3',
+            component: './pages/grandson'
+          }
+        ]
       }
     ]
-  },
-  {
-    name: '异步主页',
-    path: '/ansycindex',
-    component: './pages/ansycindex'
-  },
-  {
-    name: '异步主页2',
-    path: '/ansycindex2',
-    component: './pages/ansycindex2'
   },
   {
     component: './pages/404'

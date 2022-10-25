@@ -2,20 +2,17 @@ module.exports = {
   // 特定项目下，不再检索上级目录
   root: true,
   env: {
-    // 浏览器中的全局变量 如window等
+    // window
     browser: true,
-    // 启用es6
     es6: true,
-    // 启用node
+    // node
     node: true,
-    // 允许require和define为全局变量
+    // require define
     amd: true
   },
   extends: ['airbnb', 'airbnb/hooks'],
   plugins: ['react'],
-  // 指定解析器
   parser: '@babel/eslint-parser',
-  // 解析器选项
   parserOptions: {
     sourceType: 'module',
     ecmaFeatures: {
@@ -29,7 +26,7 @@ module.exports = {
       }
     }
   },
-  // // 特定规则
+  // 特定规则
   rules: {
     'comma-dangle': ['error', 'never'],
     'no-continue': 'warn',
@@ -46,6 +43,16 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-confusing-arrow': 'off',
     'react/jsx-key': 'error',
-    'function-paren-newline': 'off'
+    'function-paren-newline': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    'react/forbid-prop-types': 'off',
+    'no-unused-vars': 'warn',
+    'no-plusplus': 'off',
+    'no-shadow': 'off',
+    'max-len': 'off',
+    'import/prefer-default-export': 'off',
+    'import/no-named-as-default': 'off'
   }
 };

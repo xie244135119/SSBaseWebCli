@@ -29,12 +29,9 @@ module.exports = {
       errors: true,
       warnings: false
     },
-    host: '0.0.0.0',
     port: 8000,
     // 代理
-    proxy: {
-      // '/api/v1/cruise/device/list': 'http://192.168.1.202:8933/',
-    },
+    proxy: {},
     stats: false,
     historyApiFallback: true
   }

@@ -1,10 +1,3 @@
-/*
- * Author  rhys.zhao
- * Date  2022-08-18 17:21:42
- * LastEditors  rhys.zhao
- * LastEditTime  2022-08-19 09:16:31
- * Description
- */
 import Axios from 'axios';
 import { getMockData } from './mock';
 

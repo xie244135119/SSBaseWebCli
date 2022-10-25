@@ -2,32 +2,22 @@ process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 
 const fs = require('fs');
-const path = require('path');
+const gracefulFs = require('graceful-fs');
+gracefulFs.gracefulify(fs);
+// const path = require('path');
 const webpack = require('webpack');
 const WebDevServer = require('webpack-dev-server');
 const loadsh = require('lodash');
 const chalk = require('chalk');
 const ora = require('ora');
-const spawn = require('cross-spawn');
+// const spawn = require('cross-spawn');
 const dayjs = require('dayjs');
 const paths = require('../webpack/paths');
-const baseConfig = require('../webpack/webpack.config');
-const devConfig = require('../webpack/webpack.config.dev');
-const devServerUtil = require('../webpack/devServerUtil');
-//
-const targeConfig = loadsh.merge(baseConfig, devConfig);
-const LOG_PREFIX = require(paths.packageJsonPath).cliType;
-const spinner = ora();
+let spinner = ora();
 spinner.spinner = 'runner';
 
-let fswatcher1 = null;
-let fswatcher2 = null;
-process.on('SIGINT', () => {
-  console.log(' exit ');
-  fswatcher1?.close();
-  fswatcher2?.close();
-  process.exit();
-});
+const devServerUtil = require('../webpack/devServerUtil');
+const LOG_PREFIX = require(paths.packageJsonPath).cliType;
 
 const toJsonOptionsObject = {
   // all log
@@ -166,68 +156,97 @@ const combileHandler = (_, stats) => {
   );
 };
 
-const compile = webpack(targeConfig);
-// watching.compiler
-const server = new WebDevServer(compile, targeConfig.devServer);
-//
-devServerUtil.getActivePort(targeConfig.devServer.host, targeConfig.devServer.port).then((port) => {
-  let reStart = false;
-  if (spinner.isSpinning) {
-    reStart = true;
-  }
-  console.log(
-    chalk.blue(
-      `Project is running at http://${targeConfig.devServer.host}:${targeConfig.devServer.port}/`
-    )
-  );
-  console.log();
-  server.listen(port, targeConfig.devServer.host);
-  if (reStart) {
-    spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
-    console.log();
-  }
-});
+let rootCompile = null;
+let runingServer = null;
 
-const exit = () => {
-  spinner?.stop();
-  server?.close();
+// update port
+const runCombile = () => {
+  const baseConfig = require('../webpack/webpack.config');
+  const devConfig = require('../webpack/webpack.config.dev');
+  const targeConfig = loadsh.merge(baseConfig, devConfig);
+
+  const HOST = targeConfig.devServer.host || process.env.HOST || '0.0.0.0';
+  const createCompile = (port) => {
+    // create compile
+    const compile = webpack(targeConfig);
+    // watching.compiler
+    const server = new WebDevServer(compile, targeConfig.devServer);
+    server.listen(port, targeConfig.devServer.host);
+    //
+    compile.hooks.compile.tap('beforeCompile', () => {
+      if (!spinner.isSpinning) {
+        spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
+        console.log();
+      }
+    });
+
+    compile.hooks.done.tap('done', (e) => {
+      combileHandler(null, e);
+    });
+    return [compile, server];
+  };
+
+  //
+  return devServerUtil.getActivePort(HOST, targeConfig.devServer.port).then((port) => {
+    console.log(chalk.blue(`Project is running at http://${HOST}:${targeConfig.devServer.port}/`));
+    console.log();
+    return createCompile(port);
+  });
 };
 
-compile.hooks.compile.tap('beforeCompile', () => {
-  if (!spinner.isSpinning) {
-    spinner.start(chalk.blue(`${LOG_PREFIX} compilating...`));
-    console.log();
-  }
-});
+// close Combile
+const closeCombile = () => {
+  // rootCompile.root.close();
+  runingServer.close();
+  runingServer.invalidate();
+  runingServer = null;
+};
 
-compile.hooks.done.tap('done', (e) => {
-  spinner.stop();
-  combileHandler(null, e);
+runCombile().then((res) => {
+  rootCompile = res[0];
+  runingServer = res[1];
 });
 
 const configfileWatchHandler = (event, filename) => {
   console.log(chalk.yellow(`${filename} exist ${event}`));
+  spinner = spinner.clear();
+
   if (event === 'change') {
-    exit();
-    fswatcher1.close();
-    fswatcher2.close();
-    spawn.sync('node', [path.join(paths.scriptPath, 'start.js')], {
-      stdio: 'inherit'
+    // spinner.text = chalk.blue(`${LOG_PREFIX} config change`);
+    // close server
+    closeCombile();
+    runCombile().then((res) => {
+      rootCompile = res[0];
+      runingServer = res[1];
     });
+    // spawn.sync('node', [path.join(paths.scriptPath, 'start.js')], {
+    //   stdio: 'inherit'
+    // });
   }
 };
-fswatcher1 = fs.watch(paths.scriptPath, { recursive: true }, configfileWatchHandler);
-fswatcher2 = fs.watch(paths.webpackPath, { recursive: true }, configfileWatchHandler);
+const fswatcher1 = fs.watch(paths.scriptPath, { recursive: true }, configfileWatchHandler);
+const fswatcher2 = fs.watch(paths.webpackPath, { recursive: true }, configfileWatchHandler);
+
+//
+process.on('SIGINT', () => {
+  console.log(' exit ');
+  closeCombile();
+  fswatcher1?.close();
+  fswatcher2?.close();
+  process.exit();
+});
 
 // uncaughtExceptionMonitor
 process.on('uncaughtException', (e) => {
   console.error('uncaughtExceptionMonitor:', e);
+  closeCombile();
   fswatcher1?.close();
   fswatcher2?.close();
   process.exit();
 });
 process.on('unhandledRejection', (e) => {
   console.error(' unhandledRejection:', e);
+  closeCombile();
   fswatcher1?.close();
   fswatcher2?.close();
   process.exit();
