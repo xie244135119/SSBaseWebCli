@@ -4,7 +4,6 @@ const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerP
 
 module.exports = {
   mode: 'development',
-  //
   devtool: 'cheap-module-source-map',
   // webpackDevServer config
   devServer: {
@@ -34,8 +33,7 @@ module.exports = {
       warnings: false
     },
     port: 8000,
-    // 代理
-    proxy: {},
+    // proxy: {},
     stats: false,
     historyApiFallback: true
   },

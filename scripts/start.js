@@ -206,8 +206,8 @@ const runCombile = () => {
 // close Combile
 const closeCombile = () => {
   // rootCompile.root.close();
-  runingServer.close();
-  runingServer.invalidate();
+  runingServer?.close();
+  runingServer?.invalidate();
   runingServer = null;
 };
 
