@@ -173,7 +173,6 @@ const runCombile = () => {
       }
     }
   );
-
   const HOST = targeConfig.devServer.host || process.env.HOST || '0.0.0.0';
   const createCompile = (port) => {
     // create compile
@@ -221,7 +220,6 @@ const configfileWatchHandler = (event, filename) => {
   spinner = spinner.clear();
 
   if (event === 'change') {
-    // spinner.text = chalk.blue(`${LOG_PREFIX} config change`);
     // close server
     closeCombile();
     runCombile().then((res) => {
@@ -234,7 +232,12 @@ const configfileWatchHandler = (event, filename) => {
   }
 };
 const fswatcher1 = fs.watch(paths.scriptPath, { recursive: true }, configfileWatchHandler);
-const fswatcher2 = fs.watch(paths.webpackPath, { recursive: true }, configfileWatchHandler);
+const fswatcher2 = fs.watch(paths.webpackPath, { recursive: true }, (event, filename) => {
+  delete require.cache[require.resolve('../webpack/webpack.config.dev')];
+  delete require.cache[require.resolve('../webpack/webpack.config.base')];
+  delete require.cache[require.resolve('../webpack/webpack.config.prod')];
+  configfileWatchHandler(event, filename);
+});
 
 //
 process.on('SIGINT', () => {

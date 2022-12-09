@@ -12,5 +12,7 @@ module.exports = {
   // webapack config path
   webpackPath: reslovePath('/webpack'),
   // script path
-  scriptPath: reslovePath('/scripts')
+  scriptPath: reslovePath('/scripts'),
+  // src path
+  srcPath: reslovePath('/src')
 };

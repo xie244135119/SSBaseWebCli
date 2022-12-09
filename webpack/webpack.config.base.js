@@ -2,6 +2,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HotModuleReplacementPlugin = require('webpack').HotModuleReplacementPlugin;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isDev = process.env.BABEL_ENV === 'development';
 
@@ -233,7 +234,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'public', to: 'public' },
-        { from: 'config/env.config.js', to: 'config/env.config.js' }
+        { from: 'config/env.config.js', to: 'config/env.config.js' },
+        { from: 'favicon.ico', to: 'favicon.ico' }
       ]
     }),
     new CleanWebpackPlugin(),
@@ -244,9 +246,19 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: require('html-webpack-template'),
       inject: false,
-
+      meta: [
+        {
+          name: 'referrer',
+          content: 'same-origin'
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1, shrink-to-fit=no'
+        }
+      ],
       appMountId: 'root',
       title: '项目Web标准化模板',
+      favicon: path.resolve('favicon.ico'),
       scripts: ['/config/env.config.js'],
       minify: isDev
         ? false

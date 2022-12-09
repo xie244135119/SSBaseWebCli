@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -7,22 +8,18 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   // webpackDevServer config
   devServer: {
-    // contentBase: path.resolve(__dirname, 'dist'),
     compress: true,
     //
     hot: true,
     index: 'index.html',
     // publicPath: '/',
-    // 启动之前
     // after: (app) => {
     //   console.log(' dev server 启动之后 ', app);
     // },
-    // // 启动之后
     // before: (app) => {
     //   console.log(' dev server 启动之前 ', app);
     // },
     clientLogLevel: 'none',
-    //
     noInfo: true,
     // iframe模式  false 为ifame模式, true 为内联模式
     inline: true,
@@ -33,7 +30,12 @@ module.exports = {
       warnings: false
     },
     port: 8000,
-    // proxy: {},
+    proxy: {
+      // '/api': {
+      //   target: 'http://192.168.1.220:8080/',
+      //   pathRewrite: { '/api': '' }
+      // }
+    },
     stats: false,
     historyApiFallback: true
   },

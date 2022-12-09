@@ -177,7 +177,6 @@ const combileHandler = (_, stats) => {
 const compile = webpack(targeConfig);
 compile.run(combileHandler);
 
-// uncaughtExceptionMonitor
 process.on('uncaughtException', (e) => {
   console.error('uncaughtExceptionMonitor:', e);
   exit();
