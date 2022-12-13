@@ -158,7 +158,9 @@ const combileHandler = (_, stats) => {
   if (stats.hasErrors()) {
     console.log(
       chalk.bold.blue(`[${LOG_PREFIX}]`) +
-        +chalk.hex('#0A3438')(`  Compiled failed at ${dayjs(statJsonObj.builtAt).format()}`)
+        +chalk.hex('#0A3438')(
+          `  Compiled failed at ${dayjs(statJsonObj.builtAt).format('YYYY-MM-DD HH:mm:ss')}`
+        )
     );
     console.log();
     console.log(
@@ -173,7 +175,9 @@ const combileHandler = (_, stats) => {
 
   console.log(
     chalk.bold.blue(`[${LOG_PREFIX}]`) +
-      chalk.bold.hex('#0A3438')(`  Compiled successfully at ${dayjs(statJsonObj.builtAt).format()}`)
+      chalk.bold.hex('#0A3438')(
+        `  Compiled successfully at ${dayjs(statJsonObj.builtAt).format('YYYY-MM-DD HH:mm:ss')}`
+      )
   );
   console.log();
   console.log(

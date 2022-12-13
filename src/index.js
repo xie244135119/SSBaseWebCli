@@ -1,4 +1,5 @@
 import RouteIndex from './routeIndex';
+import './index.less';
 
 // const appElement = document.body;
 // appElement.style.width = '100%';

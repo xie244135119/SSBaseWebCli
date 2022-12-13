@@ -3,13 +3,16 @@ process.env.NODE_ENV = 'production';
 
 const webpack = require('webpack');
 const chalk = require('chalk');
-const ora = require('ora');
 const dayjs = require('dayjs');
 const loadsh = require('lodash');
+const webpackbar = require('webpackbar');
 //
 const paths = require('../webpack/paths');
 const baseConfig = require('../webpack/webpack.config.base');
 const devConfig = require('../webpack/webpack.config.prod');
+//
+const LOG_PREFIX = require(paths.packageJsonPath).cliType;
+
 const targeConfig = loadsh.mergeWith(
   baseConfig,
   devConfig,
@@ -20,18 +23,16 @@ const targeConfig = loadsh.mergeWith(
     }
   }
 );
-//
-const LOG_PREFIX = require(paths.packageJsonPath).cliType;
-const spinner = ora();
-spinner.spinner = 'runner';
+targeConfig.plugins.push(
+  new webpackbar({
+    name: LOG_PREFIX,
+    profile: false,
+    fancy: true,
+    basic: false
+  })
+);
 
-const exit = () => {
-  spinner?.stop();
-  process.exit();
-};
-
-spinner.start(chalk.blue(`${LOG_PREFIX} building...`));
-const toJsonOptionsObject = {
+const toJsonOptionsObject2 = {
   // all log
   all: false,
   assets: true,
@@ -113,6 +114,15 @@ const toJsonOptionsObject = {
   /** Show the exports of the modules */
   providedExports: false
 };
+
+const toJsonOptionsObject = {
+  preset: 'verbose'
+};
+
+const closeprocess = () => {
+  process.exit();
+};
+
 const getPackageSize = (assets) => {
   const totalsize = assets.reduce((prev, cur) => prev + cur.size, 0);
   const convertM = (totalsize / (1024 * 1024)).toFixed(2);
@@ -121,50 +131,48 @@ const getPackageSize = (assets) => {
 const combileHandler = (_, stats) => {
   const statJsonObj = stats.toJson(toJsonOptionsObject);
 
-  if (stats.hasErrors() || stats.hasWarnings()) {
-    const printlog = (logs, error = false) => {
-      logs.forEach((log) => {
-        const lines = log.split('\n');
-        lines.forEach((line, index) => {
-          if (index < 2) {
-            if (error) {
-              console.log(chalk.red(line));
-            } else {
-              console.log(chalk.yellow(line));
-            }
-          } else {
-            console.log(line);
-          }
-        });
-        console.log();
-      });
-    };
-    printlog(statJsonObj.warnings);
-    printlog(statJsonObj.errors, true);
-  }
-
   if (stats.hasErrors()) {
-    spinner.fail(
+    console.log();
+    statJsonObj.errors.forEach((aLog) => {
+      console.log();
+      const lines = aLog.message.split('\n').filter((item) => item);
+      lines.forEach((line, index) => {
+        const firstline = index === 0;
+        console.log(firstline ? chalk.red.bold('ERROR in ') : '' + line);
+      });
+    });
+
+    console.log();
+    console.log(
       chalk.bgRedBright(' ERROR ') +
         chalk.redBright(
           ` ${LOG_PREFIX} failed to build with ${statJsonObj.errors?.length} errors at ${dayjs(
             statJsonObj.builtAt
-          ).format()} (${statJsonObj.warnings?.length} types of warnings)`
-        )
+          ).format('YYYY-MM-DD HH:mm:ss')}`
+        ) +
+        (statJsonObj.warnings?.length > 0
+          ? chalk.redBright(`${statJsonObj.warnings?.length} types of warnings)`)
+          : '')
     );
-    exit();
+    console.log();
+    closeprocess();
     return;
   }
 
-  spinner.succeed(
+  console.log(
     chalk.bgGreenBright(' DONE ') +
       chalk.greenBright(
         ` ${LOG_PREFIX} build successfully in ${statJsonObj.time / 1000}s at ${dayjs(
           statJsonObj.builtAt
-        ).format()} (${statJsonObj.warnings?.length} types of warnings)`
-      )
+        ).format('YYYY-MM-DD HH:mm:ss')} `
+      ) +
+      (statJsonObj.warnings?.length > 0
+        ? chalk.redBright(`${statJsonObj.warnings?.length} types of warnings)`)
+        : '')
   );
-  spinner.info(
+
+  console.log();
+  console.log(
     chalk.bgBlueBright(' OUTPUT ') +
       chalk.blueBright(
         ` ${LOG_PREFIX} ${stats.compilation.outputOptions.path}【${getPackageSize(
@@ -172,23 +180,19 @@ const combileHandler = (_, stats) => {
         )}】M`
       )
   );
-  exit();
+  console.log();
+  closeprocess();
 };
-const compile = webpack(targeConfig, (aStas) => {
-  console.log(' 编译配置 ', aStas);
+webpack(targeConfig, (aError, aStas) => {
+  combileHandler(aError, aStas);
 });
-console.log(' 编译 compile ', webpack, compile);
-compile.run(combileHandler);
 
 process.on('uncaughtException', (e) => {
-  console.error('uncaughtExceptionMonitor:', e);
-  exit();
+  closeprocess();
 });
 process.on('unhandledRejection', (e) => {
-  console.error(' unhandledRejection:', e);
-  exit();
+  closeprocess();
 });
 process.on('SIGINT', () => {
-  console.error(' exit ');
-  exit();
+  closeprocess();
 });

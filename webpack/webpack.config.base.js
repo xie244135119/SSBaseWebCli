@@ -23,11 +23,10 @@ const getStyleLoaders = (extraLoaders = [], sourceMap = false) => {
         import: true,
         sourceMap,
         modules: {
-          compileType: 'module',
           mode: 'local',
           localIdentName: '[path][name]__[local]',
           localIdentContext: path.resolve(__dirname, '../src/'),
-          localIdentHashPrefix: 'hash',
+          localIdentHashSalt: 'hash',
           namedExport: false
         }
       }
@@ -94,11 +93,11 @@ module.exports = {
     index: './src/index.js'
   },
   stats: 'none',
-  devtool: 'none',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].[fullhash].bundle.js',
-    chunkFilename: 'js/[name].[fullhash].chunk.js',
+    filename: '[name].[chunkhash].bundle.js',
+    chunkFilename: 'js/[name].[chunkhash].chunk.js',
+    assetModuleFilename: 'static/[hash][ext][query]',
     //
     publicPath: '/',
     sourcePrefix: '',
@@ -167,39 +166,13 @@ module.exports = {
         use: { loader: 'babel-loader' }
       },
       {
-        test: /\.(png|jpg|jpeg|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 10 * 1024,
-              name: 'static/[hash].[ext]'
-            }
+        test: /\.(png|jpg|jpeg|gif|mp4|svg)$/,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024
           }
-        ]
-      },
-      {
-        test: /\.(mp4)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 10 * 1024,
-              name: 'static/[hash].[ext]'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'static/[hash].[ext]'
-            }
-          }
-        ]
+        }
       },
       {
         test: /\.css$/,
@@ -242,7 +215,7 @@ module.exports = {
     // new CleanWebpackPlugin(),
     !isDev &&
       new MiniCssExtractPlugin({
-        filename: 'css/[name].[hash].css'
+        filename: 'css/[name].[chunkhash].css'
       }),
     new HtmlWebpackPlugin({
       title: '项目Web标准化模板',
@@ -266,7 +239,6 @@ module.exports = {
       },
       showErrors: true,
       scriptLoading: 'blocking',
-      // scripts: ['/config/env.config.js'],
       favicon: path.resolve('favicon.ico'),
       minify: isDev
         ? false
@@ -286,36 +258,5 @@ module.exports = {
       append: false,
       scripts: ['config/env.config.js']
     })
-    // new HtmlWebpackPlugin({
-    //   template: require('html-webpack-template'),
-    //   inject: false,
-    //   meta: [
-    //     {
-    //       name: 'referrer',
-    //       content: 'same-origin'
-    //     },
-    //     {
-    //       name: 'viewport',
-    //       content: 'width=device-width, initial-scale=1, shrink-to-fit=no'
-    //     }
-    //   ],
-    //   appMountId: 'root',
-    //   title: '项目Web标准化模板',
-    //   favicon: path.resolve('favicon.ico'),
-    //   scripts: ['/config/env.config.js'],
-    //   minify: isDev
-    //     ? false
-    //     : {
-    //         // remove comment
-    //         removeComments: true,
-    //         // remove empty attribute
-    //         removeEmptyAttributes: true,
-    //         removeRedundantAttributes: true,
-    //         collapseWhitespace: false,
-    //         removeStyleLinkTypeAttributes: true,
-    //         minifyCSS: true,
-    //         minifyJS: true
-    //       }
-    // })
   ].filter((item) => item)
 };

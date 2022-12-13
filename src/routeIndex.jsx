@@ -25,11 +25,17 @@ export default class RouteIndex {
         .filter((level) => level !== '');
       const compaths = levelpaths.length > 0 ? path.join(...levelpaths) : '/';
       if (item.redirect) {
-        return <Route key={item.path} element={<Navigate key={item.path} to={item.redirect} />} />;
+        return (
+          <Route
+            key={item.path}
+            path="/"
+            element={<Navigate key={item.path} to={item.redirect} />}
+          />
+        );
       }
       const RouteComponent = React.lazy(() => import(`${item.component}`));
       if (!item.path && item.component) {
-        return <Route key={item.component} element={<RouteComponent />} />;
+        return <Route key={item.component} path="*" element={<RouteComponent />} />;
       }
       return (
         <Route key={compaths} path={compaths} element={<RouteComponent />}>
@@ -49,7 +55,7 @@ export default class RouteIndex {
       //
     });
     const routerRender = (
-      <React.Suspense fallback={<div>加载中...</div>}>
+      <React.Suspense fallback={<Loading />}>
         <Provider store={this.globalStore}>
           <BrowserRouter
             basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
@@ -73,4 +79,22 @@ export default class RouteIndex {
     const root = createRoot(rootElement);
     root.render(routes);
   };
+}
+
+function Loading(props) {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100vh',
+        border: '1px solid red',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {/* <span>加载中...</span> */}
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 // const path = require('path-browserify');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   mode: 'development',
