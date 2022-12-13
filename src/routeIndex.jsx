@@ -1,7 +1,7 @@
 import React from 'react';
-import path from 'path';
-import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
-import ReactDOM from 'react-dom';
+import path from 'path-browserify';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import RouteConfig from '../config/router.config';
 import DefaultSetting from './defaultSetting';
@@ -14,8 +14,8 @@ export default class RouteIndex {
   static globalStore = CreateStore();
 
   /**
-   * 获取组件地址
-   * @param {*} aPaths 一组路径
+   * routes
+   * @param {*} aPaths paths
    * @returns
    */
   static getRoutes = (items = [{}], parentLevels = []) =>
@@ -25,29 +25,23 @@ export default class RouteIndex {
         .filter((level) => level !== '');
       const compaths = levelpaths.length > 0 ? path.join(...levelpaths) : '/';
       if (item.redirect) {
-        return <Redirect key={item.path} exact from={compaths} to={item.redirect} />;
+        return <Route key={item.path} element={<Navigate key={item.path} to={item.redirect} />} />;
       }
       const RouteComponent = React.lazy(() => import(`${item.component}`));
       if (!item.path && item.component) {
-        return <Route key={item.path} component={RouteComponent} />;
+        return <Route key={item.component} element={<RouteComponent />} />;
       }
       return (
-        <Route
-          key={compaths}
-          path={compaths}
-          exact={(item.children || item.routes || []).length === 0}
-        >
-          <RouteComponent>
-            {(item.children || item.routes)?.length > 0
-              ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
-              : null}
-          </RouteComponent>
+        <Route key={compaths} path={compaths} element={<RouteComponent />}>
+          {(item.children || item.routes)?.length > 0
+            ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
+            : null}
         </Route>
       );
     });
 
   /**
-   * 获取路由元素
+   * render routes
    * @returns
    */
   static getRenderRoutes = () => {
@@ -60,7 +54,7 @@ export default class RouteIndex {
           <BrowserRouter
             basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
           >
-            <Switch>{this.getRoutes(RouteConfig)}</Switch>
+            <Routes>{this.getRoutes(RouteConfig)}</Routes>
           </BrowserRouter>
         </Provider>
       </React.Suspense>
@@ -69,10 +63,14 @@ export default class RouteIndex {
   };
 
   /**
-   * dom渲染元素
+   * dom render
    */
   static renderDom = () => {
     const routes = this.getRenderRoutes();
-    ReactDOM.render(routes, document.getElementById('root'));
+    const rootElement = document.createElement('div');
+    rootElement.id = 'root';
+    document.body.append(rootElement);
+    const root = createRoot(rootElement);
+    root.render(routes);
   };
 }

@@ -1,8 +1,8 @@
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require('path-browserify');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HotModuleReplacementPlugin = require('webpack').HotModuleReplacementPlugin;
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isDev = process.env.BABEL_ENV === 'development';
 
@@ -93,15 +93,16 @@ module.exports = {
   entry: {
     index: './src/index.js'
   },
-  stats: 'verbose',
+  stats: 'none',
   devtool: 'none',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].[hash].bundle.js',
-    chunkFilename: 'js/[name].[hash].chunk.js',
+    filename: '[name].[fullhash].bundle.js',
+    chunkFilename: 'js/[name].[fullhash].chunk.js',
     //
     publicPath: '/',
-    sourcePrefix: ''
+    sourcePrefix: '',
+    clean: true
   },
   performance: {
     hints: 'warning',
@@ -238,28 +239,35 @@ module.exports = {
         { from: 'favicon.ico', to: 'favicon.ico' }
       ]
     }),
-    new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
     !isDev &&
       new MiniCssExtractPlugin({
         filename: 'css/[name].[hash].css'
       }),
     new HtmlWebpackPlugin({
-      template: require('html-webpack-template'),
-      inject: false,
-      meta: [
-        {
-          name: 'referrer',
-          content: 'same-origin'
-        },
-        {
-          name: 'viewport',
-          content: 'width=device-width, initial-scale=1, shrink-to-fit=no'
-        }
-      ],
-      appMountId: 'root',
       title: '项目Web标准化模板',
+      meta: {
+        referrer: 'same-origin',
+        viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'
+      },
+      tags: {
+        // headTags: ['/config/env.config.js'],
+        headTags: [
+          {
+            tagName: 'script',
+            attributes: {
+              src: '/config/env.config.js'
+            }
+          }
+        ]
+      },
+      assets: {
+        js: ['/config/env.config.js']
+      },
+      showErrors: true,
+      scriptLoading: 'blocking',
+      // scripts: ['/config/env.config.js'],
       favicon: path.resolve('favicon.ico'),
-      scripts: ['/config/env.config.js'],
       minify: isDev
         ? false
         : {
@@ -268,11 +276,46 @@ module.exports = {
             // remove empty attribute
             removeEmptyAttributes: true,
             removeRedundantAttributes: true,
-            collapseWhitespace: false,
+            collapseWhitespace: true,
             removeStyleLinkTypeAttributes: true,
             minifyCSS: true,
             minifyJS: true
           }
+    }),
+    new HtmlWebpackTagsPlugin({
+      append: false,
+      scripts: ['config/env.config.js']
     })
+    // new HtmlWebpackPlugin({
+    //   template: require('html-webpack-template'),
+    //   inject: false,
+    //   meta: [
+    //     {
+    //       name: 'referrer',
+    //       content: 'same-origin'
+    //     },
+    //     {
+    //       name: 'viewport',
+    //       content: 'width=device-width, initial-scale=1, shrink-to-fit=no'
+    //     }
+    //   ],
+    //   appMountId: 'root',
+    //   title: '项目Web标准化模板',
+    //   favicon: path.resolve('favicon.ico'),
+    //   scripts: ['/config/env.config.js'],
+    //   minify: isDev
+    //     ? false
+    //     : {
+    //         // remove comment
+    //         removeComments: true,
+    //         // remove empty attribute
+    //         removeEmptyAttributes: true,
+    //         removeRedundantAttributes: true,
+    //         collapseWhitespace: false,
+    //         removeStyleLinkTypeAttributes: true,
+    //         minifyCSS: true,
+    //         minifyJS: true
+    //       }
+    // })
   ].filter((item) => item)
 };

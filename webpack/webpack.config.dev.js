@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const path = require('path');
+// const path = require('path-browserify');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const AnalyzerWebpackPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -9,34 +9,27 @@ module.exports = {
   // webpackDevServer config
   devServer: {
     compress: true,
-    //
-    hot: true,
-    index: 'index.html',
-    // publicPath: '/',
-    // after: (app) => {
-    //   console.log(' dev server 启动之后 ', app);
-    // },
-    // before: (app) => {
-    //   console.log(' dev server 启动之前 ', app);
-    // },
-    clientLogLevel: 'none',
-    noInfo: true,
-    // iframe模式  false 为ifame模式, true 为内联模式
-    inline: true,
-    lazy: false,
     open: true,
-    overlay: {
-      errors: true,
-      warnings: false
+    hot: false,
+    liveReload: true,
+    // watchFiles: [],
+    client: {
+      logging: 'none',
+      overlay: {
+        errors: true,
+        warnings: false
+      },
+      progress: false,
+      reconnect: true
     },
-    port: 8000,
+    webSocketServer: 'ws',
+    port: '8000',
     proxy: {
       // '/api': {
       //   target: 'http://192.168.1.220:8080/',
       //   pathRewrite: { '/api': '' }
       // }
     },
-    stats: false,
     historyApiFallback: true
   },
   plugins: [

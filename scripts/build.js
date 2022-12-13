@@ -174,7 +174,10 @@ const combileHandler = (_, stats) => {
   );
   exit();
 };
-const compile = webpack(targeConfig);
+const compile = webpack(targeConfig, (aStas) => {
+  console.log(' 编译配置 ', aStas);
+});
+console.log(' 编译 compile ', webpack, compile);
 compile.run(combileHandler);
 
 process.on('uncaughtException', (e) => {
