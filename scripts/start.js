@@ -176,7 +176,7 @@ const combileHandler = (_, stats) => {
   console.log(
     chalk.bold.blue(`[${LOG_PREFIX}]`) +
       chalk.bold.hex('#0A3438')(
-        `  Compiled successfully at ${dayjs(statJsonObj.builtAt).format('YYYY-MM-DD HH:mm:ss')}`
+        ` Compiled successfully at ${dayjs(statJsonObj.builtAt).format('YYYY-MM-DD HH:mm:ss')}`
       )
   );
   console.log();
