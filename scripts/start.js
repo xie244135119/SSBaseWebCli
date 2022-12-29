@@ -158,7 +158,7 @@ const combileHandler = (_, stats) => {
   if (stats.hasErrors()) {
     console.log(
       chalk.bold.blue(`[${LOG_PREFIX}]`) +
-        +chalk.hex('#0A3438')(
+        chalk.hex('#0A3438')(
           `  Compiled failed at ${dayjs(statJsonObj.builtAt).format('YYYY-MM-DD HH:mm:ss')}`
         )
     );
