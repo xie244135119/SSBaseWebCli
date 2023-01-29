@@ -235,8 +235,10 @@ const runCombileAndServer = () => {
 
   // const ipv4 = WebDevServer.internalIPSync('v4');
   // const ipv6 = WebDevServer.internalIPSync('v6');
-  return WebDevServer.getFreePort(targeConfig.devServer.port, HOST).then((port) => {
-    /*console.log(chalk.bold.green(`Project is running at:`));
+  //
+  // targeConfig.devServer.port
+  return WebDevServer.getFreePort(targeConfig.devServer.port || 'auto').then((port) => {
+    /*console.log(chalk.bold.green(`Project is running at: ${port}`));
     console.log(
       chalk.bold.green(`On Your Network (Local): `) +
         chalk.rgb(42, 184, 219)(`http://${HOST}:${port}/`)

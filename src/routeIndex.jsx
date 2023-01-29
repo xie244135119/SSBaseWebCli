@@ -23,22 +23,34 @@ export default class RouteIndex {
       const levelpaths = [...parentLevels, item]
         .map((level) => level.path || '')
         .filter((level) => level !== '');
-      const compaths = levelpaths.length > 0 ? path.join(...levelpaths) : '/';
+      const senderPath = levelpaths.length > 0 ? path.join(...levelpaths) : '/';
       if (item.redirect) {
+        const redirectPath = path.join(senderPath, item.redirect);
         return (
           <Route
-            key={item.path}
-            path="/"
-            element={<Navigate key={item.path} to={item.redirect} />}
+            key={senderPath}
+            path={senderPath}
+            element={<Navigate key={senderPath} to={redirectPath} />}
           />
         );
       }
-      const RouteComponent = React.lazy(() => import(`${item.component}`));
+
       if (!item.path && item.component) {
-        return <Route key={item.component} path="*" element={<RouteComponent />} />;
+        const NotFoundComponent = React.lazy(() => import(`${item.component}`));
+        return <Route key={item.component} path="*" element={<NotFoundComponent />} />;
       }
+      if (!item.component) {
+        return (item.children || item.routes)?.length > 0
+          ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
+          : null;
+      }
+      const RouteComponent = item.component ? React.lazy(() => import(`${item.component}`)) : null;
       return (
-        <Route key={compaths} path={compaths} element={<RouteComponent />}>
+        <Route
+          key={senderPath}
+          path={senderPath}
+          element={RouteComponent ? <RouteComponent /> : null}
+        >
           {(item.children || item.routes)?.length > 0
             ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
             : null}

@@ -22,8 +22,7 @@ module.exports = {
       progress: false,
       reconnect: true
     },
-    webSocketServer: 'ws',
-    port: '8000',
+    // webSocketServer: 'ws',
     proxy: {
       // '/api': {
       //   target: 'http://192.168.1.220:8080/',

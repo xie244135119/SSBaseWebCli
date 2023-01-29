@@ -34,7 +34,7 @@ function Index() {
             >
               {item.name ? `${item.name}(${itemPath})` : itemPath}
             </span>
-            <span className={styles.filetitle}>{path.join('src', item.component)}</span>
+            <span className={styles.filetitle}>{path.join('src', item.component || '')}</span>
           </div>
           {recursive(item.children || item.routes, index + 1, [...parentItems, item])}
         </div>
@@ -50,7 +50,7 @@ function Index() {
           >
             {item.name ? `${item.name}(${itemPath})` : itemPath}
           </span>
-          <span className={styles.filetitle}>{path.join('src', item.component)}</span>
+          <span className={styles.filetitle}>{path.join('src', item.component || '')}</span>
         </div>
       );
     });
