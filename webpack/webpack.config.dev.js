@@ -10,8 +10,8 @@ module.exports = {
   devServer: {
     compress: true,
     open: true,
-    hot: false,
-    liveReload: true,
+    hot: true,
+    // liveReload: true,
     // watchFiles: [],
     client: {
       logging: 'none',

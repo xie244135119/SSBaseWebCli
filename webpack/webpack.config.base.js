@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const isDev = process.env.BABEL_ENV === 'development';
 
 /**
@@ -163,7 +164,12 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|public)/,
-        use: { loader: 'babel-loader' }
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [require.resolve('react-refresh/babel')]
+          }
+        }
       },
       {
         test: /\.(png|jpg|jpeg|gif|mp4|svg)$/,
@@ -205,6 +211,7 @@ module.exports = {
     modules: ['node_modules']
   },
   plugins: [
+    new ReactRefreshPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'public', to: 'public' },

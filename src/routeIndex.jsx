@@ -13,6 +13,7 @@ export default class RouteIndex {
    */
   static globalStore = CreateStore();
 
+  //
   /**
    * routes
    * @param {*} aPaths paths
