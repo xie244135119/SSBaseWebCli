@@ -10,12 +10,12 @@ export default [
   {
     name: '一级主页',
     path: '/parent',
-    // component: './pages/demo/parent',
+    component: './pages/demo/parent',
     children: [
-      {
-        path: '/',
-        redirect: '/child2'
-      },
+      // {
+      //   path: '/',
+      //   redirect: '/child2'
+      // },
       {
         name: '二级主页',
         path: '/child2',
