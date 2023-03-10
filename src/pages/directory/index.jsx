@@ -58,8 +58,8 @@ function Index() {
 
   return (
     <div className={styles.background}>
-      <h2>测试目录</h2>
-      <h2 style={{ margin: 0 }}>文件导航</h2>
+      {/* <h2>测试目录</h2> */}
+      <h2 style={{ margin: 0 }}>项目导航</h2>
       <h4 style={{ margin: '15px 0px 0px' }}>
         版本号：
         {window.ENV.WEB_VERSION}
