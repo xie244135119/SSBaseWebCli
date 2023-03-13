@@ -4,9 +4,14 @@ import api from '@/services/api';
 
 export default function ParentIndex() {
   useEffect(() => {
-    api.test.testGet().then((res) => {
-      console.log('get data success ', res);
-    });
+    api.test
+      .testGet()
+      .then((res) => {
+        console.log('get data success ', res);
+      })
+      .catch((e) => {
+        console.log(' e ', e);
+      });
   }, []);
 
   return (
