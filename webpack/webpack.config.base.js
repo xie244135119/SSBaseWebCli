@@ -167,12 +167,12 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            plugins: [require.resolve('react-refresh/babel')]
+            plugins: isDev ? [require.resolve('react-refresh/babel')] : []
           }
         }
       },
       {
-        test: /\.(png|jpg|jpeg|gif|mp4|svg)$/,
+        test: /\.(png|jpg|jpeg|gif|mp4|svg|fbx|FBX|obj|gltf|glb)$/,
         type: 'asset',
         parser: {
           dataUrlCondition: {
@@ -211,7 +211,7 @@ module.exports = {
     modules: ['node_modules']
   },
   plugins: [
-    new ReactRefreshPlugin(),
+    isDev && new ReactRefreshPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'public', to: 'public' },

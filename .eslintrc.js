@@ -53,6 +53,11 @@ module.exports = {
     'no-shadow': 'off',
     'max-len': 'off',
     'import/prefer-default-export': 'off',
-    'import/no-named-as-default': 'off'
+    'import/no-named-as-default': 'off',
+    'react/prop-types': [1],
+    'react/no-array-index-key': [1],
+    'react/require-default-props': 'warn',
+    camelcase: 'warn',
+    'default-param-last': 'warn'
   }
 };
