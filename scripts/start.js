@@ -141,11 +141,11 @@ const combileHandler = (_, stats) => {
   const statJsonObj = stats.toJson(toJsonOptionsObject);
 
   if (statJsonObj.warnings.length > 0) {
-    console.log();
-    statJsonObj.warnings.forEach((log) => {
-      console.log(chalk.yellow('WARNING in ') + log.message);
-    });
-    console.log();
+    // console.log();
+    // statJsonObj.warnings.forEach((log) => {
+    //   console.log(chalk.yellow('WARNING in ') + log.message);
+    // });
+    // console.log();
   }
   if (statJsonObj.errors.length > 0) {
     console.log();
