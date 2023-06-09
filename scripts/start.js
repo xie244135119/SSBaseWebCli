@@ -8,7 +8,6 @@ const webpack = require('webpack');
 const WebDevServer = require('webpack-dev-server');
 const loadsh = require('lodash');
 const chalk = require('chalk');
-const spawn = require('cross-spawn');
 const dayjs = require('dayjs');
 const webpackbar = require('webpackbar');
 const paths = require('../webpack/paths');
@@ -215,43 +214,17 @@ const runCombileAndServer = () => {
       basic: false
     })
   );
-  const HOST = targeConfig.devServer.host || process.env.HOST || 'localhost';
   const createCompile = (aPort) => {
     const compile = webpack(targeConfig, (aError, aStats) => {
       combileHandler(null, aStats);
     });
-    // compile.hooks.compile.tap('beforeCompile', () => {
-    //   //
-    // });
-
-    // compile.hooks.done.tap('done', (e) => {
-    // });
     targeConfig.devServer.port = aPort;
     const server = new WebDevServer(targeConfig.devServer, compile, targeConfig.devServer);
     return server.start().then(() => {
       return [compile, server];
     });
   };
-
-  // const ipv4 = WebDevServer.internalIPSync('v4');
-  // const ipv6 = WebDevServer.internalIPSync('v6');
-  //
-  // targeConfig.devServer.port
   return WebDevServer.getFreePort(targeConfig.devServer.port || 'auto').then((port) => {
-    /*console.log(chalk.bold.green(`Project is running at: ${port}`));
-    console.log(
-      chalk.bold.green(`On Your Network (Local): `) +
-        chalk.rgb(42, 184, 219)(`http://${HOST}:${port}/`)
-    );
-    console.log(
-      chalk.bold.green('On Your Network (IPv4):  ') +
-        chalk.rgb(42, 184, 219)(`http://${ipv4}:${port}/`)
-    );
-    console.log(
-      chalk.bold.green('On Your Network (IPv6):  ') +
-        chalk.rgb(42, 184, 219)(`http://${ipv6}:${port}/`)
-    );
-    console.log();*/
     return createCompile(port);
   });
 };
@@ -270,7 +243,6 @@ runCombileAndServer().then((res) => {
 });
 
 const configfileWatchHandler = (event, filename) => {
-  // console.log(chalk.yellow(`${filename} exist ${event}`));
   if (event === 'change') {
     // spawn.sync('node', [paths.scriptPath + '/start.js'], {
     //   stdio: 'inherit'
@@ -283,7 +255,6 @@ const configfileWatchHandler = (event, filename) => {
     });
   }
 };
-// const fswatcher1 = fs.watch(paths.scriptPath, { recursive: true }, configfileWatchHandler);
 const fswatcher2 = fs.watch(paths.webpackPath, { recursive: true }, (event, filename) => {
   delete require.cache[require.resolve('../webpack/webpack.config.dev')];
   delete require.cache[require.resolve('../webpack/webpack.config.base')];
