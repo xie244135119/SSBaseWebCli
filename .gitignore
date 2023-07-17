@@ -1,10 +1,9 @@
 node_modules
 .DS_Store
-yarn*
-*-lock*
 dist
 dist.zip
-yarn*
+yarn-error.log
+pnpm-lock.yaml
 directoryList.md
 .vscode
 vite

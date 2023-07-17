@@ -12,7 +12,7 @@ const dayjs = require('dayjs');
 const webpackbar = require('webpackbar');
 const paths = require('../webpack/paths');
 
-const LOG_PREFIX = require(paths.packageJsonPath).cliType;
+const LOG_PREFIX = require(paths.packageJsonPath).cliType || 'Webpack';
 
 const toJsonOptionsObject2 = {
   // all log
@@ -216,7 +216,17 @@ const runCombileAndServer = () => {
   );
   const createCompile = (aPort) => {
     const compile = webpack(targeConfig, (aError, aStats) => {
-      combileHandler(null, aStats);
+      if (aError) {
+        console.log();
+        console.log(
+          chalk.bgRed(' ERROR ') +
+            chalk.bold.red(` failed to run on port:${aPort} with ${aError.name}`)
+        );
+        console.log(aError.stack);
+        console.log();
+      } else {
+        combileHandler(null, aStats);
+      }
     });
     targeConfig.devServer.port = aPort;
     const server = new WebDevServer(targeConfig.devServer, compile, targeConfig.devServer);
