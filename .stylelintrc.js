@@ -19,6 +19,7 @@ module.exports = {
       'left',
       'z-index',
       'display',
+      'flex-direction',
       'justify-content',
       'align-items',
       'float',
