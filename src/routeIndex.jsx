@@ -7,6 +7,13 @@ import RouteConfig from '../config/router.config';
 import DefaultSetting from './defaultSetting';
 import CreateStore from '@/store/store';
 
+const modules = import.meta.glob([
+  './layouts/*.jsx',
+  './pages/*.jsx',
+  './pages/*/*.jsx',
+  './pages/*/*/*.jsx',
+  './pages/*/*/*/*.jsx'
+]);
 export default class RouteIndex {
   /**
    * global store
@@ -36,8 +43,13 @@ export default class RouteIndex {
         );
       }
 
+      let componentPromise = null;
+      const findKey = Object.keys(modules).find((key) => key.indexOf(item.component) !== -1);
+      if (findKey) {
+        componentPromise = modules[findKey];
+      }
       if (!item.path && item.component) {
-        const NotFoundComponent = React.lazy(() => import(`${item.component}`));
+        const NotFoundComponent = React.lazy(componentPromise);
         return <Route key={item.component} path="*" element={<NotFoundComponent />} />;
       }
       if (!item.component) {
@@ -45,7 +57,7 @@ export default class RouteIndex {
           ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
           : null;
       }
-      const RouteComponent = item.component ? React.lazy(() => import(`${item.component}`)) : null;
+      const RouteComponent = React.lazy(componentPromise);
       return (
         <Route
           key={senderPath}

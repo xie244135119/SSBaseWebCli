@@ -1,7 +1,7 @@
 import React from 'react';
 import path from 'path-browserify';
 import { useNavigate } from 'react-router-dom';
-import styles from './index.less';
+import styles from './index.module.less';
 import RouteConfig from '../../../config/router.config';
 
 function Index() {
