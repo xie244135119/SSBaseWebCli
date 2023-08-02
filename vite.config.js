@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import path from 'path-browserify';
 import react from '@vitejs/plugin-react-swc';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+// import { viteStaticCopy } from 'vite-plugin-static-copy';
 // import eslint from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
@@ -53,14 +53,14 @@ export default defineConfig({
     chunkSizeWarningLimit: 500,
     rollupOptions: {
       plugins: [
-        viteStaticCopy({
-          targets: [
-            {
-              src: 'node_modules/three/examples/js/libs/basis',
-              dest: 'static/three/basis'
-            }
-          ]
-        })
+        // viteStaticCopy({
+        //   targets: [
+        //     {
+        //       src: 'node_modules/three/examples/js/libs/basis',
+        //       dest: 'static/three/basis'
+        //     }
+        //   ]
+        // })
       ]
     }
   },
@@ -85,5 +85,3 @@ export default defineConfig({
   logLevel: 'info',
   clearScreen: false
 });
-
-
