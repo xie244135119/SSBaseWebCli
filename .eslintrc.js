@@ -8,22 +8,18 @@ module.exports = {
     // node
     node: true,
     // require define
-    amd: true
+    amd: true,
+        //
+        es2020: true
   },
   extends: ['airbnb', 'airbnb/hooks'],
   plugins: ['react'],
-  parser: '@babel/eslint-parser',
+  settings: { react: { version: '18.2' } },
   parserOptions: {
+    ecmaVersion: 'latest', 
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true
-    }
-  },
-  settings: {
-    'import/resolver': {
-      webpack: {
-        config: './webpack/webpack.config.base.js'
-      }
     }
   },
   // 特定规则
