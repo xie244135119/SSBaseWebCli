@@ -2,6 +2,7 @@
 
 set -e
 
+# 配置项修改
 port=22
 serveruser=root
 serverhost=0.0.0.0

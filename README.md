@@ -60,3 +60,9 @@ npm run build or (yarn build)
                 } -->
 
 
+### 8，一键部署
+
+    基于ssh-pass服务一键部署，
+    1，安装ssh-pass，（安装文件位于 public/sshpass-1.08.zip）
+    2，修改 scripts/publish.sh 中的涉及nginx等托管服务器的配置项
+    3，npm run publish 
