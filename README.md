@@ -59,4 +59,19 @@ npm run build or (yarn build)
                     to: 'static/three/basis',
                 } -->
 
+### 8, 一键部署
+#### 8.1 sshpass 安装
+    安装文件地址: 项目目录下 public/sshpass-1.08.zip
+    将zip解压到任意目录
+    安装步骤
+    1， cd sshpass 解压好的目录
+    2，./configure
+    3，make&&make install
+#### 8.2 部署
+    修改 ./scripts/publish.sh
+    修改配置:serveruser
+            serverhost
+            serverpassword
+            hostFilePath
 
+    npm run publish
