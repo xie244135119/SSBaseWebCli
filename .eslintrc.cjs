@@ -9,14 +9,14 @@ module.exports = {
     node: true,
     // require define
     amd: true,
-        //
-        es2020: true
+    //
+    es2020: true
   },
   extends: ['airbnb', 'airbnb/hooks'],
   plugins: ['react'],
   settings: { react: { version: '18.2' } },
   parserOptions: {
-    ecmaVersion: 'latest', 
+    ecmaVersion: 'latest',
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true

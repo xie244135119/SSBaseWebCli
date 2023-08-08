@@ -98,10 +98,7 @@ export default class RouteIndex {
    */
   static renderDom = () => {
     const routes = this.getRenderRoutes();
-    const rootElement = document.createElement('div');
-    rootElement.id = 'root';
-    document.body.append(rootElement);
-    const root = createRoot(rootElement);
+    const root = createRoot(document.body);
     root.render(routes);
   };
 }
