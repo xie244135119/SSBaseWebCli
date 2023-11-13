@@ -49,6 +49,8 @@ module.exports = {
     'no-shadow': 'off',
     'max-len': 'off',
     'import/prefer-default-export': 'off',
-    'import/no-named-as-default': 'off'
+    'import/no-named-as-default': 'off',
+    'import/extensions': 'off',
+    'import/no-unresolved': 'off'
   }
 };
