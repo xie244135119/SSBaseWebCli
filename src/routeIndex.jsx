@@ -44,7 +44,13 @@ export default class RouteIndex {
       }
 
       let componentPromise = null;
-      const findKey = Object.keys(modules).find((key) => key.indexOf(item.component) !== -1);
+      const findKey = Object.keys(modules).find(
+        (key) =>
+          key === item.component ||
+          key === `${item.component}.jsx` ||
+          key === `${item.component}/index` ||
+          key === `${item.component}/index.jsx`
+      );
       if (findKey) {
         componentPromise = modules[findKey];
       }
@@ -98,7 +104,10 @@ export default class RouteIndex {
    */
   static renderDom = () => {
     const routes = this.getRenderRoutes();
-    const root = createRoot(document.body);
+    const app = document.createElement('div');
+    app.id = 'app';
+    document.body.appendChild(app);
+    const root = createRoot(app);
     root.render(routes);
   };
 }
