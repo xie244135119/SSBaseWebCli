@@ -2,7 +2,7 @@
 
 #### 1，运行
 
-推荐使用 yarn
+推荐使用 yarn or pnpm
 
 1），安装依赖：yarn i or npm install
 
@@ -24,7 +24,12 @@ npm run build or (yarn build)
 
 | 文件路径                |  文件说明  |
 | :---------------------- | :--------: |
-| public/assets/xxxx.xlsx | xxx 映射表 |
+| public/files/mysql.xlsx | mysql 映射表 |
+
+### 6, 运行配置
+
+    1，public/env.config.js 文件中新增动态配置
+    2，新增动态配置
 
 
 ### 6，引入Cesium.js 
@@ -47,7 +52,7 @@ npm run build or (yarn build)
                     to: 'static/cesium/Widgets'
                 }, -->
 
-### 7，引入three.js
+### 7，引入THREE
 #####  npm add three
 #####                 
 <!-- {
@@ -60,18 +65,13 @@ npm run build or (yarn build)
                 } -->
 
 ### 8, 一键部署
-#### 8.1 sshpass 安装
-    安装文件地址: 项目目录下 public/sshpass-1.08.zip
-    将zip解压到任意目录
-    安装步骤
-    1， cd sshpass 解压好的目录
-    2，./configure
-    3，make&&make install
-#### 8.2 部署
-    修改 ./scripts/publish.sh
-    修改配置:serveruser
-            serverhost
-            serverpassword
-            hostFilePath
+#### 8.1 修改文件配置
+    1，config文件夹下 server.config.json配置
+    
+    "host": "0.0.0.0",
+    "port": 22,
+    "username": "root",
+    "password": "****",
+    "serverWebPath": "/xx/xx/xx/xx"
 
-    npm run publish
+    2，npm run publish

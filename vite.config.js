@@ -1,19 +1,18 @@
 import { defineConfig } from 'vite';
-import path from 'path-browserify';
+import path from 'path';
 import react from '@vitejs/plugin-react-swc';
-// import { viteStaticCopy } from 'vite-plugin-static-copy';
-// import eslint from 'vite-plugin-eslint';
+import lagacy from '@vitejs/plugin-legacy';
+import browserslist from 'browserslist';
+
+// console.log(' browserslist ', browserslist.defaults);
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react()
-    // eslint({
-    //   emitError: true,
-    //   emitWarning: true,
-    //   failOnError: true,
-    //   failOnWarning: false
-    // })
+    react(),
+    lagacy({
+      targets: browserslist.defaults
+    })
   ],
   resolve: {
     alias: {
@@ -40,7 +39,7 @@ export default defineConfig({
     exclude: []
   },
   build: {
-    target: 'modules',
+    // target: 'modules',
     outDir: 'dist',
     assetsDir: 'assets',
     assetsInlineLimit: 4 * 1024,

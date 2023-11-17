@@ -2,10 +2,8 @@ import React from 'react';
 import path from 'path-browserify';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
 import RouteConfig from '../config/router.config';
 import DefaultSetting from './defaultSetting';
-import CreateStore from '@/store/store';
 
 const modules = import.meta.glob([
   './layouts/*.jsx',
@@ -16,17 +14,11 @@ const modules = import.meta.glob([
 ]);
 export default class RouteIndex {
   /**
-   * global store
-   */
-  static globalStore = CreateStore();
-
-  //
-  /**
    * routes
    * @param {*} aPaths paths
    * @returns
    */
-  static getRoutes = (items = [{}], parentLevels = []) =>
+  static getRoutes = (items = [], parentLevels = [], allRouteItems = []) =>
     items.map((item) => {
       const levelpaths = [...parentLevels, item]
         .map((level) => level.path || '')
@@ -58,21 +50,32 @@ export default class RouteIndex {
         const NotFoundComponent = React.lazy(componentPromise);
         return <Route key={item.component} path="*" element={<NotFoundComponent />} />;
       }
-      if (!item.component) {
-        return (item.children || item.routes)?.length > 0
-          ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
-          : null;
-      }
       const RouteComponent = React.lazy(componentPromise);
+      let childRoutes = null;
+      if ((item.children || item.routes)?.length > 0) {
+        childRoutes = this.getRoutes(
+          item.children || item.routes,
+          [...parentLevels, item],
+          allRouteItems
+        );
+      }
+      if (!item.component) {
+        return childRoutes;
+      }
+      allRouteItems.push({
+        ...item,
+        path: senderPath
+      });
       return (
         <Route
           key={senderPath}
           path={senderPath}
-          element={RouteComponent ? <RouteComponent /> : null}
+          element={RouteComponent ? <RouteComponent routes={allRouteItems} /> : null}
         >
-          {(item.children || item.routes)?.length > 0
+          {/* {(item.children || item.routes)?.length > 0
             ? this.getRoutes(item.children || item.routes, [...parentLevels, item])
-            : null}
+            : null} */}
+          {childRoutes}
         </Route>
       );
     });
@@ -82,18 +85,13 @@ export default class RouteIndex {
    * @returns
    */
   static getRenderRoutes = () => {
-    this.globalStore.subscribe(() => {
-      //
-    });
     const routerRender = (
       <React.Suspense fallback={<Loading />}>
-        <Provider store={this.globalStore}>
-          <BrowserRouter
-            basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
-          >
-            <Routes>{this.getRoutes(RouteConfig)}</Routes>
-          </BrowserRouter>
-        </Provider>
+        <BrowserRouter
+          basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
+        >
+          <Routes>{this.getRoutes(RouteConfig)}</Routes>
+        </BrowserRouter>
       </React.Suspense>
     );
     return routerRender;
@@ -112,7 +110,7 @@ export default class RouteIndex {
   };
 }
 
-function Loading(props) {
+function Loading() {
   return (
     <div
       style={{
