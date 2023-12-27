@@ -54,7 +54,7 @@ exec('npm run build')
             remotePath,
             {
               step: (total, _, fsize) => {
-                shelljs.echo(`【一键部署】文件上传中>>>${parseInt((total / fsize) * 100, 10)}%`);
+                shelljs.echo(`【一键部署】文件上传中>>>${((total / fsize) * 100).toFixed(4)}%`);
               }
             },
             (err) => {
