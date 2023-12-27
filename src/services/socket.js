@@ -1,11 +1,3 @@
-/*
- * Author  Murphy.xie
- * Date  2022-09-14 16:10:38
- * LastEditors  Murphy.xie
- * LastEditTime  2022-10-15 10:57:04
- * Description
- */
-
 class SocketJs {
   /**
    * 全局通道
