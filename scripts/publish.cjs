@@ -42,7 +42,16 @@ exec('npm run build')
   })
   .then(() => {
     shelljs.echo('【一键部署】服务器连接成功');
-    return ssh
+
+    return ssh.execCommand(`cd ${serverConfig.deploy.serverWebPath}`).then((res) => {
+      if (res.code === 1) {
+        return ssh.mkdir(serverConfig.deploy.serverWebPath, 'exec');
+      }
+      return Promise.resolve();
+    });
+  })
+  .then(() =>
+    ssh
       .requestSFTP()
       .then((res) => {
         shelljs.echo('【一键部署】文件准备上送');
@@ -88,8 +97,8 @@ exec('npm run build')
           );
         });
         return p;
-      });
-  })
+      })
+  )
   .then(() => {
     const endTime = Date.now();
     shelljs.echo(`【一键部署】部署完成，用时${(endTime - startTime) / 1000}s`);
