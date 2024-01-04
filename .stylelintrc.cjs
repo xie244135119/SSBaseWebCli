@@ -20,6 +20,7 @@ module.exports = {
       'z-index',
       'display',
       'flex-direction',
+      'flex-wrap',
       'justify-content',
       'align-items',
       'float',
