@@ -70,7 +70,7 @@ exec('npm run build')
               // progress.stop();
               if (err) {
                 shelljs.echo('【一键部署】文件上传失败', err.code);
-                reject();
+                reject(err);
               }
               shelljs.echo('【一键部署】文件上传完成');
               reslove();
@@ -107,8 +107,8 @@ exec('npm run build')
   .then(() => {
     shelljs.exit();
   })
-  .catch(() => {
-    shelljs.echo('【一键部署】失败');
+  .catch((err) => {
+    shelljs.echo('【一键部署】失败', err);
     exec('rm -rf dist.tar.gz').then(() => {
       shelljs.exit();
     });

@@ -1,6 +1,11 @@
 ### 标准化模板创建
 
-#### 1，运行
+#### 1，环境准备
+
+开发环境：VsCode
+预装插件：Eslint， Prettier，Prettier-ESlint ，StyleLint，Vite
+
+#### 2，运行
 
 推荐使用 yarn or pnpm
 
@@ -8,17 +13,13 @@
 
 2)，运行项目 yarn start or npm start
 
-#### 2，部署
+#### 3，打包
 
 npm run build or (yarn build)
 
-### 3,项目目录
-
-### 4，Mock 服务
-
-1，api 请求正常处理
-2，在 src/services/mock 增加 url 监听
-3，config/env.config.js 开启 mock 开关
+### 4, 项目目录
+    src-总的资源文件
+    
 
 ### 5，文件说明
 
@@ -31,8 +32,21 @@ npm run build or (yarn build)
     1，public/env.config.js 文件中新增动态配置
     2，新增动态配置
 
+### 7, 一键部署
+#### 7.1 修改文件配置
+    1，config文件夹下 server.config.json配置
+    
+    "host": "0.0.0.0",
+    "port": 22,
+    "username": "root",
+    "password": "****",
+    "serverWebPath": "/xx/xx/xx/xx"
+#### 7.2 配置
+    2，npm run publish
 
-### 6，引入Cesium.js 
+
+### 注意事项
+#### 引入Cesium
 ##### 1，npm add cesium 
 ##### 2, CopyWebpackPlugin 引入
                 <!-- {
@@ -52,26 +66,8 @@ npm run build or (yarn build)
                     to: 'static/cesium/Widgets'
                 }, -->
 
-### 7，引入THREE
+####    引入 three.js
 #####  npm add three
-#####                 
-<!-- {
-                    from: 'node_modules/three/examples/js/libs/draco/',
-                    to: 'static/three/draco',
-                },
-                {
-                    from: 'node_modules/three/examples/js/libs/basis/',
-                    to: 'static/three/basis',
-                } -->
-
-### 8, 一键部署
-#### 8.1 修改文件配置
-    1，config文件夹下 server.config.json配置
-    
-    "host": "0.0.0.0",
-    "port": 22,
-    "username": "root",
-    "password": "****",
-    "serverWebPath": "/xx/xx/xx/xx"
-
-    2，npm run publish
+#####  涉及的静态资源 手动拷贝              
+    1, node_modules/three/examples/js/libs/draco/
+    2, node_modules/three/examples/js/libs/basis/
