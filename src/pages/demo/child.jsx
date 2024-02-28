@@ -1,4 +1,3 @@
-import SSCache from '@/js/SSCache';
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
