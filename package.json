@@ -13,7 +13,8 @@
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview",
-    "publish": "node ./scripts/publish.cjs"
+    "publish": "node ./scripts/publish.cjs",
+    "publishs": "node ./scripts/publish.cjs --env sandbox"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [

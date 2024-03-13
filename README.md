@@ -72,7 +72,6 @@ npm run build or (yarn build)
 
 ```
 
-
 ### 5，文件说明
 
 | 文件路径                |  文件说明  |
@@ -93,8 +92,10 @@ npm run build or (yarn build)
     "username": "root",
     "password": "****",
     "serverWebPath": "/xx/xx/xx/xx"
-#### 7.2 配置
-    2，npm run publish
+#### 7.2 执行
+    2，执行命令
+    正式环境: npm run publish
+    沙盒环境: npm run publishs
 
 
 ### 注意事项

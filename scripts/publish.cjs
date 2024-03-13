@@ -1,11 +1,16 @@
-//
 const shelljs = require('shelljs');
 const path = require('path');
 const { NodeSSH } = require('node-ssh');
-
-const ssh = new NodeSSH();
 const serverConfig = require('../config/server.config.json');
 
+const findEnvIndex = process.argv.indexOf('--env');
+let enviromentConfig = serverConfig.deploy;
+if (findEnvIndex !== -1) {
+  const configKey = process.argv[findEnvIndex + 1];
+  enviromentConfig = serverConfig[configKey] || serverConfig.deploy;
+}
+
+const ssh = new NodeSSH();
 const exec = (command = '') =>
   new Promise((reslove, reject) => {
     shelljs.exec(
@@ -34,30 +39,21 @@ exec('npm run build')
     shelljs.echo('【一键部署】连接服务器中...');
 
     return ssh.connect({
-      host: serverConfig.deploy.host,
-      port: serverConfig.deploy.port,
-      username: serverConfig.deploy.username,
-      password: serverConfig.deploy.password
+      host: enviromentConfig.host,
+      port: enviromentConfig.port,
+      username: enviromentConfig.username,
+      password: enviromentConfig.password
     });
   })
   .then(() => {
     shelljs.echo('【一键部署】服务器连接成功');
-
-    return ssh.execCommand(`cd ${serverConfig.deploy.serverWebPath}`).then((res) => {
-      if (res.code === 1) {
-        return ssh.mkdir(serverConfig.deploy.serverWebPath, 'exec');
-      }
-      return Promise.resolve();
-    });
-  })
-  .then(() =>
-    ssh
+    return ssh
       .requestSFTP()
       .then((res) => {
         shelljs.echo('【一键部署】文件准备上送');
         return new Promise((reslove, reject) => {
           const localPath = path.join(`${shelljs.pwd()}`, './dist.tar.gz');
-          const remotePath = `${serverConfig.deploy.serverWebPath}/dist.tar.gz`;
+          const remotePath = `${enviromentConfig.serverWebPath}/dist.tar.gz`;
           res.fastPut(
             localPath,
             remotePath,
@@ -70,7 +66,7 @@ exec('npm run build')
               // progress.stop();
               if (err) {
                 shelljs.echo('【一键部署】文件上传失败', err.code);
-                reject(err);
+                reject();
               }
               shelljs.echo('【一键部署】文件上传完成');
               reslove();
@@ -92,13 +88,13 @@ exec('npm run build')
         commands.forEach((command) => {
           p = p.then(() =>
             ssh.execCommand(command, {
-              cwd: serverConfig.deploy.serverWebPath
+              cwd: enviromentConfig.serverWebPath
             })
           );
         });
         return p;
-      })
-  )
+      });
+  })
   .then(() => {
     const endTime = Date.now();
     shelljs.echo(`【一键部署】部署完成，用时${(endTime - startTime) / 1000}s`);
@@ -107,8 +103,8 @@ exec('npm run build')
   .then(() => {
     shelljs.exit();
   })
-  .catch((err) => {
-    shelljs.echo('【一键部署】失败', err);
+  .catch(() => {
+    shelljs.echo('【一键部署】失败');
     exec('rm -rf dist.tar.gz').then(() => {
       shelljs.exit();
     });
