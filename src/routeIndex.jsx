@@ -6,11 +6,11 @@ import RouteConfig from '../config/router.config';
 import DefaultSetting from './defaultSetting';
 
 const modules = import.meta.glob([
-  './layouts/*.jsx',
-  './pages/*.jsx',
-  './pages/*/*.jsx',
-  './pages/*/*/*.jsx',
-  './pages/*/*/*/*.jsx'
+  './layouts/*.*sx',
+  './pages/*.*sx',
+  './pages/*/*.*sx',
+  './pages/*/*/*.*sx',
+  './pages/*/*/*/*.*sx'
 ]);
 export default class RouteIndex {
   /**
@@ -87,9 +87,7 @@ export default class RouteIndex {
   static getRenderRoutes = () => {
     const routerRender = (
       <React.Suspense fallback={<Loading />}>
-        <BrowserRouter
-          basename={process.env.NODE_ENV === 'production' ? DefaultSetting.directory : ''}
-        >
+        <BrowserRouter basename={DefaultSetting.directory}>
           <Routes>{this.getRoutes(RouteConfig)}</Routes>
         </BrowserRouter>
       </React.Suspense>
