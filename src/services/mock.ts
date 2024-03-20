@@ -16,7 +16,7 @@ export function getMockData(url, params = {}) {
 }
 
 export default class MockJs {
-  static setup = () => {};
+  static setup = (config?: { timeout: number }) => {};
 
   static mock = (url, responseFunc) => {
     allData[url] = responseFunc;

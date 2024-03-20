@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /**
  * 缓存服务
  */
@@ -62,7 +63,7 @@ class SSMemboryCache extends SSCacheProtrol {
 
 class SSDiskCache extends SSCacheProtrol {
   has(key) {
-    return localStorage.getItem(key) ? true : false;
+    return !!localStorage.getItem(key);
   }
 
   get(key) {
@@ -134,7 +135,7 @@ class SSCache {
   /**
  Returns the value associated with a given key.
  This method may blocks the calling thread until file read finished.
- 
+
  @param key A string identifying the value. If nil, just return nil.
  @return The value associated with key, or nil if no value is associated with key.
  */
@@ -150,7 +151,7 @@ class SSCache {
   /**
  Sets the value of the specified key in the cache.
  This method may blocks the calling thread until file write finished.
- 
+
  @param  object The object to be stored in the cache. If nil, it calls `removeObjectForKey:`.
  @param {string} key    The key with which to associate the value. If nil, this method has no effect.
  @param {Boolean} persistent 持久话存储
@@ -166,7 +167,7 @@ class SSCache {
   /**
  Removes the value of the specified key in the cache.
  This method may blocks the calling thread until file delete finished.
- 
+
  @param key The key identifying the value to be removed. If nil, this method has no effect.
  */
   remove(key) {
@@ -176,7 +177,6 @@ class SSCache {
     }
     if (this.diskCache.has(key)) {
       this.diskCache.remove(key);
-      return;
     }
   }
 

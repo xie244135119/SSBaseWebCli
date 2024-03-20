@@ -1,31 +1,28 @@
-class SocketJs {
-  /**
-   * 全局通道
-   */
-  static globalSocket = new SocketJs(window.ENV.socketSource);
+export type SocketListenerType = (e: any) => void;
 
+export default class SocketJs {
   /**
    * 相关通讯标识
    */
   static SocketType = {};
 
   // socket通道
-  _webSocket = null;
+  private _webSocket = null;
 
   // interval timer
-  _beatTimer = null;
+  private _beatTimer = null;
 
   // 请求的socket 地址
-  _socketUrl = '';
+  private _socketUrl = '';
 
   // 事件处理函数
-  _observerFunc = {};
+  private _observerFunc = {};
 
   // 全量监听
-  _listenerFunc = () => {};
+  onListener: SocketListenerType = null;
 
   // reconnect count
-  _retryConnecCount = 0;
+  private _retryConnecCount = 0;
 
   /**
    * 销毁
@@ -38,16 +35,12 @@ class SocketJs {
     this._beatTimer = null;
   };
 
-  constructor(aWsurl = window.ENV.socketSource) {
+  constructor(aWsurl: string) {
     this._socketUrl = aWsurl;
     this._initWebSocket(aWsurl);
   }
 
-  /**
-   * WebSocket 初始化操作
-   * @param {*} aWsurl websocket地址
-   */
-  _initWebSocket = (aWsurl) => {
+  _initWebSocket = (aWsurl: string) => {
     if (!aWsurl) return;
 
     const ws = new WebSocket(aWsurl);
@@ -56,7 +49,7 @@ class SocketJs {
       console.log(' open websocket ');
     };
 
-    ws.onmessage = (e) => {
+    ws.onmessage = (e: MessageEvent) => {
       if (e.data.indexOf('连接成功') !== -1) {
         this._startHeartbeat();
         return;
@@ -66,8 +59,7 @@ class SocketJs {
         return;
       }
       try {
-        console.log(' socket 收到消息 ', e);
-        this._listenerFunc?.(e.data);
+        this.onListener?.(e.data);
         const [aType, senderData] = this._parseData(e.data) || [];
         this.onPush(aType, senderData);
       } catch (error) {
@@ -78,14 +70,13 @@ class SocketJs {
       this._retryConnecCount = 0;
     };
 
-    ws.onerror = (web, e) => {
-      console.error(' websocket connect error ', web, e);
+    ws.onerror = (ev: Event) => {
+      // console.error(' websocket connect error ', web, ev);
       // 连接失败，重连三次
       this._reconnectWebSocket(aWsurl);
     };
 
     ws.onclose = () => {
-      console.error(' websocket close ');
       this._reconnectWebSocket();
     };
   };
@@ -121,13 +112,6 @@ class SocketJs {
       func: aCallBack
     };
     return handle;
-  };
-
-  /**
-   * 建立全部通道监听
-   */
-  onListener = (aCallBack = () => {}) => {
-    this._listenerFunc = aCallBack;
   };
 
   /**
@@ -212,5 +196,3 @@ class SocketJs {
     }, 50 * 1000);
   };
 }
-
-export default SocketJs;

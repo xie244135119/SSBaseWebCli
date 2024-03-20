@@ -2,7 +2,7 @@ import React from 'react';
 import path from 'path-browserify';
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.less';
-import RouteConfig from '../../../config/router.config';
+import RouteConfig, { RouteConfigItem } from '../../../config/router.config';
 
 function Index() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function Index() {
       return text;
     }, '');
   //
-  const recursive = (items = [{}], index = 0, parentItems = []) =>
+  const recursive = (items: RouteConfigItem[], index = 0, parentItems = []) =>
     items.map((item, key) => {
       if (item.redirect) {
         return null;
@@ -21,7 +21,7 @@ function Index() {
         return null;
       }
       const itemPath = getPath([...parentItems, item]);
-      return (item.children || item.routes)?.length > 0 ? (
+      return (item.children)?.length > 0 ? (
         <div
           key={`${item.path + key}`}
           style={{ display: 'flex', flexDirection: 'column', marginLeft: index * 15 }}
@@ -37,7 +37,7 @@ function Index() {
             </span>
             <span className={styles.filetitle}>{path.join('src', item.component || '')}</span>
           </div>
-          {recursive(item.children || item.routes, index + 1, [...parentItems, item])}
+          {recursive(item.children, index + 1, [...parentItems, item])}
         </div>
       ) : (
         <div key={item.path} className={styles.row}>

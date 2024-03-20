@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react-swc';
 import lagacy from '@vitejs/plugin-legacy';
 import browserslist from 'browserslist';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),

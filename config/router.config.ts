@@ -1,4 +1,12 @@
-export default [
+export type RouteConfigItem = {
+  name?: string;
+  path?: string;
+  component?: string;
+  redirect?: string;
+  children?: RouteConfigItem[];
+};
+
+const configs: RouteConfigItem[] = [
   {
     path: '/directory',
     component: './pages/directory/index'
@@ -34,3 +42,5 @@ export default [
     component: './pages/404'
   }
 ];
+
+export default configs;
