@@ -40,7 +40,9 @@ export default class RouteIndex {
         (key) =>
           key === item.component ||
           key === `${item.component}.jsx` ||
+          key === `${item.component}.tsx` ||
           key === `${item.component}/index` ||
+          key === `${item.component}/index.tsx` ||
           key === `${item.component}/index.jsx`
       );
       if (findKey) {
