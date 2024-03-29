@@ -23,10 +23,6 @@ const axiosIntance = Axios.create({
   withCredentials: false,
   responseType: 'json',
   validateStatus: (httpCode) => {
-    if (httpCode === 401) {
-      // console.log(' 请求api httpCode 超时 ');
-      // Prism.removeUserToken();
-    }
     return httpCode >= 200 && httpCode < 300;
   },
   headers: {

@@ -15,6 +15,7 @@ module.exports = {
   extends: ['airbnb', 'airbnb/hooks'],
   plugins: ['react'],
   settings: { react: { version: '18.2' } },
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',

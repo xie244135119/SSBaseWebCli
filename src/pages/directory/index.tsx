@@ -2,7 +2,8 @@ import React from 'react';
 import path from 'path-browserify';
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.less';
-import RouteConfig, { RouteConfigItem } from '../../../config/router.config';
+import RouteConfig from '../../../config/router.config';
+import ProjectConfig from '../../../config/project.config';
 
 function Index() {
   const navigate = useNavigate();
@@ -59,12 +60,12 @@ function Index() {
   return (
     <div className={styles.background}>
       {/* <h2>测试目录</h2> */}
-      <h2 style={{ margin: 0 }}>项目导航</h2>
+      <h2 style={{ margin: 0 }}>{ProjectConfig.title} - 前端目录</h2>
       <h4 style={{ margin: '15px 0px 0px' }}>
         版本号：
-        {window.ENV.WEB_VERSION}
+        {__APP_VERSION__}
       </h4>
-      <h6 style={{ margin: '10px 0px 0px' }}>注：下面的文件仅为示例，开发时可直接删除</h6>
+      {/* <h6 style={{ margin: '10px 0px 0px' }}>注：下面的文件仅为示例，开发时可直接删除</h6> */}
       {recursive(RouteConfig)}
     </div>
   );

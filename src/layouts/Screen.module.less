@@ -1,0 +1,149 @@
+@SLIDER_LEFT: 40px;
+
+
+  .background {
+    display: flex;
+    width: 1920px;;
+    height: 1080px;
+    flex-direction: column;
+    transform-origin: left top;
+    background-color: #002241;
+    background-size: 100% 100%;
+
+    .layoutheaderview {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 576px;
+      background-size: 100% 100%;
+
+      .headerbg {
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .headerViewRight {
+        display: flex;
+        align-items: center;
+        height: 120px;
+
+        .testview{
+          margin-right: 20px;
+          border-radius: 50%;
+          width: 80px;
+          height: 80px;
+          font-size: 30px;
+          text-align: center;
+          background-color: white;
+          box-shadow: 0 0 25px white;
+          line-height: 80px;
+          cursor: pointer;
+          pointer-events: all;
+
+          &:hover{
+            transform: scale(1.2);
+          }
+        }
+
+        .changescreenview {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          padding: 0 20px 0 80px;
+          // width: 290px;
+          width: 180px;
+          height: 109px;
+          background: url(./assets/rightBg_2.png) no-repeat;
+          background-size: 100% 100%;
+          // cursor: pointer;
+          pointer-events: all;
+
+          .btn1{
+            width: 44px;
+            height: 44px;
+            background: url(./assets/lingdao.png) no-repeat;
+            background-size: 100% 100%;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+
+          .btn2{
+            width: 44px;
+            height: 36px;
+            margin:0 20px;
+            background: url(./assets/isop.png) no-repeat;
+            background-size: 100% 100%;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+
+          .btn3{
+            width: 44px;
+            height: 36px;
+            background: url(./assets/robot.png) no-repeat;
+            background-size: 100% 100%;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+        }
+      }
+    }
+
+    .layoutnavview {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 @SLIDER_LEFT;
+      width: 200px;
+      height: 100px;
+      flex-direction: row;
+      box-sizing: border-box;
+      pointer-events: auto;
+
+      .backbtview {
+        display: flex;
+        align-items: center;
+        width: 180px;
+        height: 70px;
+        font-size: 32px;
+        color: white;
+        background-size: 100% 100%;
+        flex-direction: row;
+        background-image: url(./assets/nav_back_svg.svg);
+        cursor: pointer;
+        flex-shrink: 0;
+        animation: rightButtonIn 1s 0s cubic-bezier(0.525, -0.35, 0.115, 1.335) 1;
+
+        &:hover {
+          transform: scale(1.1);
+          text-shadow: 0 0 15px #378bf7;
+        }
+      }
+    }
+
+    .layoutcontentview {
+      position: absolute;
+      top: 120px;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-sizing: border-box;
+    }
+  }
+
+
+
+

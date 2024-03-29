@@ -1,16 +1,10 @@
-/*
- * Author  Murphy.xie
- * Date  2024-02-21 15:41:20
- * LastEditors  Murphy.xie
- * LastEditTime  2024-03-13 10:49:30
- * Description 基础图表
- */
+
 import React, { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import * as echarts from 'echarts';
 import styles from './base.module.less';
 
-type Props = {
+interface Props {
   chartOption?: {},
   style?: React.CSSProperties,
   className?: string,

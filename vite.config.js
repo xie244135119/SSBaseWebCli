@@ -11,6 +11,9 @@ export default defineConfig({
       targets: browserslist.defaults
     })
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify('v' + process.env.npm_package_version)
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

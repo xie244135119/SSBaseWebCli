@@ -3,7 +3,7 @@ import path from 'path-browserify';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import RouteConfig from '../config/router.config';
-import DefaultSetting from './defaultSetting';
+import ProjectConfig from '../config/project.config';
 
 const modules = import.meta.glob([
   './layouts/*.*sx',
@@ -89,7 +89,7 @@ export default class RouteIndex {
   static getRenderRoutes = () => {
     const routerRender = (
       <React.Suspense fallback={<Loading />}>
-        <BrowserRouter basename={DefaultSetting.directory}>
+        <BrowserRouter basename={ProjectConfig.directory}>
           <Routes>{this.getRoutes(RouteConfig)}</Routes>
         </BrowserRouter>
       </React.Suspense>
