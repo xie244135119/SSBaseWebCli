@@ -1,6 +1,5 @@
-
 import React, { useEffect, useRef } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import styles from './Screen.module.less';
 import ProjectConfig from '../../config/project.config';
@@ -11,6 +10,8 @@ export default function ScreenLayout() {
   const backgroundElementRef = useRef<HTMLDivElement>();
   //
   const navigate = useNavigate();
+  //
+  const location = useLocation();
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -26,13 +27,12 @@ export default function ScreenLayout() {
   }, []);
 
   useEffect(() => {
-    api.user.isLogin().then(success => {
+    api.user.isLogin().then((success) => {
       if (!success) {
         navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
       }
-    })
-  }, [])
-
+    });
+  }, []);
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
