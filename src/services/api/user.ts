@@ -2,6 +2,9 @@ import request from '../request';
 
 // 存储 key 值
 const StorageKey = 'storage_userinfo';
+// api请求拼接
+//
+request.defaults.headers.Authorization = 'token';
 
 /**
  * 登录接口
@@ -9,8 +12,18 @@ const StorageKey = 'storage_userinfo';
  * @returns
  */
 export function login(params: { [key: string]: any }): Promise<boolean> {
-  localStorage.setItem(StorageKey, JSON.stringify(params));
-  return Promise.resolve(true);
+  // api 登录的时候 修改此处请求即可
+  return Promise.resolve({
+    code: 200,
+    data: 'token'
+  }).then((res) => {
+    if (res.code === 200) {
+      localStorage.setItem(StorageKey, JSON.stringify(params));
+      // 后续拼接全部请求方式
+      request.defaults.headers.Authorization = res.data;
+    }
+    return res.code === 200;
+  });
 }
 
 /**
@@ -18,7 +31,7 @@ export function login(params: { [key: string]: any }): Promise<boolean> {
  * @returns
  */
 export function isLogin(): Promise<boolean> {
-  return Promise.resolve(localStorage.getItem(StorageKey) ? true : false);
+  return Promise.resolve(localStorage.getItem(StorageKey) !== undefined);
 }
 
 /**
@@ -47,5 +60,6 @@ export function getInfo(): Promise<{ [key: string]: any }> {
  */
 export function logout(): Promise<boolean> {
   localStorage.removeItem(StorageKey);
+  delete request.defaults.headers.Authorization;
   return Promise.resolve(true);
 }

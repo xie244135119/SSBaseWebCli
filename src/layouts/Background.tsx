@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Avatar, Breadcrumb, ConfigProvider, Dropdown, MenuItemProps } from 'antd';
@@ -20,7 +19,7 @@ dayjs.locale(zhCn);
  * @param {*} params
  * @returns
  */
-function BreadcrumbRoute({ route, params }) {
+function BreadcrumbRoute({ route }) {
   const { title = '', path = '' } = route;
   return (
     <a href={path} key={path} style={{ color: 'unset' }}>
@@ -54,13 +53,11 @@ export default function BackgroundLayout(props) {
   /**
    * 面包屑
    */
-  const BreadcrumbRenderItem = useCallback((route) => {
-    return (
-      <a key={route.path} href={route.path} style={{ color: 'unset', fontSize: 16 }} >
-        {route.title}
-      </a>
-    );
-  }, []);
+  const BreadcrumbRenderItem = useCallback((route) => (
+    <a key={route.path} href={route.path} style={{ color: 'unset', fontSize: 16 }}>
+      {route.title}
+    </a>
+  ), []);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -76,12 +73,12 @@ export default function BackgroundLayout(props) {
   }, []);
 
   useEffect(() => {
-    api.user.isLogin().then(success => {
+    api.user.isLogin().then((success) => {
       if (!success) {
         navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   //
   useEffect(() => {
@@ -90,11 +87,10 @@ export default function BackgroundLayout(props) {
     const openRoutes = [...routes];
     openRoutes.pop();
     setSliderMenuConfig({
-      openKeys: openRoutes.map(item => item.fullPath),
-      selectKeys: routes.map(item => item.fullPath)
+      openKeys: openRoutes.map((item) => item.fullPath),
+      selectKeys: routes.map((item) => item.fullPath)
     });
   }, [location.pathname]);
-
 
   /**
    * 渲染菜单Items
@@ -103,7 +99,7 @@ export default function BackgroundLayout(props) {
     menus
       .filter((item) => item.name && !item.hideInMenu)
       .map((item) =>
-        item.children?.filter(item => item.name && !item.hideInMenu).length > 0
+        item.children?.filter((item) => item.name && !item.hideInMenu).length > 0
           ? {
             key: item.fullPath,
             label: item.name,
@@ -125,7 +121,7 @@ export default function BackgroundLayout(props) {
           if (res) {
             navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
           }
-        })
+        });
       }
     }
   ];
@@ -138,7 +134,7 @@ export default function BackgroundLayout(props) {
         <div className={styles.background} ref={backgroundElementRef}>
           {/* 顶部导航 */}
           <div className={styles.header}>
-            <img className={styles.logo} alt="logo" src='/logo.png' />
+            <img className={styles.logo} alt="logo" src="/logo.png" />
             <span className={styles.logotext}>{ProjectConfig.title}</span>
             <div style={{ flex: 1 }} />
             <div className={styles.userview}>

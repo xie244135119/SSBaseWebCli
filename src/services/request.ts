@@ -22,14 +22,7 @@ const axiosIntance = Axios.create({
   timeoutErrorMessage: '网络出点小差，请稍等重试',
   withCredentials: false,
   responseType: 'json',
-  validateStatus: (httpCode) => {
-    return httpCode >= 200 && httpCode < 300;
-  },
-  headers: {
-    'Content-Type': 'application/json',
-    'X-AppKey': 'demo'
-  },
-
+  validateStatus: (httpCode) => httpCode >= 200 && httpCode < 300,
   cancelToken: source.token
 });
 

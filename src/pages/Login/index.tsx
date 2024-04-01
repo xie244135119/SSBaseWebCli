@@ -34,11 +34,9 @@ function Login(props) {
     });
   };
 
-
   useEffect(() => {
     onGetCaptcha();
-  }, [])
-
+  }, []);
 
   return (
     <div className={styles.LoginWrapper}>

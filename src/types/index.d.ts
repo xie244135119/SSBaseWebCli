@@ -1,3 +1,8 @@
+/**
+ * 版本号
+ */
+declare let __APP_VERSION__: string;
+
 interface Window {
   ENV: any;
   [propName: string]: any;

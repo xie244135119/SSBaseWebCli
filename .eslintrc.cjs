@@ -1,5 +1,4 @@
 module.exports = {
-  // 特定项目下，不再检索上级目录
   root: true,
   env: {
     // window
@@ -13,7 +12,7 @@ module.exports = {
     es2020: true
   },
   extends: ['airbnb', 'airbnb/hooks'],
-  plugins: ['react'],
+  plugins: ['react', '@typescript-eslint'],
   settings: { react: { version: '18.2' } },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -23,7 +22,6 @@ module.exports = {
       jsx: true
     }
   },
-  // 特定规则
   rules: {
     'comma-dangle': ['error', 'never'],
     'no-continue': 'warn',
@@ -45,13 +43,16 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react/forbid-prop-types': 'off',
-    'no-unused-vars': 'warn',
     'no-plusplus': 'off',
     'no-shadow': 'off',
     'max-len': 'off',
     'import/prefer-default-export': 'off',
     'import/no-named-as-default': 'off',
     'import/extensions': 'off',
-    'import/no-unresolved': 'off'
+    'import/no-unresolved': 'off',
+    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'no-undef': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'error'
   }
 };

@@ -3,7 +3,6 @@
     "baseUrl": "",
     "experimentalDecorators": true,
     "module": "ES2020",
-    "types": ["vite/client"],
     "moduleResolution": "node",
     "paths": {
       "@/*": ["src/*"]

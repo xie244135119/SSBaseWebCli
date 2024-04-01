@@ -1,5 +1,39 @@
 import path from 'path-browserify';
 
+/**
+ * 路由配置
+//  */
+// interface RouteConfigItem {
+//   /**
+//    * 路由名称
+//    */
+//   name?: string;
+//   /**
+//    * 路径名称
+//    */
+//   path?: string;
+//   /**
+//    * 完整路径
+//    */
+//   fullPath?: string;
+//   /**
+//    * 隐藏在菜单中
+//    */
+//   hideInMenu?: boolean;
+//   /**
+//    * 组件名称
+//    */
+//   component?: string;
+//   /**
+//    * 重定向地址
+//    */
+//   redirect?: string;
+//   /**
+//    * 子级
+//    */
+//   children?: RouteConfigItem[];
+// }
+
 const RouterConfig: RouteConfigItem[] = [
   {
     path: '/directory',

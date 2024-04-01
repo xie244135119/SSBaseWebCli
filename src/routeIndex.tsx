@@ -12,6 +12,24 @@ const modules = import.meta.glob([
   './pages/*/*/*.*sx',
   './pages/*/*/*/*.*sx'
 ]);
+
+function Loading() {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {/* <span>加载中...</span> */}
+    </div>
+  );
+}
+
 export default class RouteIndex {
   /**
    * routes
@@ -108,21 +126,4 @@ export default class RouteIndex {
     const root = createRoot(app);
     root.render(routes);
   };
-}
-
-function Loading() {
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      {/* <span>加载中...</span> */}
-    </div>
-  );
 }
