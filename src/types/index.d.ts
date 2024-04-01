@@ -58,6 +58,10 @@ interface RouteConfigItem {
    */
   hideInMenu?: boolean;
   /**
+   * 权限
+   */
+  authorization?: string[];
+  /**
    * 组件名称
    */
   component?: string;

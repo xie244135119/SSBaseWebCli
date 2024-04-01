@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Avatar, Breadcrumb, ConfigProvider, Dropdown, MenuItemProps } from 'antd';
+import { Menu, Avatar, Breadcrumb, ConfigProvider, Dropdown } from 'antd';
 import { DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
@@ -36,7 +36,7 @@ BreadcrumbRoute.defaultProps = {
   route: null
 };
 
-export default function BackgroundLayout(props) {
+export default function BackgroundLayout() {
   //
   const location = useLocation();
   const navigate = useNavigate();

@@ -1,39 +1,5 @@
 import path from 'path-browserify';
 
-/**
- * 路由配置
-//  */
-// interface RouteConfigItem {
-//   /**
-//    * 路由名称
-//    */
-//   name?: string;
-//   /**
-//    * 路径名称
-//    */
-//   path?: string;
-//   /**
-//    * 完整路径
-//    */
-//   fullPath?: string;
-//   /**
-//    * 隐藏在菜单中
-//    */
-//   hideInMenu?: boolean;
-//   /**
-//    * 组件名称
-//    */
-//   component?: string;
-//   /**
-//    * 重定向地址
-//    */
-//   redirect?: string;
-//   /**
-//    * 子级
-//    */
-//   children?: RouteConfigItem[];
-// }
-
 const RouterConfig: RouteConfigItem[] = [
   {
     path: '/directory',
@@ -85,6 +51,7 @@ const RouterConfig: RouteConfigItem[] = [
         name: '页面1',
         path: '/parent1',
         component: './pages/demo/parent',
+        authorization: ['admin', 'web'],
         children: [
           {
             name: '二级页面',
@@ -120,7 +87,7 @@ recursion(RouterConfig);
 
 /**
  * 根据 url地址 获取路由项目列表
- * @param {string} urlPath url地址
+ * @param urlPath url地址
  */
 export const getRouteByPathName = (
   urlPath: string
