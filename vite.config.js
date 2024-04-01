@@ -12,7 +12,7 @@ export default defineConfig({
     })
   ],
   define: {
-    __APP_VERSION__: JSON.stringify('v' + process.env.npm_package_version)
+    __APP_VERSION__: JSON.stringify(`v${process.env.npm_package_version}`)
   },
   resolve: {
     alias: {
