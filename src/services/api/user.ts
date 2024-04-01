@@ -31,7 +31,7 @@ export function login(params: { [key: string]: any }): Promise<boolean> {
  * @returns
  */
 export function isLogin(): Promise<boolean> {
-  return Promise.resolve(localStorage.getItem(StorageKey) !== undefined);
+  return Promise.resolve(localStorage.getItem(StorageKey) !== null);
 }
 
 /**
