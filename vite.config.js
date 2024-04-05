@@ -45,7 +45,7 @@ export default defineConfig({
     assetsInlineLimit: 4 * 1024,
     cssCodeSplit: true,
     copyPublicDir: true,
-    sourcemap: true,
+    sourcemap: false,
     minify: 'esbuild',
     write: true,
     reportCompressedSize: true,
