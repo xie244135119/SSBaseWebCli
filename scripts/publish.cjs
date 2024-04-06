@@ -97,7 +97,9 @@ exec('npm run build')
   })
   .then(() => {
     const endTime = Date.now();
-    shelljs.echo(`【一键部署】部署完成，用时${(endTime - startTime) / 1000}s`);
+    shelljs.echo(
+      `【一键部署】${Date().toLocaleString()}部署完成，用时${(endTime - startTime) / 1000}s`
+    );
     shelljs.echo(`【一键部署】预览地址：${enviromentConfig.preview}`);
     return exec('rm -rf dist.tar.gz');
   })
