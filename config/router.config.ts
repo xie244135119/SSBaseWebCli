@@ -6,6 +6,10 @@ const RouterConfig: RouteConfigItem[] = [
     component: './pages/directory/index'
   },
   {
+    path: '/components',
+    component: './pages/directory/component'
+  },
+  {
     path: '/',
     redirect: '/directory'
   },

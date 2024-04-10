@@ -13,6 +13,7 @@ specifiers:
   browserslist: 4.22.1
   classnames: 2.3.2
   dayjs: 1.11.10
+  echarts: ^5.5.0
   eslint: 8.56.0
   eslint-config-airbnb: 19.0.4
   eslint-plugin-import: 2.25.3
@@ -49,6 +50,7 @@ dependencies:
   antd: 5.14.2_biqbaboplfbrettd7655fr4n2y
   axios: 1.6.2
   dayjs: 1.11.10
+  echarts: 5.5.0
   lodash: 4.17.21
   qs: 6.11.0
   react: 18.2.0
@@ -2857,6 +2859,13 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /echarts/5.5.0:
+    resolution: {integrity: sha512-rNYnNCzqDAPCr4m/fqyUFv7fD9qIsd50S6GDFgO1DxZhncCsNsG7IfUlAlvZe5oSEQxtsjnHiUuppzccry93Xw==}
+    dependencies:
+      tslib: 2.3.0
+      zrender: 5.5.0
+    dev: false
 
   /electron-to-chromium/1.4.587:
     resolution: {integrity: sha512-RyJX0q/zOkAoefZhB9XHghGeATVP0Q3mwA253XD/zj2OeXc+JZB9pCaEv6R578JUYaWM9PRhye0kXvd/V1cQ3Q==}
@@ -5721,6 +5730,10 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
+  /tslib/2.3.0:
+    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
+    dev: false
+
   /tslib/2.6.1:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
 
@@ -6017,3 +6030,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zrender/5.5.0:
+    resolution: {integrity: sha512-O3MilSi/9mwoovx77m6ROZM7sXShR/O/JIanvzTwjN3FORfLSr81PsUGd7jlaYOeds9d8tw82oP44+3YucVo+w==}
+    dependencies:
+      tslib: 2.3.0
+    dev: false
