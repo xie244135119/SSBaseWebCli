@@ -3,10 +3,12 @@ import path from 'path-browserify';
 const RouterConfig: RouteConfigItem[] = [
   {
     path: '/directory',
+    name: '工程目录',
     component: './pages/directory/index'
   },
   {
     path: '/components',
+    name: '前端组件库',
     component: './pages/directory/component'
   },
   {
