@@ -1,5 +1,6 @@
 const shelljs = require('shelljs');
 const path = require('path');
+const fs = require('fs');
 const { NodeSSH } = require('node-ssh');
 const serverConfig = require('../config/server.config.json');
 
@@ -28,6 +29,7 @@ const exec = (command = '') =>
     );
   });
 const startTime = Date.now();
+let distGzSize = 0;
 shelljs.echo('【一键部署】编译开始...');
 exec('npm run build')
   .then(() => {
@@ -37,6 +39,7 @@ exec('npm run build')
   .then(() => {
     shelljs.echo('【一键部署】文件压缩完成');
     shelljs.echo('【一键部署】连接服务器中...');
+    distGzSize = fs.statSync(path.join(`${shelljs.pwd()}`, './dist.tar.gz')).size / (1024 * 1024);
 
     return ssh.connect({
       host: enviromentConfig.host,
@@ -98,7 +101,9 @@ exec('npm run build')
   .then(() => {
     const endTime = Date.now();
     shelljs.echo(
-      `【一键部署】${Date().toLocaleString()}部署完成，用时${(endTime - startTime) / 1000}s`
+      `【一键部署】${new Date().toLocaleString()}部署完成，压缩包${distGzSize.toFixed(2)}M，用时${
+        (endTime - startTime) / 1000
+      }s`
     );
     shelljs.echo(`【一键部署】预览地址：${enviromentConfig.preview}`);
     return exec('rm -rf dist.tar.gz');
@@ -106,8 +111,8 @@ exec('npm run build')
   .then(() => {
     shelljs.exit();
   })
-  .catch(() => {
-    shelljs.echo('【一键部署】失败');
+  .catch((e) => {
+    shelljs.echo('【一键部署】失败', e);
     exec('rm -rf dist.tar.gz').then(() => {
       shelljs.exit();
     });
