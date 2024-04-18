@@ -3,17 +3,17 @@ import request from 'axios';
 
 /**
  * 获取excel数据信息
- * @param aFilePath 本地地址
- * @param aWorkSheets 一组表名
  * @returns
  */
-const importExcel = (
-  aFilePath: string,
+const importExcelData = (
+  data: ArrayBuffer,
   aWorkSheets: string[] = []
-): Promise<{ [key: string]: any[] }> => {
-  const filePath = aFilePath;
-  return request.get(filePath, { responseType: 'arraybuffer' }).then((res) => {
-    const webbook = XLSX.read(res.data, { type: 'array' });
+): Promise<{ [key: string]: any[] }> =>
+  new Promise((reslove) => {
+    const webbook = XLSX.read(data, {
+      type: 'array',
+      sheets: aWorkSheets.length === 0 ? null : aWorkSheets
+    });
     let workSheets = aWorkSheets;
     if (workSheets.length === 0) {
       workSheets = webbook.SheetNames;
@@ -25,8 +25,23 @@ const importExcel = (
       const json = XLSX.utils.sheet_to_json(workSheet);
       dict[sheetName] = json;
     }
-    return dict;
+    reslove(dict);
   });
+
+/**
+ * 获取excel数据信息 <无权限校验>
+ * @param aFilePath 一个网络文件地址
+ * @param aWorkSheets 一组表名
+ * @returns
+ */
+const importExcel = (
+  aFilePath: string,
+  aWorkSheets: string[] = []
+): Promise<{ [key: string]: any[] }> => {
+  const filePath = aFilePath;
+  return request
+    .get(filePath, { responseType: 'arraybuffer' })
+    .then((res) => importExcelData(res.data, aWorkSheets));
 };
 
 /**
@@ -70,7 +85,7 @@ const sheetsToBlob = (obj: { [key: string]: any[] }): Blob => {
  * @param url 下载的地址
  * @param savename 保存的文件名
  */
-function openDownXlsxDialog(url: string | Blob, fileName?: string) {
+function download(url: string | Blob, fileName?: string) {
   let newUrl: string;
   if (typeof url === 'object' && url instanceof Blob) {
     newUrl = URL.createObjectURL(url);
@@ -96,7 +111,7 @@ function openDownXlsxDialog(url: string | Blob, fileName?: string) {
 function exportExcel(sheets: { [key: string]: any }, fileName: string) {
   try {
     const blob = sheetsToBlob(sheets);
-    openDownXlsxDialog(blob, fileName);
+    download(blob, fileName);
   } catch (error) {
     console.error(' 文件导出数据 ', error);
   }
@@ -107,7 +122,7 @@ function exportExcel(sheets: { [key: string]: any }, fileName: string) {
  * @param aList 原始数据源
  * @param aUniqePropNames 一组唯一值 属性名称
  */
-const createMultiMap = (aList = [], aUniqePropNames: string[]): { [key: string]: any } => {
+const createMultiMap = (aList: any[], aUniqePropNames: string[]): { [key: string]: any } => {
   const resault = {};
   for (let index = 0; index < aList.length; index += 1) {
     const element = aList[index];
@@ -132,11 +147,19 @@ export default {
    */
   importExcel,
   /**
+   * 导入 excel数据解析
+   */
+  importExcelData,
+  /**
    * 导出excel文件
    */
   exportExcel,
   /**
    * 根据数据本地数据创建映射关系
    */
-  createMultiMap
+  createMultiMap,
+  /**
+   * 下载文件流
+   */
+  download
 };

@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@ant-design/icons': ^5.3.6
+  '@ant-design/icons': 5.3.6
   '@types/react': 18.2.67
   '@types/react-dom': 18.2.22
   '@typescript-eslint/eslint-plugin': 6.21.0
@@ -13,7 +13,7 @@ specifiers:
   browserslist: 4.22.1
   classnames: 2.3.2
   dayjs: 1.11.10
-  echarts: ^5.5.0
+  echarts: 5.5.0
   eslint: 8.56.0
   eslint-config-airbnb: 19.0.4
   eslint-plugin-import: 2.25.3
@@ -43,6 +43,7 @@ specifiers:
   terser: 5.24.0
   typescript: 5.4.3
   vite: 4.5.0
+  vite-plugin-chunk-split: 0.4.7
   xlsx: 0.18.5
 
 dependencies:
@@ -91,6 +92,7 @@ devDependencies:
   terser: 5.24.0
   typescript: 5.4.3
   vite: 4.5.0_h5ggjuwc6cse5wa4lhkejbsgze
+  vite-plugin-chunk-split: 0.4.7_vite@4.5.0
 
 packages:
 
@@ -2939,6 +2941,10 @@ packages:
       which-typed-array: 1.1.11
     dev: true
 
+  /es-module-lexer/1.5.0:
+    resolution: {integrity: sha512-pqrTKmwEIgafsYZAGw9kszYzmagcE/n4dbgwGWLEXg7J4QFJVQRBld8j3Q3GNez79jzxZshq0bcT962QHOghjw==}
+    dev: true
+
   /es-set-tostringtag/2.0.1:
     resolution: {integrity: sha512-g3OMbtlwY3QewlqAiMLI47KywjWZoEytKr8pf6iTC8uJq5bIAH52Z9pnQ8pVL6whrCto53JZDuUIsifGeLorTg==}
     engines: {node: '>= 0.4'}
@@ -3986,6 +3992,13 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: true
+
+  /magic-string/0.26.7:
+    resolution: {integrity: sha512-hX9XH3ziStPoPhJxLq1syWuZMxbDvGNbVchfrdCtanC7D13888bMFow61x8axrx+GfHLtVeAx2kxL7tTGRl+Ow==}
+    engines: {node: '>=12'}
+    dependencies:
+      sourcemap-codec: 1.4.8
     dev: true
 
   /magic-string/0.30.5:
@@ -5405,6 +5418,11 @@ packages:
     requiresBuild: true
     dev: true
 
+  /sourcemap-codec/1.4.8:
+    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
+    dev: true
+
   /spdx-correct/3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
     dependencies:
@@ -5878,6 +5896,16 @@ packages:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
+    dev: true
+
+  /vite-plugin-chunk-split/0.4.7_vite@4.5.0:
+    resolution: {integrity: sha512-BGPMTxlC6Z+VNY1t/51F1ablkt4UQqdEPvAmCKRBsEPIpKAlW3sioQwK4klS14ievsGNaeALAKdko7n3oPJ8BQ==}
+    peerDependencies:
+      vite: ^3.1.0
+    dependencies:
+      es-module-lexer: 1.5.0
+      magic-string: 0.26.7
+      vite: 4.5.0_h5ggjuwc6cse5wa4lhkejbsgze
     dev: true
 
   /vite/4.5.0_h5ggjuwc6cse5wa4lhkejbsgze:

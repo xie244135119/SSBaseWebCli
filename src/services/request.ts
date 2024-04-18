@@ -17,12 +17,9 @@ const source = CancelToken.source();
  */
 const axiosIntance = Axios.create({
   baseURL: '',
-  timeout: 20 * 1000,
-  // timeout: 2*1000,
   timeoutErrorMessage: '网络出点小差，请稍等重试',
   withCredentials: false,
   responseType: 'json',
-  validateStatus: (httpCode) => httpCode >= 200 && httpCode < 300,
   cancelToken: source.token
 });
 
