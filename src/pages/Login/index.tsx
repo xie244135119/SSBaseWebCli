@@ -5,7 +5,7 @@ import styles from './index.module.less';
 import api from '@/services/api';
 import ProjectConfig from '../../../config/project.config';
 
-function Login(props) {
+function Login() {
   const [loginForm] = Form.useForm();
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +19,10 @@ function Login(props) {
     const values = loginForm.getFieldsValue();
     api.user.login(values).then((res) => {
       if (res) {
-        const redirect = decodeURIComponent(location.search.replace('?', '')).replace('redirect=', '');
+        const redirect = decodeURIComponent(location.search.replace('?', '')).replace(
+          'redirect=',
+          ''
+        );
         navigate(redirect || '/background');
       }
     });

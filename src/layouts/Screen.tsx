@@ -3,15 +3,12 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import styles from './Screen.module.less';
 import ProjectConfig from '../../config/project.config';
-import api from '@/services/api';
 
 export default function ScreenLayout() {
   // target background element
   const backgroundElementRef = useRef<HTMLDivElement>();
   //
   const navigate = useNavigate();
-  //
-  const location = useLocation();
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {

@@ -3,12 +3,16 @@ import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import lagacy from '@vitejs/plugin-legacy';
 import browserslist from 'browserslist';
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 
 export default defineConfig({
   plugins: [
     react(),
     lagacy({
       targets: browserslist.defaults
+    }),
+    chunkSplitPlugin({
+      strategy: 'default'
     })
   ],
   define: {

@@ -99,30 +99,29 @@ npm run build or (yarn build)
 
 
 ### 注意事项
-#### 引入Cesium
-##### 1，npm add cesium 
-##### 2, CopyWebpackPlugin 引入
-                <!-- {
-                    from: 'node_modules/cesium/Build/Cesium/Workers',
-                    to: 'static/cesium/Workers'
-                },
-                {
-                    from: 'node_modules/cesium/Build/Cesium/ThirdParty',
-                    to: 'static/cesium/ThirdParty'
-                },
-                {
-                    from: 'node_modules/cesium/Build/Cesium/Assets',
-                    to: 'static/cesium/Assets'
-                },
-                {
-                    from: 'node_modules/cesium/Build/Cesium/Widgets',
-                    to: 'static/cesium/Widgets'
-                }, -->
+####    引入Cesium
+#####   1，npm add cesium 
+#####   2，复制引入
 
-####    引入 three.js
+    {
+        from: 'node_modules/cesium/Build/Cesium/Workers',
+        to: 'static/cesium/Workers'
+    },
+    {
+        from: 'node_modules/cesium/Build/Cesium/ThirdParty',
+        to: 'static/cesium/ThirdParty'
+    },
+    {
+        from: 'node_modules/cesium/Build/Cesium/Assets',
+        to: 'static/cesium/Assets'
+    },
+    {
+        from: 'node_modules/cesium/Build/Cesium/Widgets',
+        to: 'static/cesium/Widgets'
+    }
+
+####   引入 three.js
 #####  npm add three
 #####  涉及的静态资源 手动拷贝              
     1, node_modules/three/examples/js/libs/draco/
     2, node_modules/three/examples/js/libs/basis/
-
-
