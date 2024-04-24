@@ -22,54 +22,67 @@ const RouterConfig: RouteConfigItem[] = [
     component: './pages/Login/index'
   },
   {
-    name: '可视化大屏',
-    path: '/screen',
-    component: './layouts/Screen',
+    name: '系统',
+    path: '/',
+    component: './layouts/AuthLayout',
     children: [
       {
-        path: '/',
-        redirect: '/index'
-      },
-      {
-        name: '大屏首页',
-        path: '/index',
-        hideInMenu: true,
-        component: './pages/demo/child'
-      },
-      {
-        name: '大屏详情',
-        path: '/child',
-        hideInMenu: true,
-        component: './pages/demo/child'
-      }
-    ]
-  },
-  {
-    name: '后台管理系统',
-    path: '/background',
-    component: './layouts/Background',
-    children: [
-      {
-        path: '/',
-        redirect: '/parent1'
-      },
-      {
-        name: '页面1',
-        path: '/parent1',
-        component: './pages/demo/parent',
-        authorization: ['admin', 'web'],
+        name: '可视化大屏',
+        path: '/screen',
+        component: './layouts/Screen',
         children: [
           {
-            name: '二级页面',
-            path: './child',
+            path: '/',
+            redirect: '/index'
+          },
+          {
+            name: '大屏首页',
+            path: '/index',
+            hideInMenu: true,
             component: './pages/demo/child'
+          },
+          {
+            name: '大屏详情',
+            path: '/child',
+            hideInMenu: true,
+            component: './pages/demo/child'
+          },
+          {
+            component: './pages/404'
           }
         ]
       },
       {
-        name: '页面2',
-        path: '/parent2',
-        component: './pages/demo/parent'
+        name: '后台管理系统',
+        path: '/background',
+        component: './layouts/Background',
+        children: [
+          {
+            path: '/',
+            redirect: '/parent1'
+          },
+          {
+            name: '页面1',
+            path: '/parent1',
+            component: './pages/demo/parent',
+            authorization: ['admin', 'web'],
+            children: [
+              {
+                name: '二级页面',
+                path: './child',
+                component: './pages/demo/child'
+              }
+            ]
+          },
+          {
+            name: '页面2',
+            path: '/parent2',
+            component: './pages/demo/parent'
+          },
+          {
+            component: './pages/404'
+          }
+        ]
       }
     ]
   },

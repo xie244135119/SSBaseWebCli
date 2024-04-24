@@ -43,6 +43,8 @@ export default function BackgroundLayout() {
   const backgroundElementRef = useRef<HTMLDivElement>();
   // 加载的层级路由
   const [routes, setRoutes] = useState<RouteConfigItem[]>([]);
+  // 左侧菜单
+  const [menus, setMenus] = useState<RouteConfigItem[]>([]);
 
   // 滑块菜单配置
   const [sliderMenuConfig, setSliderMenuConfig] = useState({
@@ -53,11 +55,14 @@ export default function BackgroundLayout() {
   /**
    * 面包屑
    */
-  const BreadcrumbRenderItem = useCallback((route) => (
-    <a key={route.path} href={route.path} style={{ color: 'unset', fontSize: 16 }}>
-      {route.title}
-    </a>
-  ), []);
+  const BreadcrumbRenderItem = useCallback(
+    (route) => (
+      <a key={route.path} href={route.path} style={{ color: 'unset', fontSize: 16 }}>
+        {route.title}
+      </a>
+    ),
+    []
+  );
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -72,17 +77,10 @@ export default function BackgroundLayout() {
     };
   }, []);
 
-  useEffect(() => {
-    api.user.isLogin().then((success) => {
-      if (!success) {
-        navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
-      }
-    });
-  }, []);
-
   //
   useEffect(() => {
     const { routes } = getRouteByPathName(location.pathname);
+    console.log(' routes ', routes);
     setRoutes(routes);
     const openRoutes = [...routes];
     openRoutes.pop();
@@ -91,6 +89,14 @@ export default function BackgroundLayout() {
       selectKeys: routes.map((item) => item.fullPath)
     });
   }, [location.pathname]);
+
+  useEffect(() => {
+    // const { routes = [] } = getRouteByPathName('/background');
+    // const obj = routes.pop();
+    // setMenus(obj.children || []);
+    const route = RouterConfig.find((item) => item.name === '系统');
+    setMenus(route.children || []);
+  }, []);
 
   /**
    * 渲染菜单Items
@@ -127,9 +133,7 @@ export default function BackgroundLayout() {
   ];
 
   return (
-    <ConfigProvider
-      locale={ZhCN}
-    >
+    <ConfigProvider locale={ZhCN}>
       <div style={{ width: '100vw', height: '100vh' }}>
         <div className={styles.background} ref={backgroundElementRef}>
           {/* 顶部导航 */}
@@ -161,7 +165,7 @@ export default function BackgroundLayout() {
             <div className={styles.slider}>
               <Menu
                 mode="inline"
-                items={getMenuItems(RouterConfig)}
+                items={getMenuItems(menus)}
                 onSelect={(item) => {
                   navigate(item.key);
                 }}

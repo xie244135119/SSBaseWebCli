@@ -26,31 +26,25 @@ export default function ScreenLayout() {
     };
   }, []);
 
-  useEffect(() => {
-    api.user.isLogin().then((success) => {
-      if (!success) {
-        navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
-      }
-    });
-  }, []);
-
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <div className={styles.background} ref={backgroundElementRef}>
         <div className={styles.layoutheaderview}>
           <img alt="headertitle" src="" className={styles.headerbg} />
-          <Button
-            type="primary"
-            onClick={() => {
-              navigate('/background');
-            }}
-          >
-            返回管理系统
-          </Button>
         </div>
         <div className={styles.layoutcontentview}>
           <Outlet />
         </div>
+        <Button
+          size="large"
+          style={{ position: 'absolute', bottom: 50, right: 50 }}
+          type="primary"
+          onClick={() => {
+            navigate('/background');
+          }}
+        >
+          返回管理系统
+        </Button>
       </div>
     </div>
   );
