@@ -6,6 +6,7 @@
  */
 const shelljs = require('shelljs');
 const path = require('path');
+const fs = require('fs');
 const { NodeSSH } = require('node-ssh');
 const serverConfig = require('../config/server.config.json');
 
@@ -34,10 +35,11 @@ const exec = (command = '') =>
     );
   });
 const startTime = Date.now();
-shelljs.echo('【一键部署】编译开始...');
+let distGzSize = 0;
+shelljs.echo('【一键部署】开始打包...');
 exec('npm run build')
   .then(() => {
-    shelljs.echo('【一键部署】编译完成，压缩文件中...');
+    shelljs.echo('【一键部署】打包完成，压缩文件中...');
     const splitUploadFileNames = [];
     const { splitIncludes, splitUpload } = enviromentConfig;
     if (splitIncludes && Array.isArray(splitIncludes)) {
@@ -56,6 +58,7 @@ exec('npm run build')
     splitUploadFileNames.unshift(targetTar);
     shelljs.echo('【一键部署】文件压缩完成');
     shelljs.echo('【一键部署】连接服务器中...');
+    distGzSize = fs.statSync(path.join(`${shelljs.pwd()}`, './dist.tar.gz')).size / (1024 * 1024);
     return ssh
       .connect({
         host: enviromentConfig.host,
@@ -134,12 +137,12 @@ exec('npm run build')
 
         let p = Promise.resolve();
         commands.forEach((command) => {
-          p = p.then(() => {
-            return ssh.execCommand(command, {
+          p = p.then(() =>
+            ssh.execCommand(command, {
               cwd: enviromentConfig.serverWebPath,
               stream: 'stdout'
-            });
-          });
+            })
+          );
         });
         return p;
       })
@@ -149,7 +152,11 @@ exec('npm run build')
           shelljs.exec(`rm -rf  ${e}`);
         });
         const endTime = Date.now();
-        shelljs.echo(`【一键部署】部署完成，用时${(endTime - startTime) / 1000}s`);
+        shelljs.echo(
+          `【一键部署】${new Date().toLocaleString()}部署完成，压缩包${distGzSize.toFixed(
+            2
+          )}M，用时${(endTime - startTime) / 1000}s`
+        );
         shelljs.echo(`【一键部署】预览地址：${enviromentConfig.preview}`);
         shelljs.exit();
       });
