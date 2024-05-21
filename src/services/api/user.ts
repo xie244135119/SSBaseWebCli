@@ -1,10 +1,9 @@
 import request from '../request';
 
+// 登录方式 密码登录(password) or 单点登录(sso)
+const STORAGE_LOGIN_TYPE = 'login_type';
 // 存储 key 值
-const StorageTokenKey = 'storage_usertoken';
-// api请求拼接
-//
-request.defaults.headers.Authorization = 'token';
+const STORAGE_TOKEN_KEY = 'storage_usertoken';
 
 /**
  * 登录接口
@@ -19,7 +18,8 @@ export function login(params: { [key: string]: any }): Promise<boolean> {
     data: 'a345ahklt45cc'
   }).then((res) => {
     if (res.code === 200) {
-      localStorage.setItem(StorageTokenKey, JSON.stringify(params));
+      localStorage.setItem(STORAGE_TOKEN_KEY, JSON.stringify(params));
+      localStorage.setItem(STORAGE_LOGIN_TYPE, 'password');
       // 后续拼接全部请求方式
       request.defaults.headers.Authorization = res.data;
     }
@@ -39,7 +39,7 @@ export function ssoLogin(ssoLoginToken: string) {
     data: 'b4555xsd6jkbd'
   }).then((res) => {
     if (res.data) {
-      localStorage.setItem(StorageTokenKey, res.data);
+      localStorage.setItem(STORAGE_LOGIN_TYPE, 'sso');
       // 后续拼接全部请求方式
       request.defaults.headers.Authorization = res.data;
       return true;
@@ -49,11 +49,21 @@ export function ssoLogin(ssoLoginToken: string) {
 }
 
 /**
- * 判断是否登录
+ * 获取身份认证信息
+ */
+export function getAuthorization() {
+  if (localStorage.getItem(STORAGE_LOGIN_TYPE) === 'password') {
+    return localStorage.getItem(STORAGE_TOKEN_KEY);
+  }
+  return '';
+}
+
+/**
+ * 判断是否登录 <检测Token是否过期>
  * @returns
  */
 export function isLogin(): Promise<boolean> {
-  return Promise.resolve(localStorage.getItem(StorageTokenKey) !== null);
+  return Promise.resolve(localStorage.getItem(STORAGE_TOKEN_KEY) !== null);
 }
 
 /**
@@ -69,7 +79,7 @@ export function getCaptcha(): Promise<string> {
  */
 export function getInfo(): Promise<{ [key: string]: any }> {
   try {
-    const json = JSON.parse(localStorage.getItem(StorageTokenKey));
+    const json = JSON.parse(localStorage.getItem(STORAGE_TOKEN_KEY));
     return Promise.resolve(json);
   } catch (error) {
     return Promise.resolve({});
@@ -81,7 +91,7 @@ export function getInfo(): Promise<{ [key: string]: any }> {
  * @returns
  */
 export function logout(): Promise<boolean> {
-  localStorage.removeItem(StorageTokenKey);
+  localStorage.removeItem(STORAGE_TOKEN_KEY);
   delete request.defaults.headers.Authorization;
   return Promise.resolve(true);
 }

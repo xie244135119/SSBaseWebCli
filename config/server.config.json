@@ -5,7 +5,12 @@
     "username": "服务器账号",
     "password": "服务器密码",
     "serverWebPath": "前端部署目录",
-    "preview": "预览环境地址"
+    "preview": "预览环境地址",
+    "splitIncludes": [
+      "dist打包下需要分割的资源目录《与splitUpload配合使用》",
+      "对于模型资源文件，可只上传一次"
+    ],
+    "splitUpload": true
   },
   "sandbox": {
     "host": "服务器IP",
@@ -13,6 +18,8 @@
     "username": "服务器账号",
     "password": "服务器密码",
     "serverWebPath": "前端部署目录",
-    "preview": "预览环境地址"
+    "preview": "预览环境地址",
+    "splitIncludes": ["dist打包下需要分割的资源目录《与splitUpload配合使用》"],
+    "splitUpload": true
   }
 }

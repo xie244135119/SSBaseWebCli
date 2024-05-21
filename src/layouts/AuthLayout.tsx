@@ -15,32 +15,45 @@ export default function AuthLayout() {
       navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
     };
 
-    // 判断登录 -- 未登录 -- sso登录
+    // 判断登录 -- 优先判断sso登录 --- 如果不是单点登录情况 --- 未登录
     setLoading(true);
-    api.user.isLogin().then((success) => {
-      if (success) {
-        setLoading(false);
-        return;
-      }
-      const query = QueryString.parse(location.search.replace('?', ''));
-      if (!query.user) {
-        reLogin();
-        return;
-      }
+    //  存在单点登录
+    const query = QueryString.parse(location.search.replace('?', ''));
+    if (query.token) {
       // 执行 sso登录
-      api.user.ssoLogin(query.user as string).then((success) => {
-        console.log(' sso 登录 ', success);
+      api.user.ssoLogin(query.token as string).then((success) => {
         if (success) {
           setLoading(false);
         } else {
           reLogin();
         }
       });
+      return;
+    }
+    // 非单点登录 --- 账号密码登录
+    api.user.isLogin().then((success) => {
+      if (success) {
+        setLoading(false);
+      }
     });
   }, []);
 
   if (loading) {
-    return <Spin spinning style={{ width: '100vw', height: '100vh' }} />;
+    return (
+      <Spin
+        spinning
+        tip="登录中..."
+        size="large"
+        style={{
+          height: '100vh',
+          width: '100vw',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      />
+    );
   }
   return <Outlet />;
 }
