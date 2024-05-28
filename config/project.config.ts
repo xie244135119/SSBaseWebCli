@@ -8,6 +8,9 @@ const ProjectConfig: ProjectItem = {
   backgroundWeb: {
     width: 1920,
     height: 1080
+  },
+  request: {
+    ignoreContentTypes: ['application/vnd.ms-excel']
   }
 };
 

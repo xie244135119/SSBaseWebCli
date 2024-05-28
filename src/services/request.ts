@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { getMockData } from './mock';
+import ProjectConfig from '../../config/project.config';
 
 /**
  * 错误处理
@@ -32,7 +33,14 @@ axiosIntance.interceptors.request.use((config) => config);
  * 响应处理
  */
 axiosIntance.interceptors.response.use(
-  (res) => res.data,
+  (res) => {
+    const contentTypes = ProjectConfig.request.ignoreContentTypes;
+    const contentType: string = res.headers['content-type'];
+    if (contentTypes.some((item) => contentType.includes(item))) {
+      return res;
+    }
+    return res.data;
+  },
   (error) => {
     // 如果开启mock数据
     if (window.ENV?.useMock) {

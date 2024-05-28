@@ -34,6 +34,12 @@ interface ProjectItem {
     width: number;
     height: number;
   };
+  /**
+   * 请求体系
+   */
+  request: {
+    ignoreContentTypes: string[];
+  };
   [key: string]: any;
 }
 
