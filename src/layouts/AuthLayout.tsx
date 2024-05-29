@@ -34,6 +34,8 @@ export default function AuthLayout() {
     api.user.isLogin().then((success) => {
       if (success) {
         setLoading(false);
+      } else {
+        reLogin();
       }
     });
   }, []);
