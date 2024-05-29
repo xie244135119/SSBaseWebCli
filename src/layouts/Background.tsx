@@ -80,7 +80,6 @@ export default function BackgroundLayout() {
   //
   useEffect(() => {
     const { routes } = getRouteByPathName(location.pathname);
-    console.log(' routes ', routes);
     setRoutes(routes);
     const openRoutes = [...routes];
     openRoutes.pop();
@@ -91,9 +90,6 @@ export default function BackgroundLayout() {
   }, [location.pathname]);
 
   useEffect(() => {
-    // const { routes = [] } = getRouteByPathName('/background');
-    // const obj = routes.pop();
-    // setMenus(obj.children || []);
     const route = RouterConfig.find((item) => item.name === '系统');
     setMenus(route.children || []);
   }, []);
@@ -135,7 +131,11 @@ export default function BackgroundLayout() {
   return (
     <ConfigProvider locale={ZhCN}>
       <div style={{ width: '100vw', height: '100vh' }}>
-        <div className={styles.background} ref={backgroundElementRef}>
+        <div
+          className={styles.background}
+          style={{ width: ProjectConfig.screenWeb.width, height: ProjectConfig.screenWeb.height }}
+          ref={backgroundElementRef}
+        >
           {/* 顶部导航 */}
           <div className={styles.header}>
             <img className={styles.logo} alt="logo" src="/logo.png" />

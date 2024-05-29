@@ -25,7 +25,11 @@ export default function ScreenLayout() {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <div className={styles.background} ref={backgroundElementRef}>
+      <div
+        className={styles.background}
+        style={{ width: ProjectConfig.screenWeb.width, height: ProjectConfig.screenWeb.height }}
+        ref={backgroundElementRef}
+      >
         <div className={styles.layoutheaderview}>
           <img alt="headertitle" src="" className={styles.headerbg} />
         </div>

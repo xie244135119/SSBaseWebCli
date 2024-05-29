@@ -13,29 +13,29 @@ interface Window {
  */
 interface ProjectItem {
   /**
-   * 标题
+   * @description 标题
    */
   title: string;
   /**
-   * 部署的目录地址 <用于二级部署目录下>
+   * @description 部署的目录地址 <用于二级部署目录下>
    */
   directory?: string;
   /**
-   * 可视化大屏 配置
+   * @description 可视化大屏 配置
    */
   screenWeb?: {
     width: number;
     height: number;
   };
   /**
-   * 后台管理系统 配置基准分辨率
+   * @description 后台管理系统 配置基准分辨率
    */
   backgroundWeb?: {
     width: number;
     height: number;
   };
   /**
-   * 请求体系
+   * @description 请求体系
    */
   request: {
     ignoreContentTypes: string[];
