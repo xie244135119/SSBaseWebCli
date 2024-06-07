@@ -27,7 +27,6 @@ export default defineConfig({
   },
   publicDir: 'public',
   server: {
-    host: 'localhost',
     open: true,
     hmr: true,
 
@@ -68,7 +67,6 @@ export default defineConfig({
     }
   },
   preview: {
-    host: '0.0.0.0',
     open: true
   },
   css: {
