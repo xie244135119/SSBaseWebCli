@@ -1,5 +1,5 @@
 const ProjectConfig: ProjectItem = {
-  title: '项目管理系统',
+  title: '项目标准化模板',
   directory: '',
   screenWeb: {
     width: 1920,

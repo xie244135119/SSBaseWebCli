@@ -11,17 +11,22 @@ export default function AuthLayout() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!window.ENV.checkToken) {
+      setLoading(false);
+      return;
+    }
+
     const reLogin = () => {
       navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
     };
 
-    // 判断登录 -- 优先判断sso登录 --- 如果不是单点登录情况 --- 未登录
+    // 系统登录判断 -- 优先判断sso登录 --- 正常账号密码登录判断 --- 未登录
     setLoading(true);
     //  存在单点登录
     const query = QueryString.parse(location.search.replace('?', ''));
     if (query.token) {
       // 执行 sso登录
-      api.user.ssoLogin(query.token as string).then((success) => {
+      api.user.ssoLogin(query).then((success) => {
         if (success) {
           setLoading(false);
         } else {

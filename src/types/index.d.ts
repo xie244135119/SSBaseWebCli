@@ -4,7 +4,21 @@
 declare let __APP_VERSION__: string;
 
 interface Window {
-  ENV: any;
+  /**
+   * 环境变量
+   */
+  ENV: {
+    /**
+     * @description 是否登录验证 false:跳过 默认true
+     */
+    checkToken: boolean;
+    /**
+     * @description 网络请求统一前缀，nginx配置下使用
+     */
+    requestBaseUrl: string;
+    //
+    [key: string]: any;
+  };
   [propName: string]: any;
 }
 

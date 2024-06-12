@@ -8,7 +8,7 @@
     "preview": "预览环境地址",
     "splitIncludes": [
       "dist打包下需要分割的资源目录《与splitUpload配合使用》",
-      "对于模型资源文件，可只上传一次"
+      "对于模型资源文件，可只上传一次，首次splitUpload置为true, 第二次即可改为false"
     ],
     "splitUpload": true
   },
@@ -19,7 +19,7 @@
     "password": "服务器密码",
     "serverWebPath": "前端部署目录",
     "preview": "预览环境地址",
-    "splitIncludes": ["dist打包下需要分割的资源目录《与splitUpload配合使用》"],
+    "splitIncludes": [],
     "splitUpload": true
   }
 }
