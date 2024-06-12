@@ -3,6 +3,7 @@ import ProjectConfig from '../../config/project.config';
 import request, { webrequest } from './request';
 import * as mysql from './api/mysql';
 import * as user from './api/user';
+import * as test from './api/test';
 
 request.defaults.headers.Authorization = user.getAuthorization();
 webrequest.defaults.headers.Authorization = user.getAuthorization();
@@ -33,6 +34,8 @@ request.interceptors.response.use(
 export default {
   // Api 文档文件
   mysql,
+  // 用户系统
+  user,
   //
-  user
+  test
 };
