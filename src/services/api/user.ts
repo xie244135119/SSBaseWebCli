@@ -70,7 +70,10 @@ export function login(params: { [key: string]: any }): Promise<boolean> {
  * @param callBack
  * @returns
  */
-export function ssoLogin(ssoParams: { [key: string]: any }): Promise<boolean> {
+export function ssoLogin(params: { [key: string]: any }): Promise<boolean> {
+  if (Object.keys(params).length === 0) {
+    return Promise.resolve(false);
+  }
   // # 重写sso参数
   // return request.get('/api/ssologin', { params: ssoParams });
   // 默认处理

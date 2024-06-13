@@ -22,9 +22,17 @@ export default function AuthLayout() {
 
     // 系统登录判断 -- 优先判断sso登录 --- 正常账号密码登录判断 --- 未登录
     setLoading(true);
-    //  存在单点登录
-    const query = QueryString.parse(location.search.replace('?', ''));
-    if (query.token) {
+    // 非单点登录 --- 账号密码登录
+    api.user.isLogin().then((success) => {
+      if (success) {
+        setLoading(false);
+        return;
+      }
+
+      //  统一登录
+      const query = QueryString.parse(location.search.replace('?', ''), {
+        decoder: (str) => str
+      });
       // 执行 sso登录
       api.user.ssoLogin(query).then((success) => {
         if (success) {
@@ -33,15 +41,6 @@ export default function AuthLayout() {
           reLogin();
         }
       });
-      return;
-    }
-    // 非单点登录 --- 账号密码登录
-    api.user.isLogin().then((success) => {
-      if (success) {
-        setLoading(false);
-      } else {
-        reLogin();
-      }
     });
   }, []);
 
