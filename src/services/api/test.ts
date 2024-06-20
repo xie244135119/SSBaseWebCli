@@ -41,11 +41,11 @@ export function deleteById(params: { [key: string]: any }): Promise<ResponseItem
 }
 
 /**
- * 导入发电方式数据
+ * 导入文件数据
  * @returns
  */
 export function upload(file: File, config?: AxiosRequestConfig): Promise<ResponseItem> {
   const formdata = new FormData();
   formdata.append('file', file);
-  return request.post('/api/v1/electricityTrade/generateElecDetail/import', formdata, config);
+  return request.post('/api/v1/import', formdata, config);
 }
