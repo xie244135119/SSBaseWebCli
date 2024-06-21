@@ -12,6 +12,9 @@ export default function ScreenLayout() {
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
+      if (!backgroundElementRef.current) {
+        return;
+      }
       const { parentElement } = backgroundElementRef.current;
       const widthScale = parentElement.offsetWidth / ProjectConfig.screenWeb.width;
       const heightScale = parentElement.offsetHeight / ProjectConfig.screenWeb.height;

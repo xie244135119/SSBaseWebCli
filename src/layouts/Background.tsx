@@ -66,6 +66,9 @@ export default function BackgroundLayout() {
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
+      if (!backgroundElementRef.current) {
+        return;
+      }
       const { parentElement } = backgroundElementRef.current;
       const widthScale = parentElement.offsetWidth / ProjectConfig.backgroundWeb.width;
       const heightScale = parentElement.offsetHeight / ProjectConfig.backgroundWeb.height;
