@@ -59,11 +59,16 @@ const RouterConfig: RouteConfigItem[] = [
         children: [
           {
             path: '/',
-            redirect: '/parent1'
+            redirect: '/demo'
           },
           {
-            name: '页面1',
-            path: '/parent1',
+            path: './demo',
+            name: '功能演示',
+            component: './pages/demo/demo'
+          },
+          {
+            name: '嵌套页面示例',
+            path: '/parent',
             component: './pages/demo/parent',
             authorization: ['admin', 'web'],
             children: [
@@ -73,11 +78,6 @@ const RouterConfig: RouteConfigItem[] = [
                 component: './pages/demo/child'
               }
             ]
-          },
-          {
-            name: '页面2',
-            path: '/parent2',
-            component: './pages/demo/parent'
           },
           {
             component: './pages/404'

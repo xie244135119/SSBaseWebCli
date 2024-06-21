@@ -12,7 +12,8 @@ const importExcelData = (
   new Promise((reslove) => {
     const webbook = XLSX.read(data, {
       type: 'array',
-      sheets: aWorkSheets.length === 0 ? null : aWorkSheets
+      sheets: aWorkSheets.length === 0 ? null : aWorkSheets,
+      cellDates: true
     });
     let workSheets = aWorkSheets;
     if (workSheets.length === 0) {
