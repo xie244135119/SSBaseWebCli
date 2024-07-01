@@ -105,17 +105,32 @@ declare module '*.json' {
   export default classes;
 }
 
-declare module '*.jpg' {
-  const classes: string;
-  export default classes;
-}
-
 declare module '*.png' {
   const classes: string;
   export default classes;
 }
 
 declare module '*.png?url' {
+  const classes: string;
+  export default classes;
+}
+
+declare module '*.jpeg' {
+  const classes: string;
+  export default classes;
+}
+
+declare module '*.tiff' {
+  const classes: string;
+  export default classes;
+}
+
+declare module '*.bmp' {
+  const classes: string;
+  export default classes;
+}
+
+declare module '*.gif' {
   const classes: string;
   export default classes;
 }
