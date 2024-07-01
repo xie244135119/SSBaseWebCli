@@ -100,7 +100,22 @@ declare module '*.module.less' {
   export default classes;
 }
 
+declare module '*.json' {
+  const classes: any;
+  export default classes;
+}
+
+declare module '*.jpg' {
+  const classes: string;
+  export default classes;
+}
+
 declare module '*.png' {
+  const classes: string;
+  export default classes;
+}
+
+declare module '*.png?url' {
   const classes: string;
   export default classes;
 }
