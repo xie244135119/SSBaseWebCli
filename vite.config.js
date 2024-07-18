@@ -56,14 +56,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 500,
     rollupOptions: {
       plugins: [
-        // viteStaticCopy({
-        //   targets: [
-        //     {
-        //       src: 'node_modules/three/examples/js/libs/basis',
-        //       dest: 'static/three/basis'
-        //     }
-        //   ]
-        // })
+        //
       ]
     }
   },

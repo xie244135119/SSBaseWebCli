@@ -100,6 +100,11 @@ declare module '*.module.less' {
   export default classes;
 }
 
+declare module '*.module.scss' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+
 declare module '*.json' {
   const classes: any;
   export default classes;
@@ -120,6 +125,11 @@ declare module '*.jpeg' {
   export default classes;
 }
 
+declare module '*.jpg' {
+  const classes: string;
+  export default classes;
+}
+
 declare module '*.tiff' {
   const classes: string;
   export default classes;
@@ -131,6 +141,11 @@ declare module '*.bmp' {
 }
 
 declare module '*.gif' {
+  const classes: string;
+  export default classes;
+}
+
+declare module '*.svg' {
   const classes: string;
   export default classes;
 }
