@@ -1,3 +1,4 @@
+import { updateRequestToken } from '../api';
 import request from '../request';
 
 // 登录方式 密码登录(password) or 单点登录(sso)
@@ -8,7 +9,7 @@ const STORAGE_TOKEN_KEY = 'storage_usertoken';
 /**
  *  储存用户Token
  * @param type 登录类型
- * @param token 字符串
+ * @param token 令牌字符串
  */
 const setToken = (type: 'password' | 'sso', token: string) => {
   localStorage.setItem(STORAGE_LOGIN_TYPE, type);
@@ -17,7 +18,7 @@ const setToken = (type: 'password' | 'sso', token: string) => {
   } else if (type === 'password') {
     localStorage.setItem(STORAGE_TOKEN_KEY, token);
   }
-  request.defaults.headers.Authorization = token;
+  updateRequestToken(token);
 };
 
 /**
@@ -132,6 +133,6 @@ export function getInfo(): Promise<{ [key: string]: any }> {
  */
 export function logout(): Promise<boolean> {
   localStorage.removeItem(STORAGE_TOKEN_KEY);
-  delete request.defaults.headers.Authorization;
+  updateRequestToken(null);
   return Promise.resolve(true);
 }

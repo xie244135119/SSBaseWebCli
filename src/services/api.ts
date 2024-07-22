@@ -5,8 +5,6 @@ import * as mysql from './api/mysql';
 import * as user from './api/user';
 import * as test from './api/test';
 
-request.defaults.headers.Authorization = user.getAuthorization();
-webrequest.defaults.headers.Authorization = user.getAuthorization();
 request.defaults.baseURL = window.ENV.requestBaseUrl;
 request.defaults.validateStatus = (status) => {
   if (status === 401) {
@@ -30,6 +28,16 @@ request.interceptors.response.use(
     message.error(`${e?.message}(${decodeURIComponent(e.request?.responseURL)})`, 5000);
   }
 );
+
+/**
+ * @description 更新请求 Token
+ */
+export const updateRequestToken = (token: string) => {
+  request.defaults.headers.Authorization = token;
+  webrequest.defaults.headers.Authorization = token;
+};
+
+updateRequestToken(user.getAuthorization());
 
 export default {
   // Api 文档文件
