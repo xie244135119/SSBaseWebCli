@@ -26,7 +26,7 @@ export default defineConfig({
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
   },
   publicDir: 'public',
-  base: '',
+  base: '/',
   server: {
     open: true,
     hmr: true,
