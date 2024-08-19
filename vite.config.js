@@ -30,7 +30,7 @@ export default defineConfig({
   server: {
     open: true,
     hmr: true,
-
+    host: true,
     proxy: {
       // '/api': {
       //   target: '',
