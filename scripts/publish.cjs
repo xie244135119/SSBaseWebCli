@@ -64,7 +64,8 @@ exec('npm run build')
         host: enviromentConfig.host,
         port: enviromentConfig.port,
         username: enviromentConfig.username,
-        password: enviromentConfig.password
+        password: enviromentConfig.password,
+        readyTimeout: 120 * 1000
       })
       .then(() => {
         shelljs.echo('【一键部署】服务器准备已就绪');
