@@ -20,7 +20,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      config: path.resolve(__dirname, './config')
     },
     mainFields: ['module', 'jsnext:main', 'jsnext'],
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
