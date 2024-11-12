@@ -2,7 +2,7 @@ import React from 'react';
 import path from 'path-browserify';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
-import Loading from './pages/Loading';
+import Loading from './pages/Loading/index';
 import RouteConfig from '../config/router.config';
 import ProjectConfig from '../config/project.config';
 
