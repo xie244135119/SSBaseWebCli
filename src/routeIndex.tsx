@@ -2,6 +2,7 @@ import React from 'react';
 import path from 'path-browserify';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
+import Loading from './pages/Loading';
 import RouteConfig from '../config/router.config';
 import ProjectConfig from '../config/project.config';
 
@@ -12,23 +13,6 @@ const modules = import.meta.glob([
   './pages/*/*/*.*sx',
   './pages/*/*/*/*.*sx'
 ]);
-
-function Loading() {
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      {/* <span>加载中...</span> */}
-    </div>
-  );
-}
 
 export default class RouteIndex {
   /**
