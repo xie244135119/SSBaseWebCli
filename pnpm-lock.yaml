@@ -31,10 +31,8 @@ specifiers:
   react: 18.2.0
   react-dom: 18.2.0
   react-router-dom: 6.4.5
-  react-router-redux: 4.0.8
   react-svg: 15.1.7
-  recoil: ^0.7.7
-  redux: 4.2.0
+  recoil: 0.7.7
   sass: 1.69.5
   shelljs: 0.8.5
   stylelint: 14.10.0
@@ -58,10 +56,8 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
-  react-router-redux: 4.0.8
   react-svg: 15.1.7_biqbaboplfbrettd7655fr4n2y
   recoil: 0.7.7_biqbaboplfbrettd7655fr4n2y
-  redux: 4.2.0
   xlsx: 0.18.5
 
 devDependencies:
@@ -5089,10 +5085,6 @@ packages:
       react-router: 6.4.5_react@18.2.0
     dev: false
 
-  /react-router-redux/4.0.8:
-    resolution: {integrity: sha512-lzlK+S6jZnn17BZbzBe6F8ok3YAhGAUlyWgRu3cz5mT199gKxfem5lNu3qcgzRiVhNEOFVG0/pdT+1t4aWhoQw==}
-    dev: false
-
   /react-router/6.4.5_react@18.2.0:
     resolution: {integrity: sha512-1RQJ8bM70YEumHIlNUYc6mFfUDoWa5EgPDenK/fq0bxD8DYpQUi/S6Zoft+9DBrh2xmtg92N5HMAJgGWDhKJ5Q==}
     engines: {node: '>=14'}
@@ -5181,12 +5173,6 @@ packages:
       indent-string: 4.0.0
       strip-indent: 3.0.0
     dev: true
-
-  /redux/4.2.0:
-    resolution: {integrity: sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==}
-    dependencies:
-      '@babel/runtime': 7.22.6
-    dev: false
 
   /regenerate-unicode-properties/10.1.1:
     resolution: {integrity: sha512-X007RyZLsCJVVrjgEFVpLUTZwyOZk3oiL75ZcuYjlIWd6rNJtOjkBwQc5AsRrpbKVkxN6sklw/k/9m2jJYOf8Q==}

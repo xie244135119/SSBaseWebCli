@@ -64,22 +64,6 @@ export default function BackgroundLayout() {
     []
   );
 
-  useEffect(() => {
-    const observer = new ResizeObserver(() => {
-      if (!backgroundElementRef.current) {
-        return;
-      }
-      const { parentElement } = backgroundElementRef.current;
-      const widthScale = parentElement.offsetWidth / ProjectConfig.backgroundWeb.width;
-      const heightScale = parentElement.offsetHeight / ProjectConfig.backgroundWeb.height;
-      backgroundElementRef.current.style.transform = `scale(${widthScale}, ${heightScale})`;
-    });
-    observer.observe(backgroundElementRef.current.parentElement);
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
   //
   useEffect(() => {
     const { routes } = getRouteByPathName(location.pathname);
@@ -106,14 +90,14 @@ export default function BackgroundLayout() {
       .map((item) =>
         item.children?.filter((item) => item.name && !item.hideInMenu).length > 0
           ? {
-            key: item.fullPath,
-            label: item.name,
-            children: getMenuItems(item.children, [...target, item])
-          }
+              key: item.fullPath,
+              label: item.name,
+              children: getMenuItems(item.children, [...target, item])
+            }
           : {
-            key: item.fullPath,
-            label: item.name
-          }
+              key: item.fullPath,
+              label: item.name
+            }
       );
 
   const userDropdownItems = [
@@ -134,11 +118,7 @@ export default function BackgroundLayout() {
   return (
     <ConfigProvider locale={ZhCN}>
       <div style={{ width: '100vw', height: '100vh' }}>
-        <div
-          className={styles.background}
-          style={{ width: ProjectConfig.screenWeb.width, height: ProjectConfig.screenWeb.height }}
-          ref={backgroundElementRef}
-        >
+        <div className={styles.background} ref={backgroundElementRef}>
           {/* 顶部导航 */}
           <div className={styles.header}>
             <img className={styles.logo} alt="logo" src="/logo.png" />
