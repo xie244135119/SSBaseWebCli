@@ -25,7 +25,7 @@ request.interceptors.response.use(
     return res;
   },
   (e) => {
-    message.error(`${e?.message}(${decodeURIComponent(e.request?.responseURL)})`, 5000);
+    message.error(`${e?.message}(${decodeURIComponent(e.request?.responseURL)})`, 5);
   }
 );
 
