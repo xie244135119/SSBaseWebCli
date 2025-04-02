@@ -99,12 +99,21 @@ export function getAuthorization() {
 }
 
 /**
- * 判断是否登录 <检测Token是否过期>
+ * 判断是否登录
  * @returns
  */
-export function isLogin(): Promise<boolean> {
-  // return request.get('/api/checkToken').then((res) => res.status === 'SUCCESS');
-  return Promise.resolve(localStorage.getItem(STORAGE_TOKEN_KEY) !== null);
+export function isLogin(): Promise<{
+  login: boolean;
+  permission: boolean;
+}> {
+  return Promise.resolve({
+    login: true,
+    permission: true
+  });
+  // return getInfo().then((res) => ({
+  //   login: res.status === 'SUCCESS',
+  //   permission: res.data?.status === '1' || res.data.admin
+  // }));
 }
 
 /**

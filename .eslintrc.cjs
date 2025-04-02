@@ -53,6 +53,7 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'no-undef': 'off',
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error'
+    '@typescript-eslint/no-unused-vars': 'error',
+    'react/jsx-wrap-multilines': 'off'
   }
 };
