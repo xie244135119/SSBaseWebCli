@@ -9,9 +9,11 @@ request.defaults.baseURL = window.ENV.requestBaseUrl;
 request.defaults.validateStatus = (status) => {
   if (status === 401) {
     message.info('登录失效，请重新登录');
-    window.location.href = `${ProjectConfig.directory}/login?redirect=${encodeURIComponent(
-      window.location.pathname.replace(ProjectConfig.directory, '') + window.location.search
-    )}`;
+    if (window.location.pathname !== '/login') {
+      window.location.href = `${ProjectConfig.directory}/login?redirect=${encodeURIComponent(
+        window.location.pathname.replace(ProjectConfig.directory, '') + window.location.search
+      )}`;
+    }
   }
   return status >= 200 && status < 300;
 };
