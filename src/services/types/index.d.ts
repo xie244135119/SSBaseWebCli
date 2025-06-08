@@ -1,5 +1,5 @@
-interface ResponseItem {
+interface ResponseItem<T> {
   code: number;
   message?: string;
-  data?: any;
+  data?: T;
 }
