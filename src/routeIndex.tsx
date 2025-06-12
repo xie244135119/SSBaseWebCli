@@ -3,9 +3,10 @@ import path from 'path-browserify';
 import { RecoilRoot } from 'recoil';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
-import Loading from './pages/Loading/index';
 import RouteConfig from 'config/router.config';
 import ProjectConfig from 'config/project.config';
+import Loading from './pages/Loading/index';
+import ErrorBoundary from './pages/Error';
 
 const modules = import.meta.glob([
   './layouts/*.*sx',
@@ -92,11 +93,13 @@ export default class RouteIndex {
   static getRenderRoutes = () => {
     const routerRender = (
       <RecoilRoot>
-        <React.Suspense fallback={<Loading />}>
-          <BrowserRouter basename={ProjectConfig.directory}>
-            <Routes>{this.getRoutes(RouteConfig)}</Routes>
-          </BrowserRouter>
-        </React.Suspense>
+        <ErrorBoundary>
+          <React.Suspense fallback={<Loading />}>
+            <BrowserRouter basename={ProjectConfig.directory}>
+              <Routes>{this.getRoutes(RouteConfig)}</Routes>
+            </BrowserRouter>
+          </React.Suspense>
+        </ErrorBoundary>
       </RecoilRoot>
     );
     return routerRender;
