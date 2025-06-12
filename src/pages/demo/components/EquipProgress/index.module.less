@@ -1,0 +1,65 @@
+.item {
+  display: flex;
+  flex-direction: column;
+
+  .titleview {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .label {
+      font-size: 15px;
+      font-weight: bold;
+      flex: 1;
+    }
+
+    .thumb {
+      margin-left: 15px;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+    }
+
+    .notetext {
+      margin-left: 6px;
+      font-size: 13px;
+    }
+  }
+
+  .barcontainer {
+    margin-top: 10px;
+    position: relative;
+    height: 40px;
+    border-radius: 25px;
+    background-color: #eae3cc;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    box-sizing: border-box;
+    padding: 0 15px;
+
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: #e9bb47;
+      width: 50%;
+      border-radius: 20px;
+      z-index: 0;
+    }
+
+    .installtext {
+      color: #fff;
+      z-index: 1;
+    }
+
+    .uninstalltext {
+      z-index: 1;
+    }
+  }
+}

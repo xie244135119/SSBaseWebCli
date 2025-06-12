@@ -10,6 +10,8 @@ import { Outlet } from 'react-router-dom';
 import BaseChart from '@/components/Chart/base';
 import useTableHook from '@/hooks/useTable';
 import TEMPLATE from '@/static/template';
+import styles from './styles.module.less';
+import EquipmentOverview from './components/EquipProgress';
 
 export default function Demo(props) {
   const detailsCloumns = () => {
@@ -45,6 +47,8 @@ export default function Demo(props) {
 
   return (
     <div>
+      {/* 组件配置 */}
+      <EquipmentOverview />
       {/*  */}
       <h3>折线图配置</h3>
       <BaseChart
