@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 /**
  * 版本号
  */
@@ -69,6 +71,14 @@ interface RouteConfigItem {
    * 路径名称
    */
   path?: string;
+  /**
+   * 菜单图表
+   */
+  icon?: ReactNode;
+  /**
+   * 选中的菜单样式
+   */
+  selectIcon?: ReactNode;
   /**
    * 完整路径
    */

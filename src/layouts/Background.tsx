@@ -10,6 +10,7 @@ import styles from './Background.module.less';
 import RouterConfig, { getRouteByPathName } from '../../config/router.config';
 import ProjectConfig from '../../config/project.config';
 import api from '@/services/api';
+import { RouteConfigItem } from '@/types';
 
 dayjs.locale(zhCn);
 
@@ -90,14 +91,20 @@ export default function BackgroundLayout() {
       .map((item) =>
         item.children?.filter((item) => item.name && !item.hideInMenu).length > 0
           ? {
-              key: item.fullPath,
-              label: item.name,
-              children: getMenuItems(item.children, [...target, item])
-            }
+            key: item.fullPath,
+            icon:
+                (sliderMenuConfig.selectKeys.includes(item.fullPath) && item.selectIcon) ||
+                item.icon,
+            label: item.name,
+            children: getMenuItems(item.children, [...target, item])
+          }
           : {
-              key: item.fullPath,
-              label: item.name
-            }
+            key: item.fullPath,
+            icon:
+                (sliderMenuConfig.selectKeys.includes(item.fullPath) && item.selectIcon) ||
+                item.icon,
+            label: item.name
+          }
       );
 
   const userDropdownItems = [
