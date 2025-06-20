@@ -6,7 +6,6 @@
  */
 const shelljs = require('shelljs');
 const path = require('path');
-const fs = require('fs');
 const { NodeSSH } = require('node-ssh');
 const serverConfig = require('../config/server.config.json');
 
