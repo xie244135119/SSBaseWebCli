@@ -1,6 +1,6 @@
 /**
  * description 一键部署脚本
- * v1.3版本
+ * v1.4版本
  * 执行命令：npm run publish
  * 沙盒命令：npm run publishs
  */
@@ -52,7 +52,6 @@ if (findEnvIndex !== -1) {
 
 const ssh = new NodeSSH();
 const startTime = Date.now();
-let currentStatus = '';
 
 const exec = (command = '') =>
   new Promise((resolve, reject) => {
@@ -67,24 +66,27 @@ async function main() {
     await exec('npm run build');
 
     output.update('🗜️ 正在压缩构建文件...');
+    const { splitIncludes, splitUpload, serverWebDist } = enviromentConfig;
+    if (serverWebDist !== 'dist') {
+      await exec(`mv dist/ ${serverWebDist}/`);
+    }
     const splitUploadFileNames = [];
-    const { splitIncludes, splitUpload } = enviromentConfig;
 
     if (splitIncludes?.length) {
       await Promise.all(
         splitIncludes.map(async (e) => {
           if (splitUpload) {
-            const targetTar = `dist.${e}.tar.gz`;
-            await exec(`tar zcvf ${targetTar} dist/${e}`);
+            const targetTar = `${serverWebDist}.${e}.tar.gz`;
+            await exec(`tar zcvf ${targetTar} ${serverConfig.serverWebDist}/${e}`);
             splitUploadFileNames.push(targetTar);
           }
-          await exec(`rm -rf dist/${e}`);
+          await exec(`rm -rf ${serverWebDist}/${e}`);
         })
       );
     }
 
-    const targetTar = 'dist.tar.gz';
-    await exec(`tar zcvf ${targetTar} dist/`);
+    const targetTar = `${serverWebDist}.tar.gz`;
+    await exec(`tar zcvf ${targetTar} ${serverWebDist}/`);
     splitUploadFileNames.unshift(targetTar);
 
     output.update(SSH_STATUS.CONNECTING);
@@ -121,12 +123,14 @@ async function main() {
 
     output.update(SSH_STATUS.DEPLOYING);
     const commands = [
-      'rm -rf dist_last_bak.tar.gz',
-      'tar zcvf dist_last_bak.tar.gz dist_bak/',
-      'rm -rf dist_bak/',
-      'mv dist/ dist_bak/',
+      `rm -rf ${serverWebDist}_last_bak.tar.gz`,
+      `tar zcvf ${serverWebDist}_last_bak.tar.gz ${serverWebDist}_bak/`,
+      `rm -rf ${serverWebDist}_bak/`,
+      `mv ${serverWebDist}/ ${serverWebDist}_bak/`,
       ...splitUploadFileNames.map((e) => `tar zxvf ${e} && rm -rf ${e}`),
-      ...(!splitUpload ? splitIncludes.map((e) => `cp -r dist_bak/${e} dist`) : [])
+      ...(!splitUpload
+        ? splitIncludes.map((e) => `cp -r ${serverWebDist}_bak/${e} ${serverWebDist}`)
+        : [])
     ];
 
     for (const cmd of commands) {
