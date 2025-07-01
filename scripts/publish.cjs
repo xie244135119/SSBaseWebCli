@@ -138,6 +138,9 @@ async function main() {
     }
 
     splitUploadFileNames.forEach((f) => shelljs.rm(f));
+    if (serverWebDist !== 'dist') {
+      await exec(`mv ${serverWebDist}/ dist/`);
+    }
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
     output.final(`✅ 部署成功！用时 ${duration}s\n访问地址：${enviromentConfig.preview}`);
   } catch (error) {
