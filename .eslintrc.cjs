@@ -55,6 +55,7 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     'react/jsx-wrap-multilines': 'off',
-    'react/jsx-one-line-title': 'off'
+    'react/jsx-one-line-title': 'off',
+    'react/jsx-one-expression-per-line': 'off'
   }
 };
