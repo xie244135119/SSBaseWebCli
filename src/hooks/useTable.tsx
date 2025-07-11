@@ -1,12 +1,12 @@
 /*
  * Author  Murphy.xie
  * Date  2024-03-01 18:18:52
- * LastEditors  Murphy.xie
- * LastEditTime  2024-06-03 15:23:47
+ * LastEditors  Wade.wu
+ * LastEditTime  2025-04-03 15:34:24
  * Description 自定义Table
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Table,
   TableProps,
@@ -43,7 +43,7 @@ export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * 编辑模式是否生效
    */
-  editable?: boolean;
+  editable?: boolean | ((record: number, index: number) => boolean);
   /**
    * 输入框类型
    */
@@ -110,9 +110,9 @@ export function EditableCell(props: TableColumnProps<any> & EditableCellProps) {
    * 触发编辑的时候
    */
   const onTriggerEdit = () => {
-    // console.log(' 触发编辑的时候 ', cellFormKey, form.getFieldValue(cellFormKey));
+    // console.log(' 触发编辑的时候 ', cellFormKey, record, form.getFieldsValue());
     setEditing(true);
-    if (!form.getFieldValue(cellFormKey)) {
+    if (form.getFieldValue(cellFormKey) === undefined) {
       form.setFieldValue(`${dataIndex}.${index}`, record[dataIndex]);
     }
   };
@@ -125,7 +125,7 @@ export function EditableCell(props: TableColumnProps<any> & EditableCellProps) {
     case 'text':
       inputNode = (
         <Input
-          // autoFocus
+          autoFocus
           {...editInputProps}
           onBlur={() => {
             if (!isEditing) {
@@ -157,6 +157,7 @@ export function EditableCell(props: TableColumnProps<any> & EditableCellProps) {
     setEditing(isEditing);
   }, [isEditing]);
 
+  // console.log(' form props ', cellFormKey, record, props, inputNode);
   return (
     <td className={className} colSpan={colSpan} rowSpan={rowSpan} style={style}>
       {editing && (
@@ -172,7 +173,9 @@ export function EditableCell(props: TableColumnProps<any> & EditableCellProps) {
           }}
         >
           {/* {children} */}
-          {form.getFieldValue(cellFormKey) || children}
+          {form.getFieldValue(cellFormKey) !== undefined
+            ? form.getFieldValue(cellFormKey)
+            : children}
         </div>
       )}
       {!editing && !editable && children}
@@ -185,6 +188,10 @@ interface Props extends TableProps {
    * 数据模拟
    */
   mock?: boolean;
+  /**
+   * 当前时间
+   */
+  currentTime?: string;
   /**
    * 编辑模式 默认false
    */
@@ -208,10 +215,23 @@ interface Props extends TableProps {
     data: any[];
     total: number;
   }>;
+  /**
+   * 异步加载数据延迟更新
+   */
+  lazyLoadData?: boolean;
 }
 
 export default function useTableHook(props: Props) {
-  const { columns, dataSource: defaultDataSource, loadData, mock, editable, editFormProps } = props;
+  const {
+    columns,
+    dataSource: defaultDataSource,
+    loadData,
+    lazyLoadData = false,
+    currentTime,
+    mock,
+    editable,
+    editFormProps
+  } = props;
   // 数据列表
   const [dataSource, setDataSource] = useState<{
     list: any[];
@@ -222,8 +242,8 @@ export default function useTableHook(props: Props) {
   });
   // 加载进度条
   const [loading, setLoading] = useState<boolean>(false);
-  // 配置项
-  const [pagination, setPagination] = useState({
+  // 分页配置项
+  const paginationRef = useRef({
     current: 1,
     pageSize: 10
   });
@@ -233,6 +253,46 @@ export default function useTableHook(props: Props) {
   //
   // 判断编辑模式
   const isEditingCell = (record) => record === editingItem;
+
+  // 随机生成姓名
+  const getRandomName = () => {
+    const surnames = ['张', '李', '王', '刘', '陈', '杨', '黄', '赵', '周', '吴'];
+    const firstNames = [
+      '伟',
+      '芳',
+      '军',
+      '敏',
+      '勇',
+      '静',
+      '涛',
+      '丽',
+      '明',
+      '磊',
+      '刚',
+      '华',
+      '燕',
+      '鹏',
+      '超',
+      '娟',
+      '斌',
+      '宁',
+      '晶',
+      '鑫'
+    ];
+
+    // 随机选择一个姓
+    const randomSurname = surnames[Math.floor(Math.random() * surnames.length)];
+    // 随机选择一个名
+    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+
+    // 返回完整的随机姓名
+    return randomSurname + randomFirstName;
+  };
+
+  const getRandomElement = (arr) => {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
+  };
 
   /**
    * 处理模拟数据
@@ -264,7 +324,39 @@ export default function useTableHook(props: Props) {
       } = {};
       keys.forEach((e) => {
         if (typeof e === 'string') {
-          obj[e] = (Math.random() * 100).toFixed(2);
+          if (e === 'name') {
+            obj[e] = getRandomName();
+          } else if (e === 'qy') {
+            obj[e] = '全省';
+          } else if (e === 'hy') {
+            obj[e] = '大工业';
+          } else if (e === 'zffs') {
+            const array = ['日常走访', '专项走访'];
+            obj[e] = getRandomElement(array);
+          } else if (e === 'zt') {
+            const array = ['完成', '未完成'];
+            obj[e] = getRandomElement(array);
+          } else if (e === 'jhmc') {
+            const array = ['2024年***日日常走访', '2024年***日走访'];
+            obj[e] = getRandomElement(array);
+          } else if (e === 'pj') {
+            const array = ['好', '优秀', '良'];
+            obj[e] = getRandomElement(array);
+          } else if (e === 'khmc') {
+            const array = [
+              '贵州贵旺生物科技有限公司',
+              '中天城投集团物业管理有限公司',
+              '贵州大学',
+              '大方雪榕生物科技有限公司',
+              '仁怀市电力实业有限责任公司',
+              '贵阳宏益房地产开发有限公司',
+              '贵州页岩气勘探开发有限责任公司',
+              '贵州大财经学'
+            ];
+            obj[e] = getRandomElement(array);
+          } else {
+            obj[e] = (Math.random() * 100).toFixed(2);
+          }
         } else if (Array.isArray(e)) {
           const reducive = (l = [], index = 0, target = {}) => {
             if (index === e.length - 1) {
@@ -278,7 +370,8 @@ export default function useTableHook(props: Props) {
           reducive(e, 0, obj);
         }
       });
-      obj.time = dayjs().subtract(index, 'd').format('YYYY-MM-DD');
+      obj.time = currentTime || dayjs().subtract(index, 'd').format('YYYY-MM-DD');
+      obj.timeMonth = currentTime || dayjs().subtract(index, 'd').format('YYYY-MM');
       list.push(obj);
     }
     return list;
@@ -288,18 +381,13 @@ export default function useTableHook(props: Props) {
    * 重新加载
    * @param reset 重置
    */
-  const reload = () => {
-    setPagination({
-      ...pagination,
-      current: 1
-    });
-  };
-
-  useEffect(() => {
-    // console.log(' pagination 发生改变 ', pagination);
+  const reload = (reset: boolean = false) => {
     if (loadData) {
       setLoading(true);
-      loadData(pagination.current, pagination.pageSize)
+      if (reset) {
+        paginationRef.current.current = 1;
+      }
+      loadData(paginationRef.current.current, paginationRef.current.pageSize)
         .then((res) => {
           setLoading(false);
           setDataSource({
@@ -314,14 +402,20 @@ export default function useTableHook(props: Props) {
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
-        const mock = getMockData(pagination.pageSize);
+        const mock = getMockData(paginationRef.current.pageSize);
         setDataSource({
           list: mock,
           total: mock.length
         });
       }, 500);
     }
-  }, [pagination]);
+  };
+
+  useEffect(() => {
+    if ((loadData && !lazyLoadData) || mock) {
+      reload();
+    }
+  }, [currentTime]);
 
   delete props.dataSource;
   delete props.loadData;
@@ -366,7 +460,7 @@ export default function useTableHook(props: Props) {
           record,
           dataIndex: col.dataIndex,
           index,
-          editable: col.editable,
+          editable: typeof col.editable === 'function' ? col.editable(record, index) : col.editable,
           isEditing: col.isEditing !== undefined ? col.isEditing : isEditingCell(record),
           editType: col.editType || 'text',
           editFormItemProps: col.editFormItemProps,
@@ -391,17 +485,19 @@ export default function useTableHook(props: Props) {
           bordered
           dataSource={defaultDataSource || dataSource?.list}
           columns={editColumns as any}
+          scroll={{ x: 'max-content' }}
           pagination={{
             showTotal: (total) => `共${total}条`,
             showSizeChanger: true,
-            current: pagination.current,
-            pageSize: pagination.pageSize,
+            current: paginationRef.current.current,
+            pageSize: paginationRef.current.pageSize,
             onShowSizeChange: (current, size) => {
               // console.log(' 事件变化 ', current, size);
-              setPagination({
+              paginationRef.current = {
                 current,
                 pageSize: size
-              });
+              };
+              reload();
             },
             onChange: endEdit
           }}
@@ -430,20 +526,19 @@ export default function useTableHook(props: Props) {
         showTotal: (total) => `共${total}条`,
         total: dataSource?.total,
         showSizeChanger: true,
-        current: pagination.current,
-        pageSize: pagination.pageSize,
+        defaultCurrent: paginationRef.current.current,
+        defaultPageSize: paginationRef.current.pageSize,
         onChange: (page, pageSize) => {
-          // console.log(' 事件变化 ', page, pageSize);
-          setPagination({
+          paginationRef.current = {
             current: page,
             pageSize
-          });
+          };
+          reload();
         }
       }}
       {...props}
     />
   );
-
   return {
     element,
     reload
