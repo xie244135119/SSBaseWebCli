@@ -48,7 +48,7 @@ export default function EquipmentOverview() {
   return (
     <div className={styles.overview}>
       <EquipProgress
-        label="门锁"
+        label="变压器"
         installed={150} // 示例数据
         uninstalled={100} // 示例数据
         installedColor="#faad14" // 示例颜色 (黄色)
@@ -56,7 +56,7 @@ export default function EquipmentOverview() {
       />
       <EquipProgress
         style={{ marginTop: 20 }}
-        label="雷达"
+        label="开关柜"
         installed={150} // 示例数据
         uninstalled={100} // 示例数据
         installedColor="#eb2f96" // 示例颜色 (粉色)
