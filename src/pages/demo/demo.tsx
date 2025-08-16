@@ -1,10 +1,3 @@
-/*
- * Author  Murphy.xie
- * Date  2024-06-20 17:19:51
- * LastEditors  Murphy.xie
- * LastEditTime  2024-06-20 17:29:34
- * Description
- */
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import BaseChart from '@/components/Chart/base';

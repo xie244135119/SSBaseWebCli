@@ -1,11 +1,3 @@
-/*
- * Author  Murphy.xie
- * Date  2024-03-01 18:18:52
- * LastEditors  Wade.wu
- * LastEditTime  2025-04-03 15:34:24
- * Description 自定义Table
- */
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Table,
@@ -254,46 +246,6 @@ export default function useTableHook(props: Props) {
   // 判断编辑模式
   const isEditingCell = (record) => record === editingItem;
 
-  // 随机生成姓名
-  const getRandomName = () => {
-    const surnames = ['张', '李', '王', '刘', '陈', '杨', '黄', '赵', '周', '吴'];
-    const firstNames = [
-      '伟',
-      '芳',
-      '军',
-      '敏',
-      '勇',
-      '静',
-      '涛',
-      '丽',
-      '明',
-      '磊',
-      '刚',
-      '华',
-      '燕',
-      '鹏',
-      '超',
-      '娟',
-      '斌',
-      '宁',
-      '晶',
-      '鑫'
-    ];
-
-    // 随机选择一个姓
-    const randomSurname = surnames[Math.floor(Math.random() * surnames.length)];
-    // 随机选择一个名
-    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-
-    // 返回完整的随机姓名
-    return randomSurname + randomFirstName;
-  };
-
-  const getRandomElement = (arr) => {
-    const randomIndex = Math.floor(Math.random() * arr.length);
-    return arr[randomIndex];
-  };
-
   /**
    * 处理模拟数据
    * @param count
@@ -324,39 +276,7 @@ export default function useTableHook(props: Props) {
       } = {};
       keys.forEach((e) => {
         if (typeof e === 'string') {
-          if (e === 'name') {
-            obj[e] = getRandomName();
-          } else if (e === 'qy') {
-            obj[e] = '全省';
-          } else if (e === 'hy') {
-            obj[e] = '大工业';
-          } else if (e === 'zffs') {
-            const array = ['日常走访', '专项走访'];
-            obj[e] = getRandomElement(array);
-          } else if (e === 'zt') {
-            const array = ['完成', '未完成'];
-            obj[e] = getRandomElement(array);
-          } else if (e === 'jhmc') {
-            const array = ['2024年***日日常走访', '2024年***日走访'];
-            obj[e] = getRandomElement(array);
-          } else if (e === 'pj') {
-            const array = ['好', '优秀', '良'];
-            obj[e] = getRandomElement(array);
-          } else if (e === 'khmc') {
-            const array = [
-              '贵州贵旺生物科技有限公司',
-              '中天城投集团物业管理有限公司',
-              '贵州大学',
-              '大方雪榕生物科技有限公司',
-              '仁怀市电力实业有限责任公司',
-              '贵阳宏益房地产开发有限公司',
-              '贵州页岩气勘探开发有限责任公司',
-              '贵州大财经学'
-            ];
-            obj[e] = getRandomElement(array);
-          } else {
-            obj[e] = (Math.random() * 100).toFixed(2);
-          }
+          obj[e] = (Math.random() * 100).toFixed(2);
         } else if (Array.isArray(e)) {
           const reducive = (l = [], index = 0, target = {}) => {
             if (index === e.length - 1) {

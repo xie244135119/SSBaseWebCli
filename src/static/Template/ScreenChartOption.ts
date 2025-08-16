@@ -123,7 +123,7 @@ export function getBaseBarChartOption(chartOption?: echarts.EChartsOption): echa
       // ...yAxis
     },
     series: {
-      name: '电量',
+      name: '数值',
       type: 'bar',
       barWidth: '30%',
       xAxisIndex: 0,
@@ -241,7 +241,7 @@ export function getMultiBarChartOption(categorys?: string[], chartOption?: echar
       // ...xAxis
     },
     yAxis: {
-      name: '单位：亿千瓦时',
+      name: '单位：元',
       nameTextStyle: {
         color: XaxisLabelColor
       },
@@ -898,27 +898,27 @@ export function getPieChartOption(chartOption?: echarts.EChartsOption): echarts.
     option.series[0].data = [
       {
         value: 260,
-        name: '思源电气'
+        name: '测试1'
       },
       {
         value: 103,
-        name: '思源电气'
+        name: '测试2'
       },
       {
         value: 63,
-        name: '武汉南瑞'
+        name: '测试3'
       },
       {
         value: 53,
-        name: '河南中分'
+        name: '测试4'
       },
       {
         value: 48,
-        name: '深圳林科'
+        name: '测试5'
       },
       {
         value: 233,
-        name: '其他'
+        name: '测试6'
       }
     ];
   }
@@ -926,7 +926,6 @@ export function getPieChartOption(chartOption?: echarts.EChartsOption): echarts.
 }
 
 /**
- * 大用户用电趋势
  *  <多条不叠加的柱状图，多条折线图>
  * @param {string[]} dimensionsConfig
  * @param {string[]} categorys 分类类型

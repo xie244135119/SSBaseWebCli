@@ -1,11 +1,3 @@
-/*
- * Author  Murphy.xie
- * Date  2024-02-21 17:43:39
- * LastEditors  Murphy.xie
- * LastEditTime  2024-04-08 18:04:19
- * Description 基础图表模版配置
- */
-
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import _ from 'lodash';
@@ -89,7 +81,7 @@ export function getBaseBarChartOption(chartOption?: echarts.EChartsOption): echa
         alignWithLabel: true
       },
       axisLabel: {
-          color: XaxisLabelColor,
+        color: XaxisLabelColor,
         // 默认x轴字体大小
         fontSize: 14,
         // margin:文字到x轴的距离
@@ -135,7 +127,7 @@ export function getBaseBarChartOption(chartOption?: echarts.EChartsOption): echa
       // ...yAxis
     },
     series: {
-      name: '电量',
+      name: '数值',
       type: 'bar',
       barWidth: '30%',
       xAxisIndex: 0,
@@ -255,7 +247,7 @@ export function getMultiBarChartOption(categorys = ['demo'], chartOption?: echar
       // ...xAxis
     },
     yAxis: {
-      name: '单位：亿千瓦时',
+      name: '单位：元',
       nameTextStyle: {
         color: XaxisLabelColor
       },
@@ -570,7 +562,7 @@ export const getLineChartOption = (
       }
     },
     yAxis: {
-      name: '单位：亿千瓦时',
+      name: '单位：元',
       nameTextStyle: {
         color: XaxisLabelColor
       },
@@ -852,27 +844,11 @@ export function getPieChartOption(chartOption?: echarts.EChartsOption): echarts.
     option.series.data = [
       {
         value: 260,
-        name: '思源电气'
+        name: '测试1'
       },
       {
         value: 103,
-        name: '思源电气'
-      },
-      {
-        value: 63,
-        name: '武汉南瑞'
-      },
-      {
-        value: 53,
-        name: '河南中分'
-      },
-      {
-        value: 48,
-        name: '深圳林科'
-      },
-      {
-        value: 233,
-        name: '其他'
+        name: '测试2'
       }
     ];
   }
@@ -880,7 +856,6 @@ export function getPieChartOption(chartOption?: echarts.EChartsOption): echarts.
 }
 
 /**
- * 用电用户 容量分析 <多条不叠加的柱状图，多条折线图>
  * @param {string[]} dimensionsConfig
  * @param {string[]} categorys 分类类型
  * @returns
@@ -1092,7 +1067,6 @@ export function getBarAndLineOption(
 }
 
 /**
- * 代理工商用电用户规模分析
  * @param {string[]} dimensionsConfig
  * @param {string[]} categorys 分类类型
  * @returns

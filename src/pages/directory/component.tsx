@@ -1,10 +1,3 @@
-/*
- * Author  Murphy.xie
- * Date  2024-04-03 15:08:06
- * LastEditors  Murphy.xie
- * LastEditTime  2024-04-03 15:34:54
- * Description 组件库处理
- */
 import React, { useEffect, useState } from 'react';
 import styles from './component.module.less';
 import ProjectConfig from '../../../config/project.config';
@@ -36,11 +29,7 @@ export default function Component() {
 
   return (
     <div className={styles.background}>
-      <h2 style={{ margin: 0 }}>
-        {ProjectConfig.title}
-        {' '}
-        - 前端目录
-      </h2>
+      <h2 style={{ margin: 0 }}>{ProjectConfig.title} - 前端目录</h2>
       <h4 style={{ margin: '15px 0px 0px' }}>
         版本号：
         {__APP_VERSION__}
@@ -48,10 +37,7 @@ export default function Component() {
       {componentList?.map((item, index) => (
         <div key={item.url} className={styles.block}>
           <span className={styles.name}>
-            【
-            {index + 1}
-            】 ，
-            {item.url}
+            【{index + 1}】 ，{item.url}
           </span>
           {item.c}
         </div>
