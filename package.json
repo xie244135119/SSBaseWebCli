@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "projectdescription",
   "main": "index.js",
-  "author": "xie244135119@163.com",
+  "author": "wind",
   "license": "ISC",
   "cliType": "projectcliType",
   "type": "module",
