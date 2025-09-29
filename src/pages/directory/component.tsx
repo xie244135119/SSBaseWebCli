@@ -29,7 +29,7 @@ export default function Component() {
 
   return (
     <div className={styles.background}>
-      <h2 style={{ margin: 0 }}>{ProjectConfig.title} - 前端目录</h2>
+      <h2 style={{ margin: 0 }}>{ProjectConfig.title} - 目录</h2>
       <h4 style={{ margin: '15px 0px 0px' }}>
         版本号：
         {__APP_VERSION__}
