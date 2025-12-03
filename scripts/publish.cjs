@@ -152,7 +152,7 @@ async function main() {
       second: '2-digit'
     });
     output.final(
-      `✅ 部署成功！\n部署时间：${timeStr}\n部署用时：${duration}s\n访问地址：${enviromentConfig.preview}`
+      `✅ 部署成功！ ${timeStr} 用时：${duration}s\n✅ 访问地址：${enviromentConfig.preview}`
     );
   } catch (error) {
     output.final(`❌ 部署失败: ${error.message}`);
