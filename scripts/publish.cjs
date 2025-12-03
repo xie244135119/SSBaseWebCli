@@ -142,7 +142,18 @@ async function main() {
       await exec(`mv ${serverWebDist}/ dist/`);
     }
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
-    output.final(`✅ 部署成功！用时 ${duration}s\n访问地址：${enviromentConfig.preview}`);
+    const now = new Date();
+    const timeStr = now.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    output.final(
+      `✅ 部署成功！\n部署时间：${timeStr}\n部署用时：${duration}s\n访问地址：${enviromentConfig.preview}`
+    );
   } catch (error) {
     output.final(`❌ 部署失败: ${error.message}`);
     process.exit(1);
