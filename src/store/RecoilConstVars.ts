@@ -8,6 +8,12 @@ const AtomH5sSession = atom<string>({
   default: null
 });
 
+const AtomUserInfo = atom<string>({
+  key: 'UserInfo',
+  default: null
+});
+
 export default {
-  AtomH5sSession
+  AtomH5sSession,
+  AtomUserInfo
 };
