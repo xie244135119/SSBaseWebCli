@@ -90,7 +90,8 @@ export default class ErrorBoundary extends React.Component {
                   padding: '12px',
                   backgroundColor: '#fff',
                   borderRadius: '4px',
-                  border: '1px solid #ffccc7'
+                  border: '1px solid #ffccc7',
+                  userSelect: 'text'
                 }}
               >
                 {this.state.error?.toString()}
