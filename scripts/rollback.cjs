@@ -12,18 +12,20 @@ class DynamicOutput {
     this.lastMessage = '';
     this.progressEnabled = process.stdout.isTTY;
   }
+
   update(message) {
     if (this.progressEnabled) {
-      process.stdout.write('\r' + ' '.repeat(this.lastMessage.length));
-      process.stdout.write('\r' + message);
+      process.stdout.write(`\r${' '.repeat(this.lastMessage.length)}`);
+      process.stdout.write(`\r${message}`);
       this.lastMessage = message;
     } else {
       shelljs.echo(message);
     }
   }
+
   final(message) {
     if (this.progressEnabled) {
-      process.stdout.write('\r' + message + '\n');
+      process.stdout.write(`\r${message}\n`);
     } else {
       shelljs.echo(message);
     }
