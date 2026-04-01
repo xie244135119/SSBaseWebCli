@@ -14,7 +14,8 @@
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview",
     "publish": "node ./scripts/publish.cjs",
-    "publishs": "node ./scripts/publish.cjs --env sandbox"
+    "publishs": "node ./scripts/publish.cjs --env sandbox",
+    "rollback": "node ./scripts/rollback.cjs"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
