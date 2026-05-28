@@ -1,10 +1,12 @@
 /**
  * description 一键部署脚本
- * v1.4版本
+ * v1.5版本
  * 执行命令：npm run publish
  * 沙盒命令：npm run publishs
+ * v1.5: 自动递增版本号 + 输出构建包大小
  */
 const shelljs = require('shelljs');
+const fs = require('fs');
 const path = require('path');
 const { NodeSSH } = require('node-ssh');
 const serverConfig = require('../config/server.config.json');
@@ -60,10 +62,42 @@ const exec = (command = '') =>
     });
   });
 
+function bumpVersion() {
+  const packageJsonPath = path.join(shelljs.pwd().toString(), 'package.json');
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+  const versionParts = packageJson.version.split('.');
+  versionParts[versionParts.length - 1] = Number(versionParts[versionParts.length - 1]) + 1;
+  packageJson.version = versionParts.join('.');
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+  return packageJson.version;
+}
+
+function getDirSize(dirPath) {
+  let totalSize = 0;
+  const files = shelljs.find(dirPath).filter((f) => shelljs.test('-f', f));
+  files.forEach((f) => {
+    totalSize += fs.statSync(f).size;
+  });
+  return totalSize;
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+}
+
 async function main() {
   try {
+    const newVersion = bumpVersion();
+    output.final(`📌 版本号已更新: ${newVersion}`);
+
     output.update('🚀 正在打包项目...');
     await exec('npm run build');
+
+    const distPath = path.join(shelljs.pwd().toString(), enviromentConfig.serverWebDist || 'dist');
+    const distSize = getDirSize(distPath);
+    output.final(`📦 构建产物大小: ${formatSize(distSize)}`);
 
     output.update('🗜️ 正在压缩构建文件...');
     const { splitIncludes, splitUpload, serverWebDist } = enviromentConfig;
@@ -77,7 +111,7 @@ async function main() {
         splitIncludes.map(async (e) => {
           if (splitUpload) {
             const targetTar = `${serverWebDist}.${e}.tar.gz`;
-            await exec(`tar zcvf ${targetTar} ${serverConfig.serverWebDist}/${e}`);
+            await exec(`tar zcvf ${targetTar} ${serverWebDist}/${e}`);
             splitUploadFileNames.push(targetTar);
           }
           await exec(`rm -rf ${serverWebDist}/${e}`);
