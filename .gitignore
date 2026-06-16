@@ -26,3 +26,8 @@ dist.*
 .git
 .omo
 .next
+.umi
+src/.umi
+.umi-production
+.playwright-mcp
+.claude
