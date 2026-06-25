@@ -3,7 +3,12 @@
     "host": "服务器IP",
     "port": 22,
     "username": "服务器账号",
+    "authMode": "password || privateKey",
     "password": "服务器密码",
+    "privateKey": {
+      "privateKeyPath": "秘钥地址",
+      "passphrase": "秘钥密码"
+    },
     "serverWebPath": "前端部署目录",
     "serverWebDist": "dist",
     "preview": "预览环境地址",
@@ -14,7 +19,12 @@
     "host": "服务器IP",
     "port": 22,
     "username": "服务器账号",
+    "authMode": "password || privateKey",
     "password": "服务器密码",
+    "privateKey": {
+      "privateKeyPath": "秘钥地址",
+      "passphrase": "秘钥密码"
+    },
     "serverWebPath": "前端部署目录",
     "serverWebDist": "dist",
     "preview": "预览环境地址",

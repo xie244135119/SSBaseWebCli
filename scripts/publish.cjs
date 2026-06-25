@@ -1,13 +1,15 @@
 /**
  * description 一键部署脚本
- * v1.5版本
+ * v1.6版本
  * 执行命令：npm run publish
  * 沙盒命令：npm run publishs
  * v1.5: 自动递增版本号 + 输出构建包大小
+ * v1.6: 支持秘钥登录（privateKeyPath / passphrase）
  */
 const shelljs = require('shelljs');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { NodeSSH } = require('node-ssh');
 const serverConfig = require('../config/server.config.json');
 
@@ -54,6 +56,49 @@ if (findEnvIndex !== -1) {
 
 const ssh = new NodeSSH();
 const startTime = Date.now();
+
+// 构造 SSH 连接配置：按 authMode 决定认证方式，秘钥优先级仍可被命令行 --key 临时覆盖
+function buildSSHConfig(config) {
+  const baseConfig = {
+    host: config.host,
+    port: config.port,
+    username: config.username,
+    readyTimeout: 120_000
+  };
+
+  // 命令行参数 --key 临时指定秘钥路径，优先级最高，无论 authMode 如何都走秘钥登录
+  const keyIndex = process.argv.indexOf('--key');
+  const usePrivateKey = keyIndex !== -1 || config.authMode === 'privateKey';
+  if (!usePrivateKey) {
+    if (!config.password) {
+      throw new Error('未配置登录凭证：请在 server.config.json 中配置 authMode=password + password，或 authMode=privateKey + privateKey');
+    }
+    return { ...baseConfig, password: config.password };
+  }
+
+  // 秘钥登录：优先取命令行 --key，否则取配置 privateKey.privateKeyPath
+  const privateKeyPath =
+    keyIndex !== -1 ? process.argv[keyIndex + 1] : config.privateKey?.privateKeyPath;
+
+  if (!privateKeyPath) {
+    throw new Error('秘钥登录缺少 privateKeyPath：请在 server.config.json 的 privateKey.privateKeyPath 中配置，或通过命令行 --key 传入');
+  }
+
+  // 支持 ~ 开头的家目录路径
+  const resolvedKeyPath = privateKeyPath.replace(/^~(?=$|\/|\\)/, os.homedir());
+  if (!fs.existsSync(resolvedKeyPath)) {
+    throw new Error(`秘钥文件不存在: ${resolvedKeyPath}`);
+  }
+
+  const sshConfig = {
+    ...baseConfig,
+    privateKey: fs.readFileSync(resolvedKeyPath)
+  };
+  if (config.privateKey?.passphrase) {
+    sshConfig.passphrase = config.privateKey.passphrase;
+  }
+  return sshConfig;
+}
 
 const exec = (command = '') =>
   new Promise((resolve, reject) => {
@@ -124,13 +169,7 @@ async function main() {
     splitUploadFileNames.unshift(targetTar);
 
     output.update(SSH_STATUS.CONNECTING);
-    await ssh.connect({
-      host: enviromentConfig.host,
-      port: enviromentConfig.port,
-      username: enviromentConfig.username,
-      password: enviromentConfig.password,
-      readyTimeout: 120_000
-    });
+    await ssh.connect(buildSSHConfig(enviromentConfig));
 
     output.update(SSH_STATUS.UPLOADING);
     await ssh.mkdir(enviromentConfig.serverWebPath);
