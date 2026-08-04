@@ -1,4 +1,6 @@
 import { updateRequestToken } from '../api';
+// request 预留给真实后端登录请求模板（下方注释代码会用到），勿删
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import request from '../request';
 
 // 登录方式 密码登录(password) or 单点登录(sso)
@@ -42,6 +44,7 @@ const getToken = () => {
  * @param params
  * @returns
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function login(params: { [key: string]: any }): Promise<boolean> {
   // api 登录的时候 修改此处请求即可
   // return request.post('/api/login', params).then((res) => {
@@ -129,7 +132,7 @@ export function getCaptcha(): Promise<string> {
  */
 export function getInfo(): Promise<{ [key: string]: any }> {
   try {
-    const json = JSON.parse(localStorage.getItem(STORAGE_TOKEN_KEY));
+    const json = JSON.parse(localStorage.getItem(STORAGE_TOKEN_KEY) || '');
     return Promise.resolve(json);
   } catch (error) {
     return Promise.resolve({});

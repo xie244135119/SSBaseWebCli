@@ -1,9 +1,6 @@
 import React from 'react';
-import { Typography } from 'antd'; // 如果还需要 Ant Design 的 Typography 组件
 import classNames from 'classnames';
 import styles from './index.module.less';
-
-const { Text } = Typography; // 保留 Text 组件，用于文本
 
 interface LockProgressProps {
   className?: string;

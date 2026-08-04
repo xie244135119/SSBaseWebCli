@@ -91,11 +91,11 @@ const RouterConfig: RouteConfigItem[] = [
   }
 ];
 
-const recursion = (routes: RouteConfigItem[], targetResault: RouteConfigItem[] = []) => {
-  for (let index = 0; index < routes.length; index++) {
+const recursion = (routes: RouteConfigItem[], targetResault: RouteConfigItem[] = []): void => {
+  for (let index = 0; index < routes.length; index += 1) {
     const route = routes[index];
     if (route.path) {
-      route.fullPath = path.join(...[...targetResault, route].map((item) => item.path));
+      route.fullPath = path.join(...[...targetResault, route].map((item) => item.path || ''));
     }
     if (route.children) {
       recursion(route.children, [...targetResault, route]);
@@ -111,14 +111,17 @@ recursion(RouterConfig);
 export const getRouteByPathName = (
   urlPath: string
 ): { urlPath: string; routes: RouteConfigItem[] } => {
-  const recursion = (routes: RouteConfigItem[], targetResault = []) => {
-    for (let index = 0; index < routes.length; index++) {
+  const innerRecursion = (
+    routes: RouteConfigItem[],
+    targetResault: RouteConfigItem[] = []
+  ): RouteConfigItem[] => {
+    for (let index = 0; index < routes.length; index += 1) {
       const route = routes[index];
       if (route.fullPath === urlPath) {
         return [...targetResault, route];
       }
       if (route.children) {
-        const childresault = recursion(route.children, [...targetResault, route]);
+        const childresault = innerRecursion(route.children, [...targetResault, route]);
         if (childresault.length > 0) {
           return childresault;
         }
@@ -126,7 +129,7 @@ export const getRouteByPathName = (
     }
     return [];
   };
-  const resault = recursion(RouterConfig);
+  const resault = innerRecursion(RouterConfig);
   return {
     urlPath,
     routes: resault

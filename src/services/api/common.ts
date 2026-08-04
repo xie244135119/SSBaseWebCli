@@ -65,9 +65,9 @@ export const sort = (
 export const exportFile = (res: AxiosResponse) => {
   if (res.data instanceof Blob) {
     const dispos = res.headers['content-disposition'];
-    const components = dispos?.split(';');
-    const findFileName = components.find((item) => item.trim().startsWith('filename='));
-    const fileName = findFileName.trim().replace('filename=', '');
+    const components = dispos?.split(';') ?? [];
+    const findFileName = components.find((item: string) => item.trim().startsWith('filename='));
+    const fileName = (findFileName ?? '').trim().replace('filename=', '');
     return {
       data: res.data,
       fileName: decodeURIComponent(fileName)

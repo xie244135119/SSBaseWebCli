@@ -1,21 +1,30 @@
 import React from 'react';
 
-export default class ErrorBoundary extends React.Component {
-  constructor(props) {
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+}
+
+export default class ErrorBoundary extends React.Component<
+  { children?: React.ReactNode },
+  ErrorBoundaryState
+> {
+  constructor(props: { children?: React.ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ errorInfo });
   }
 
   render() {
-    const { hasError } = this.state;
+    const { hasError, error, errorInfo } = this.state;
     if (hasError) {
       return (
         <div
@@ -94,11 +103,11 @@ export default class ErrorBoundary extends React.Component {
                   userSelect: 'text'
                 }}
               >
-                {this.state.error?.toString()}
+                {error?.toString()}
               </pre>
             </div>
 
-            {this.state.errorInfo && (
+            {errorInfo && (
               <div
                 style={{
                   backgroundColor: '#fafafa',
@@ -132,13 +141,14 @@ export default class ErrorBoundary extends React.Component {
                     overflow: 'auto'
                   }}
                 >
-                  {this.state.errorInfo.componentStack}
+                  {errorInfo.componentStack}
                 </pre>
               </div>
             )}
 
             <div style={{ textAlign: 'center' }}>
               <button
+                type="button"
                 onClick={() => window.location.reload()}
                 style={{
                   padding: '8px 24px',
@@ -148,10 +158,13 @@ export default class ErrorBoundary extends React.Component {
                   border: 'none',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  transition: 'background-color 0.3s',
-                  ':hover': {
-                    backgroundColor: '#40a9ff'
-                  }
+                  transition: 'background-color 0.3s'
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#40a9ff';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#1890ff';
                 }}
               >
                 刷新页面
@@ -162,6 +175,7 @@ export default class ErrorBoundary extends React.Component {
       );
     }
 
-    return this.props.children;
+    const { children } = this.props;
+    return children;
   }
 }

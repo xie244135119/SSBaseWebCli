@@ -1,25 +1,27 @@
 export type SocketListenerType = (e: any) => void;
 
+type ObserverFuncMap = { [key: symbol]: { type: string; func: (data: any) => void } };
+
 export default class SocketJs {
   /**
    * 相关通讯标识
    */
-  static SocketType = {};
+  static SocketType: Record<string, any> = {};
 
   // socket通道
-  private _webSocket = null;
+  private _webSocket: WebSocket | null = null;
 
   // interval timer
-  private _beatTimer = null;
+  private _beatTimer: ReturnType<typeof setInterval> | null = null;
 
   // 请求的socket 地址
   private _socketUrl = '';
 
   // 事件处理函数
-  private _observerFunc = {};
+  private _observerFunc: ObserverFuncMap = {} as ObserverFuncMap;
 
   // 全量监听
-  onListener: SocketListenerType = null;
+  onListener: SocketListenerType | null = null;
 
   // reconnect count
   private _retryConnecCount = 0;
@@ -27,12 +29,14 @@ export default class SocketJs {
   /**
    * 销毁
    */
-  destory = () => {
+  destroy = () => {
     this.disconnect();
-    this._observerFunc = {};
+    this._observerFunc = {} as ObserverFuncMap;
     this._retryConnecCount = 0;
-    clearInterval(this._beatTimer);
-    this._beatTimer = null;
+    if (this._beatTimer) {
+      clearInterval(this._beatTimer);
+      this._beatTimer = null;
+    }
   };
 
   constructor(aWsurl: string) {
@@ -46,7 +50,7 @@ export default class SocketJs {
     const ws = new WebSocket(aWsurl);
     this._webSocket = ws;
     ws.onopen = () => {
-      console.log(' open websocket ');
+      // websocket 已连接
     };
 
     ws.onmessage = (e: MessageEvent) => {
@@ -70,7 +74,7 @@ export default class SocketJs {
       this._retryConnecCount = 0;
     };
 
-    ws.onerror = (ev: Event) => {
+    ws.onerror = () => {
       // console.error(' websocket connect error ', web, ev);
       // 连接失败，重连三次
       this._reconnectWebSocket(aWsurl);
@@ -87,7 +91,7 @@ export default class SocketJs {
    */
   _reconnectWebSocket = (aWsurl = this._socketUrl) => {
     // 先断开之前的连接
-    if (this._webSocket && this._webSocket !== null) {
+    if (this._webSocket) {
       this._webSocket.close();
       this._webSocket = null;
     }
@@ -96,7 +100,7 @@ export default class SocketJs {
     if (this._retryConnecCount >= 3) {
       return;
     }
-    console.info(` websocket retry ${this._retryConnecCount}次`);
+    // websocket 重试
     this._retryConnecCount += 1;
     this._initWebSocket(aWsurl);
   };
@@ -105,7 +109,7 @@ export default class SocketJs {
    * 建立通道监听
    * @param {*} aCallBack
    */
-  onAddObserver = (aType = '', aCallBack = () => {}) => {
+  onAddObserver = (aType = '', aCallBack: (data: any) => void = () => {}) => {
     const handle = Symbol(`${aType} listener`);
     this._observerFunc[handle] = {
       type: aType,
@@ -118,7 +122,7 @@ export default class SocketJs {
    * 移除通道监听
    * @param {*} aCallBack
    */
-  onRemoveObserver = (handle) => {
+  onRemoveObserver = (handle: symbol) => {
     delete this._observerFunc[handle];
   };
 
@@ -127,7 +131,7 @@ export default class SocketJs {
     if (!this._webSocket) {
       this._initWebSocket(this._socketUrl);
     }
-    this._webSocket.send(JSON.stringify({ type, data }));
+    this._webSocket?.send(JSON.stringify({ type, data }));
   };
 
   /**
@@ -138,7 +142,7 @@ export default class SocketJs {
     if (!this._webSocket) {
       this._initWebSocket(this._socketUrl);
     }
-    this._webSocket.send(JSON.stringify(data));
+    this._webSocket?.send(JSON.stringify(data));
   };
 
   /**
@@ -159,7 +163,7 @@ export default class SocketJs {
    * 断开连接
    */
   disconnect = () => {
-    if (this._webSocket && this._webSocket !== null) {
+    if (this._webSocket) {
       // 关闭连接
       this._webSocket.close();
       this._webSocket = null;
@@ -167,7 +171,7 @@ export default class SocketJs {
   };
 
   // 数据解析
-  _parseData = (aData = '') => {
+  _parseData = (aData = ''): [string, any] | undefined => {
     try {
       let jsonText = aData;
       const findValidIndex = jsonText.indexOf('(From Server');

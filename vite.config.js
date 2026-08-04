@@ -2,14 +2,14 @@ import { defineConfig } from 'vite';
 import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import lagacy from '@vitejs/plugin-legacy';
-import browserslist from 'browserslist';
 import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 
 export default defineConfig({
   plugins: [
     react(),
     lagacy({
-      targets: browserslist.defaults
+      // 明确指定需要 polyfill 的旧浏览器目标，避免使用 browserslist.defaults（evergreen）导致 legacy 插件形同虚设
+      targets: ['defaults', 'ie >= 11']
     }),
     chunkSplitPlugin({
       strategy: 'default'

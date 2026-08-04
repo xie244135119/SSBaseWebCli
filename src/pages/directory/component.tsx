@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styles from './component.module.less';
 import ProjectConfig from '../../../config/project.config';
 
-const ComponentModules = import.meta.glob(['../../components/*/*.*sx'], {
-  eager: true
-});
+const ComponentModules: Record<string, { default: React.ComponentType<any> }> = import.meta.glob(
+  ['../../components/*/*.{tsx,jsx,ts,js}'],
+  {
+    eager: true
+  }
+);
 
 export default function Component() {
   // 组件列表
@@ -16,7 +19,7 @@ export default function Component() {
   >();
 
   useEffect(() => {
-    const list = [];
+    const list: { url: string; c: React.JSX.Element }[] = [];
     Object.keys(ComponentModules).forEach((e) => {
       const C = ComponentModules[e].default;
       list.push({

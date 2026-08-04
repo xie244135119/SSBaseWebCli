@@ -160,21 +160,22 @@ export function getBaseBarChartOption(chartOption?: echarts.EChartsOption): echa
  * @returns
  */
 export function getMultiBarChartOption(categorys?: string[], chartOption?: echarts.EChartsOption) {
-  const list = [];
+  const list: any[] = [];
+  const safeCategorys = categorys ?? [];
   for (let index = 0; index < 12; index++) {
     list.push({
       type: `${index + 1}月`,
-      ...categorys.reduce((prev, cur, index) => {
+      ...safeCategorys.reduce((prev: Record<string, string>, cur, index) => {
         prev[cur] = (200 * Math.random() * (index % 2 === 1 ? 1 : -1)).toFixed(2);
         return prev;
       }, {})
     });
   }
   const dataset = {
-    dimensions: ['type', ...categorys],
+    dimensions: ['type', ...safeCategorys],
     source: list
   };
-  const option = {
+  const option: echarts.EChartsOption = {
     title: {
       text: '',
       textStyle: {
@@ -226,9 +227,7 @@ export function getMultiBarChartOption(categorys?: string[], chartOption?: echar
       },
       axisLabel: {
         interval: 0,
-        textStyle: {
-          color: XaxisLabelColor
-        },
+        color: XaxisLabelColor,
         // 默认x轴字体大小
         fontSize: 14,
         // margin:文字到x轴的距离
@@ -263,10 +262,7 @@ export function getMultiBarChartOption(categorys?: string[], chartOption?: echar
         }
       },
       axisLabel: {
-        interval: 0,
-        textStyle: {
-          color: YaxisLabelColor
-        },
+        color: YaxisLabelColor,
         // 默认y轴字体大小
         fontSize: 14,
         // margin:文字到y轴的距离
@@ -277,7 +273,7 @@ export function getMultiBarChartOption(categorys?: string[], chartOption?: echar
     series: [],
     dataset
   };
-  const series = categorys.map((item) => ({
+  const series = safeCategorys.map((item) => ({
     name: item,
     type: 'bar',
     // barWidth: '30%',
@@ -303,11 +299,10 @@ export function getMultiBarChartOption(categorys?: string[], chartOption?: echar
     showBackground: true,
     backgroundStyle: {
       borderRadius: [20, 20, 0, 0],
-      show: true,
       color: '#e9ebf7'
     }
   }));
-  option.series = series;
+  option.series = series as any;
   _.merge(option, chartOption);
   return option;
 }
@@ -445,7 +440,7 @@ export function getBaseBarRollbackChartOption(
   };
   _.merge(option, chartOption);
   if (!option.dataset) {
-    let list = [];
+    let list: any[] = [];
     categorys?.forEach((e) => {
       list.push({
         type: e,
@@ -640,7 +635,7 @@ export const getLineChartOption = (
     series: [],
     animation: true
   };
-  const series = [];
+  const series: any[] = [];
   categorys.forEach((e, index) => {
     series.push({
       name: e,
@@ -663,14 +658,14 @@ export const getLineChartOption = (
       }
     });
   });
-  option.series = series;
+  option.series = series as any;
   _.merge(option, chartOption);
 
   // 基础数据配置
   if (!option.dataset) {
-    const list = [];
+    const list: any[] = [];
     for (let index = 0; index < 10; index++) {
-      const item = {
+      const item: Record<string, any> = {
         // time: dayjs().subtract(index, 'd').format('YYYY-MM-DD'),
         time: index + 1
       };
@@ -719,7 +714,7 @@ export function getScatterChartOption(
         }
       },
       alwaysShowContent: true,
-      formatter: (params) => {
+      formatter: (params: any) => {
         const [{ data = {}, dimensionNames = [] }] = params;
         return `${data.name}<br /><span>${categorys[0]}：${data[dimensionNames[0]]}<br />${
           categorys[1]
@@ -849,7 +844,7 @@ export function getPieChartOption(chartOption?: echarts.EChartsOption): echarts.
         // color,
         label: {
           // normal: {
-          formatter: (params) => {
+          formatter: (params: any) => {
             const { percent } = params; // 占比
             return `{black|${params.name}} {yellow|${params.value}} {blue|${percent}%}`;
           },
@@ -894,8 +889,9 @@ export function getPieChartOption(chartOption?: echarts.EChartsOption): echarts.
   };
   _.merge(option, chartOption);
 
-  if (!option.series[0].data) {
-    option.series[0].data = [
+  const pieSeries = option.series as any[];
+  if (!pieSeries[0].data) {
+    pieSeries[0].data = [
       {
         value: 260,
         name: '测试1'
@@ -1071,7 +1067,7 @@ export function getBarAndLineOption(
     series: []
   };
   // 线条
-  const series = [];
+  const series: any[] = [];
   barCategorys.forEach((e) => {
     series.push({
       name: e,
@@ -1097,12 +1093,12 @@ export function getBarAndLineOption(
       }
     });
   });
-  option.series = series;
+  option.series = series as any;
   _.merge(option, chartOption);
   if (!option.dataset) {
-    const list = [];
+    const list: any[] = [];
     for (let index = 0; index < 30; index++) {
-      const item = {
+      const item: Record<string, any> = {
         // time: dayjs().subtract(index, 'M').format('YYYY/MM')
         time: index + 1
       };
@@ -1129,14 +1125,14 @@ export function getBarAndLineOption(
  * @returns
  */
 export function getBarStackAndLineOption(
-  barCategorys?: string[],
-  lineCategorys?: string[],
-  chartOption?: echarts.EChartsOption
+  barCategorys: string[] = ['10kV以下', '10kV及以上'],
+  lineCategorys: string[] = ['10kV及以上所占比重'],
+  chartOption: echarts.EChartsOption = {} as echarts.EChartsOption
 ) {
   // const lineCategorys = ['10kV及以上所占比重'];
-  const list = [];
+  const list: any[] = [];
   for (let index = 0; index < 10; index++) {
-    const item = {
+    const item: Record<string, any> = {
       // time: dayjs().subtract(index, 'M').format('YYYY/MM')
       time: index + 1
     };
@@ -1154,7 +1150,7 @@ export function getBarStackAndLineOption(
     source: list
   };
 
-  const option = {
+  const option: echarts.EChartsOption = {
     title: {
       text: '',
       textStyle: {
@@ -1199,9 +1195,7 @@ export function getBarStackAndLineOption(
       },
       axisLabel: {
         interval: 0,
-        textStyle: {
-          color: XaxisLabelColor
-        },
+        color: XaxisLabelColor,
         // 默认x轴字体大小
         fontSize: 14,
         // margin:文字到x轴的距离
@@ -1233,9 +1227,7 @@ export function getBarStackAndLineOption(
         },
         axisLabel: {
           interval: 0,
-          textStyle: {
-            color: YaxisLabelColor
-          },
+          color: YaxisLabelColor,
           fontSize: 14,
           margin: 10
         }
@@ -1266,9 +1258,7 @@ export function getBarStackAndLineOption(
         },
         axisLabel: {
           interval: 0,
-          textStyle: {
-            color: YaxisLabelColor
-          },
+          color: YaxisLabelColor,
           // 默认y轴字体大小
           fontSize: 14,
           // margin:文字到y轴的距离
@@ -1281,7 +1271,7 @@ export function getBarStackAndLineOption(
     dataset: modelDataset
   };
   // 线条
-  const series = [];
+  const series: any[] = [];
   barCategorys.forEach((e) => {
     series.push({
       name: e,
@@ -1354,7 +1344,7 @@ export function getBarStackAndLineOption(
       }
     });
   });
-  option.series = series;
+  option.series = series as any;
   _.merge(option, chartOption);
   return option;
 }
@@ -1363,7 +1353,7 @@ export function getBarStackAndLineOption(
  * 各算法明细对比
  * 散点图
  */
-export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOption) {
+export function getScatterPlotOption(seriesData: any[], chartOption?: echarts.EChartsOption) {
   const defaultData = [
     {
       name: '智能AI算法',
@@ -1381,7 +1371,7 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
 
   const computeXAxisAvgLine = () => {
     let sum = 0;
-    seriesData.forEach((item) => {
+    seriesData.forEach((item: any) => {
       sum += item.value[0];
     });
     return (sum / seriesData.length).toFixed(2);
@@ -1389,13 +1379,13 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
 
   const computeYAxisAvgLine = () => {
     let sum = 0;
-    seriesData.forEach((item) => {
+    seriesData.forEach((item: any) => {
       sum += item.value[1];
     });
     return (sum / seriesData.length).toFixed(2);
   };
 
-  const option = {
+  const option: echarts.EChartsOption = {
     title: {
       text: ''
     },
@@ -1416,7 +1406,7 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
           width: 1
         }
       },
-      formatter: (obj) =>
+      formatter: (obj: any) =>
         // if (obj.componentType === 'series') {
         `<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">${obj.name}</div>` +
         '<span>' +
@@ -1427,7 +1417,7 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
         '预测波动' +
         '</span>' +
         ` : ${obj.data.value[1]}`
-    },
+    } as any,
     xAxis: {
       name: '预测误差',
       type: 'value',
@@ -1451,14 +1441,10 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
         lineStyle: {
           width: 4,
           color: XaxisTickColor
-        },
-        alignWithLabel: true
+        }
       },
       axisLabel: {
-        interval: 0,
-        textStyle: {
-          color: XaxisLabelColor
-        },
+        color: XaxisLabelColor,
         // 默认x轴字体大小
         fontSize: 14,
         // margin:文字到x轴的距离
@@ -1495,10 +1481,7 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
         }
       },
       axisLabel: {
-        interval: 0,
-        textStyle: {
-          color: YaxisLabelColor
-        },
+        color: YaxisLabelColor,
         fontSize: 14,
         margin: 10
       }
@@ -1510,19 +1493,17 @@ export function getScatterPlotOption(seriesData, chartOption?: echarts.EChartsOp
         symbolSize: 20,
         markLine: {
           label: {
-            normal: {
-              formatter(params) {
-                return params.name;
-              }
+            formatter(params: any) {
+              return params.name;
             }
           },
           lineStyle: {
-            normal: {
-              color: '#626c91',
-              type: 'solid',
-              width: 1
-            },
-            emphasis: {
+            color: '#626c91',
+            type: 'solid',
+            width: 1
+          },
+          emphasis: {
+            lineStyle: {
               color: '#d9def7'
             }
           },
@@ -1731,7 +1712,7 @@ export function getBarAndBgLineOption(
     series: []
   };
   // 线条
-  const series = [];
+  const series: any[] = [];
   barCategorys.forEach((e) => {
     series.push({
       name: e,
@@ -1771,12 +1752,12 @@ export function getBarAndBgLineOption(
       }
     });
   });
-  option.series = series;
+  option.series = series as any;
   _.merge(option, chartOption);
   if (!option.dataset) {
-    const list = [];
+    const list: any[] = [];
     for (let index = 0; index < 10; index++) {
-      const item = {
+      const item: Record<string, any> = {
         time: index + 1
       };
       barCategorys.forEach((e) => {
@@ -1941,7 +1922,7 @@ export function getBgBarAndLineOption(
     series: []
   };
   // 线条
-  const series = [];
+  const series: any[] = [];
   barCategorys.forEach((e) => {
     series.push({
       name: e,
@@ -2010,12 +1991,12 @@ export function getBgBarAndLineOption(
       }
     });
   });
-  option.series = series;
+  option.series = series as any;
   _.merge(option, chartOption);
   if (!option.dataset) {
-    const list = [];
+    const list: any[] = [];
     for (let index = 0; index < 10; index++) {
-      const item = {
+      const item: Record<string, any> = {
         // time: dayjs().subtract(index, 'M').format('YYYY/MM')
         time: index + 1
       };

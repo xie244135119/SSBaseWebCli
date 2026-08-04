@@ -105,11 +105,12 @@ export function EditableCell(props: TableColumnProps<any> & EditableCellProps) {
     // console.log(' 触发编辑的时候 ', cellFormKey, record, form.getFieldsValue());
     setEditing(true);
     if (form.getFieldValue(cellFormKey) === undefined) {
-      form.setFieldValue(`${dataIndex}.${index}`, record[dataIndex]);
+      const dataKey = Array.isArray(dataIndex) ? dataIndex.join('.') : dataIndex;
+      form.setFieldValue(`${dataKey}.${index}`, record[dataKey as any]);
     }
   };
 
-  let inputNode: React.JSX.Element = null;
+  let inputNode: React.JSX.Element | null = null;
   switch (editType) {
     case 'number':
       inputNode = <InputNumber {...editInputNumberProps} />;
@@ -139,7 +140,11 @@ export function EditableCell(props: TableColumnProps<any> & EditableCellProps) {
       inputNode = <DatePicker {...editDatePickerProps} />;
       break;
     case 'custom':
-      inputNode = editRender?.(record[dataIndex], record);
+      inputNode =
+        editRender?.(
+          record[Array.isArray(dataIndex) ? dataIndex.join('.') : (dataIndex as any)],
+          record
+        ) ?? null;
       break;
     default:
       break;
@@ -230,7 +235,7 @@ export default function useTableHook(props: Props) {
     total: number;
   }>({
     list: defaultDataSource as any[],
-    total: defaultDataSource?.length
+    total: defaultDataSource?.length ?? 0
   });
   // 加载进度条
   const [loading, setLoading] = useState<boolean>(false);
@@ -241,10 +246,10 @@ export default function useTableHook(props: Props) {
   });
   // 编辑模式下
   const [form] = Form.useForm();
-  const [editingItem, setEditingItem] = useState<{}>();
+  const [editingItem, setEditingItem] = useState<{} | undefined>();
   //
   // 判断编辑模式
-  const isEditingCell = (record) => record === editingItem;
+  const isEditingCell = (record: any) => record === editingItem;
 
   /**
    * 处理模拟数据
@@ -253,20 +258,20 @@ export default function useTableHook(props: Props) {
    */
   const getMockData = (count = 50) => {
     // mock数据
-    const list = [];
+    const list: { [key: string]: any }[] = [];
 
-    const getColumnsKeys = (l = []) => {
-      const list = [];
+    const getColumnsKeys = (l: any[] = []): any[] => {
+      const keys: any[] = [];
       l.forEach((e) => {
         // console.log(' e.dataIndex ', e.dataIndex, typeof e.dataIndex, Array.isArray(e.dataIndex));
         if (e.children) {
           const resault = getColumnsKeys(e.children);
-          list.push(...resault);
+          keys.push(...resault);
         } else {
-          list.push(e.dataIndex);
+          keys.push(e.dataIndex);
         }
       });
-      return list;
+      return keys;
     };
     const keys = getColumnsKeys(columns);
     // console.log(' xxxx list ', keys, columns);
@@ -278,7 +283,7 @@ export default function useTableHook(props: Props) {
         if (typeof e === 'string') {
           obj[e] = (Math.random() * 100).toFixed(2);
         } else if (Array.isArray(e)) {
-          const reducive = (l = [], index = 0, target = {}) => {
+          const reducive = (l: any[] = [], index = 0, target: { [key: string]: any } = {}) => {
             if (index === e.length - 1) {
               target[l[index]] = (Math.random() * 100).toFixed(2);
             } else {
@@ -337,8 +342,9 @@ export default function useTableHook(props: Props) {
     }
   }, [currentTime]);
 
-  delete props.dataSource;
-  delete props.loadData;
+  // 不再直接 mutate 入参 props，挑出已消费的字段后透传其余属性
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { dataSource: _dataSource, loadData: _loadData, columns: _columns, ...restProps } = props;
 
   if (editable) {
     /**
@@ -354,7 +360,7 @@ export default function useTableHook(props: Props) {
      * 结束编辑模式
      */
     const endEdit = () => {
-      setEditingItem(null);
+      setEditingItem(undefined);
     };
 
     /**
@@ -375,12 +381,13 @@ export default function useTableHook(props: Props) {
       }
       return {
         ...col,
-        onCell: (record, index) => ({
+        onCell: (record: any, index: number | undefined) => ({
           ...col.onCell?.(record, index),
           record,
           dataIndex: col.dataIndex,
           index,
-          editable: typeof col.editable === 'function' ? col.editable(record, index) : col.editable,
+          editable:
+            typeof col.editable === 'function' ? col.editable(record, index ?? 0) : col.editable,
           isEditing: col.isEditing !== undefined ? col.isEditing : isEditingCell(record),
           editType: col.editType || 'text',
           editFormItemProps: col.editFormItemProps,
@@ -392,7 +399,7 @@ export default function useTableHook(props: Props) {
         })
       };
     });
-    delete props.columns;
+    // delete props.columns 已用解构消费，无需 mutate
 
     const element = (
       <Form form={form} component={false} {...editFormProps}>
@@ -421,7 +428,7 @@ export default function useTableHook(props: Props) {
             },
             onChange: endEdit
           }}
-          {...props}
+          {...restProps}
         />
       </Form>
     );
@@ -456,7 +463,7 @@ export default function useTableHook(props: Props) {
           reload();
         }
       }}
-      {...props}
+      {...restProps}
     />
   );
   return {

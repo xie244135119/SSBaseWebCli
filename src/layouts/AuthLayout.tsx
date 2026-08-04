@@ -28,7 +28,7 @@ export default function AuthLayout() {
     const query = QueryString.parse(location.search.replace('?', ''));
     if (query.user) {
       // 执行 sso登录
-      api.user.ssoLogin(query.token as string).then((success) => {
+      api.user.ssoLogin(query.token as any).then((success) => {
         if (success) {
           setLoading(false);
           setSystemAuthorization(true);

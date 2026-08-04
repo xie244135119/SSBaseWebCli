@@ -1,4 +1,3 @@
-
 type EventCallback = (...args: any[]) => void;
 
 interface EventBus {
@@ -46,7 +45,7 @@ const createEventBus = (): EventBus => {
     emit(event, ...args) {
       const callbacks = getCallbacks(event);
       // 复制一份回调集合，避免执行过程中修改原集合导致的问题
-      Array.from(callbacks).forEach(cb => cb(...args));
+      Array.from(callbacks).forEach((cb) => cb(...args));
     },
 
     off(event, callback) {

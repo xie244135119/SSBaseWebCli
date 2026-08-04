@@ -52,11 +52,14 @@ export default function BaseChart(props: Props) {
   const { onLoad, chartOption, className, style, onEvents, chartOptionDeps, loading, onInit } =
     props;
 
-  const chartElementRef = useRef<HTMLElement>();
+  const chartElementRef = useRef<HTMLDivElement | null>(null);
 
-  const chartInstanceRef = useRef<echarts.ECharts>();
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null);
 
   useEffect(() => {
+    if (!chartElementRef.current) {
+      return undefined;
+    }
     const chartInstance = echarts.init(chartElementRef.current);
     chartInstanceRef.current = chartInstance;
     onInit?.(chartInstance);
@@ -76,7 +79,9 @@ export default function BaseChart(props: Props) {
     onLoad?.();
     return () => {
       observer.disconnect();
-      chartInstance.dispose();
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.dispose();
+      }
     };
   }, []);
 
@@ -85,16 +90,18 @@ export default function BaseChart(props: Props) {
 
     chartInstanceRef.current.off();
 
+    const instance = chartInstanceRef.current;
     if (onEvents) {
       onEvents.forEach((e) => {
-        chartInstanceRef.current.on(e.eventName, (params) => {
-          e.eventCallback?.(params, chartInstanceRef.current);
+        instance.on(e.eventName, (params) => {
+          e.eventCallback?.(params, instance);
         });
       });
     }
   }, [onEvents]);
 
   useEffect(() => {
+    if (!chartInstanceRef.current) return;
     if (loading) {
       chartInstanceRef.current.showLoading(DefaultLoadingOptions);
     } else {
@@ -104,7 +111,7 @@ export default function BaseChart(props: Props) {
 
   useEffect(() => {
     if (!chartOption) {
-      return () => { };
+      return () => {};
     }
 
     if (chartOption.dataset) {
@@ -118,10 +125,14 @@ export default function BaseChart(props: Props) {
         chartOption.dataset.source = [];
       }
     }
-    chartInstanceRef.current.setOption(chartOption);
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.setOption(chartOption);
+    }
 
     return () => {
-      chartInstanceRef.current.clear();
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.clear();
+      }
     };
   }, chartOptionDeps);
 
@@ -129,7 +140,7 @@ export default function BaseChart(props: Props) {
     <div
       className={className}
       style={{ height: '100%', width: '100%', ...style }}
-      ref={chartElementRef as any}
+      ref={chartElementRef}
     />
   );
 }
@@ -138,7 +149,7 @@ export function RandomHexColor() {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);
   const b = Math.floor(Math.random() * 256);
-  const toHex = (value) => {
+  const toHex = (value: number) => {
     const hex = value.toString(16);
     return hex.length === 1 ? `0${hex}` : hex;
   };
@@ -147,19 +158,23 @@ export function RandomHexColor() {
 }
 
 export function MixHexColor(hexcolor: string, amount = 0.2) {
-  const hexToRgb = (hex) => {
+  const hexToRgb = (hex: string) => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return { r, g, b };
   };
 
-  const rgbToHex = (r, g, b) => {
-    const toHex = (c) => c.toString(16).padStart(2, '0');
+  const rgbToHex = (r: number, g: number, b: number) => {
+    const toHex = (c: number) => c.toString(16).padStart(2, '0');
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   };
 
-  const mixColors = (color1, color2, amount) => {
+  const mixColors = (
+    color1: { r: number; g: number; b: number },
+    color2: { r: number; g: number; b: number },
+    amount: number
+  ) => {
     const r = color1.r + (color2.r - color1.r) * amount;
     const g = color1.g + (color2.g - color1.g) * amount;
     const b = color1.b + (color2.b - color1.b) * amount;
@@ -174,8 +189,9 @@ export function MixHexColor(hexcolor: string, amount = 0.2) {
   return rgbToHex(mixedColor.r, mixedColor.g, mixedColor.b);
 }
 
-export function HighlightHexColor(hexcolor, lightenPercent = 0.2) {
-  lightenPercent = 0.4;
+export function HighlightHexColor(hexcolor: string) {
+  // 固定提亮到 0.4
+  const lighten = 0.4;
 
   const hex = hexcolor.replace(/^#/, '');
   const r = parseInt(hex.slice(0, 2), 16) / 255;
@@ -184,12 +200,13 @@ export function HighlightHexColor(hexcolor, lightenPercent = 0.2) {
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h;
-  let s;
+  let h: number | undefined;
+  let s: number | undefined;
   let l = (max + min) / 2;
 
   if (max === min) {
-    h = s = 0;
+    h = 0;
+    s = 0;
   } else {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -203,15 +220,21 @@ export function HighlightHexColor(hexcolor, lightenPercent = 0.2) {
       case b:
         h = (r - g) / d + 4;
         break;
+      default:
+        break;
     }
-    h /= 6;
+    if (h !== undefined) {
+      h /= 6;
+    }
   }
 
-  l = Math.min(1, l + lightenPercent);
+  l = Math.min(1, l + lighten);
 
-  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const sat = s ?? 0;
+  const q = l < 0.5 ? l * (1 + sat) : l + sat - l * sat;
   const p = 2 * l - q;
-  const convert = (t) => {
+  const convert = (tVal: number) => {
+    let t = tVal;
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
     if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -220,9 +243,10 @@ export function HighlightHexColor(hexcolor, lightenPercent = 0.2) {
     return p;
   };
 
-  const newR = Math.round(convert(h + 1 / 3) * 255);
-  const newG = Math.round(convert(h) * 255);
-  const newB = Math.round(convert(h - 1 / 3) * 255);
+  const hue = h ?? 0;
+  const newR = Math.round(convert(hue + 1 / 3) * 255);
+  const newG = Math.round(convert(hue) * 255);
+  const newB = Math.round(convert(hue - 1 / 3) * 255);
 
   return `#${[
     newR.toString(16).padStart(2, '0'),

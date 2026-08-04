@@ -10,15 +10,15 @@ request.defaults.validateStatus = (status) => {
   if (status === 401) {
     message.info('登录失效，请重新登录');
     if (window.location.pathname !== '/login') {
-      window.location.href = `${ProjectConfig.directory}/login?redirect=${encodeURIComponent(
-        window.location.pathname.replace(ProjectConfig.directory, '') + window.location.search
+      window.location.href = `${ProjectConfig.directory ?? ''}/login?redirect=${encodeURIComponent(
+        window.location.pathname.replace(ProjectConfig.directory ?? '', '') + window.location.search
       )}`;
     }
   }
   return status >= 200 && status < 300;
 };
 request.interceptors.response.use(
-  (res: { [key: string]: any }) => {
+  (res: any) => {
     if (res.status) {
       if (res.status !== 'SUCCESS') {
         message.error(res.message || res.msg || '请求失败，请重试');
@@ -34,9 +34,14 @@ request.interceptors.response.use(
 /**
  * @description 更新请求 Token
  */
-export const updateRequestToken = (token: string) => {
-  request.defaults.headers.Authorization = token;
-  webrequest.defaults.headers.Authorization = token;
+export const updateRequestToken = (token: string | null) => {
+  if (token) {
+    request.defaults.headers.Authorization = token;
+    webrequest.defaults.headers.Authorization = token;
+  } else {
+    delete request.defaults.headers.Authorization;
+    delete webrequest.defaults.headers.Authorization;
+  }
 };
 
 updateRequestToken(user.getAuthorization());

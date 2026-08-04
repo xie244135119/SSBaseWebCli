@@ -19,13 +19,13 @@ const importExcelData = (
   new Promise((reslove) => {
     const webbook = XLSX.read(data, {
       type: 'array',
-      sheets: aWorkSheets.length === 0 ? null : aWorkSheets
+      sheets: aWorkSheets.length === 0 ? undefined : aWorkSheets
     });
-    let workSheets = aWorkSheets;
+    let workSheets: string[] = aWorkSheets;
     if (workSheets.length === 0) {
       workSheets = webbook.SheetNames;
     }
-    const dict = {};
+    const dict: { [key: string]: any[] } = {};
     for (let index = 0; index < workSheets.length; index += 1) {
       const sheetName = workSheets[index];
       const workSheet = webbook.Sheets[sheetName];
@@ -61,17 +61,19 @@ function download(url: string | Blob | ArrayBuffer, fileName?: string) {
   if (typeof url === 'object' && url instanceof Blob) {
     newUrl = URL.createObjectURL(url);
   } else {
-    newUrl = url;
+    newUrl = url as string;
   }
 
   const alink = document.createElement('a');
   alink.href = newUrl;
-  alink.download = fileName;
-  let event;
+  alink.download = fileName ?? '';
+  let event: Event | undefined;
   if (window.MouseEvent) {
     event = new MouseEvent('click');
   }
-  alink.dispatchEvent(event);
+  if (event) {
+    alink.dispatchEvent(event);
+  }
 }
 
 /**
@@ -81,7 +83,7 @@ function download(url: string | Blob | ArrayBuffer, fileName?: string) {
  */
 function exportExcel(sheets: { [key: string]: any[] }, fileName: string) {
   const sheetKeys = Object.keys(sheets);
-  const Sheets = {};
+  const Sheets: { [key: string]: any } = {};
   sheetKeys.forEach((key) => {
     const sheet = XLSX.utils.json_to_sheet(sheets[key]);
     Sheets[key] = sheet;
@@ -105,7 +107,7 @@ function exportExcelFromTable(tablee: HTMLTableElement, fileName?: string) {
   // Process Data (add a new row)
   // var ws = workbook.Sheets['Sheet1'];
   // XLSX.utils.sheet_add_aoa(ws, [['Created ' + new Date().toISOString()]], { origin: -1 });
-  XLSX.writeFileXLSX(workbook, fileName);
+  XLSX.writeFileXLSX(workbook, fileName ?? '');
 }
 
 /**
@@ -116,19 +118,23 @@ function exportExcelFromTable(tablee: HTMLTableElement, fileName?: string) {
  */
 function exportExcelFromColumns(columns: ExportTableColumns[], dataList: any[], fileName: string) {
   // 将头部标题数据 拉平
-  const mergeOptions = [];
+  const mergeOptions: any[] = [];
   let maxHeaderLevel = 1;
   const flatteHeaders = (
     columns: ExportTableColumns[],
     prevHeaders: ExportTableColumns[] = [],
     level = 1
-  ) => {
-    const list = [];
-    for (let index = 0; index < columns.length; index++) {
+  ): ExportTableColumns[] => {
+    const list: ExportTableColumns[] = [];
+    for (let index = 0; index < columns.length; index += 1) {
       const element = columns[index];
 
-      if (element.children?.length > 0) {
-        const resault = flatteHeaders(element.children, [...prevHeaders, element], level + 1);
+      if ((element.children?.length ?? 0) > 0) {
+        const resault = flatteHeaders(
+          element.children as ExportTableColumns[],
+          [...prevHeaders, element],
+          level + 1
+        );
         list.push(...resault);
         // 只处理横向合并问题
         mergeOptions.push({
@@ -183,7 +189,7 @@ function exportExcelFromColumns(columns: ExportTableColumns[], dataList: any[], 
   }
 
   // 从对象中获取值
-  const getValueFromProps = (keys: string[], obj: { [key: string]: any }) => {
+  const getValueFromProps = (keys: string[], obj: { [key: string]: any }): any => {
     if (keys.length <= 1) {
       return obj?.[keys[0]];
     }
@@ -192,11 +198,11 @@ function exportExcelFromColumns(columns: ExportTableColumns[], dataList: any[], 
     return getValueFromProps(keys, target);
   };
 
-  const contentDatas = [];
-  for (let index = 0; index < dataList.length; index++) {
+  const contentDatas: any[] = [];
+  for (let index = 0; index < dataList.length; index += 1) {
     const element = dataList[index];
-    const values = [];
-    for (let j = 0; j < dataIndexKeys.length; j++) {
+    const values: any[] = [];
+    for (let j = 0; j < dataIndexKeys.length; j += 1) {
       const dataIndex = dataIndexKeys[j];
       let value = null;
 
@@ -204,7 +210,7 @@ function exportExcelFromColumns(columns: ExportTableColumns[], dataList: any[], 
       if (dataIndex instanceof Array) {
         value = getValueFromProps([...dataIndex], element);
       } else {
-        value = getValueFromProps([dataIndex], element);
+        value = getValueFromProps([dataIndex as string], element);
       }
       values.push(value);
     }
@@ -227,8 +233,8 @@ function exportExcelFromColumns(columns: ExportTableColumns[], dataList: any[], 
  * @param aList 原始数据源
  * @param aUniqePropNames 一组唯一值 属性名称
  */
-const createMultiMap = (aList = [], aUniqePropNames: string[]): { [key: string]: any } => {
-  const resault = {};
+const createMultiMap = (aUniqePropNames: string[], aList: any[] = []): { [key: string]: any } => {
+  const resault: { [key: string]: any } = {};
   for (let index = 0; index < aList.length; index += 1) {
     const element = aList[index];
     for (let j = 0; j < aUniqePropNames.length; j += 1) {

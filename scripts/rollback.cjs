@@ -39,6 +39,21 @@ class DynamicOutput {
 const output = new DynamicOutput();
 const ssh = new NodeSSH();
 
+/**
+ * 路径白名单校验：只允许字母/数字/下划线/连字符/点/斜杠，防止 shell 注入。
+ */
+function assertSafePath(value, field = 'path') {
+  if (typeof value !== 'string' || value.length === 0) {
+    throw new Error(`配置项 ${field} 为空，请在 server.config.json 中配置`);
+  }
+  if (!/^[\w./-]+$/.test(value)) {
+    throw new Error(
+      `配置项 ${field} 含非法字符（仅允许字母、数字、_、-、.、/）：${value}，疑似命令注入风险`
+    );
+  }
+  return value;
+}
+
 // 构造 SSH 连接配置：按 authMode 决定认证方式，秘钥优先级仍可被命令行 --key 临时覆盖
 function buildSSHConfig(config) {
   const baseConfig = {
@@ -92,6 +107,7 @@ if (findEnvIndex !== -1) {
 async function main() {
   const startTime = Date.now();
   try {
+    assertSafePath(enviromentConfig.serverWebPath, 'serverWebPath');
     output.update('🚀 正在建立安全连接...');
     await ssh.connect(buildSSHConfig(enviromentConfig));
 

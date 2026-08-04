@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import React from 'react';
 import BaseChart from '@/components/Chart/base';
 import useTableHook from '@/hooks/useTable';
 import TEMPLATE from '@/static/template';
-import styles from './styles.module.less';
 import EquipmentOverview from './components/EquipProgress';
 
-export default function Demo(props) {
+export default function Demo() {
   const detailsCloumns = () => {
     const list = [
       {

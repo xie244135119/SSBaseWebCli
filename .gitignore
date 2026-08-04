@@ -31,3 +31,10 @@ src/.umi
 .umi-production
 .playwright-mcp
 .claude
+
+# 部署配置含服务器凭据，禁止入库；请基于 server.config.example.json 复制填写
+config/server.config.json
+
+# 统一使用 pnpm，忽略其他包管理器 lockfile
+package-lock.json
+yarn.lock

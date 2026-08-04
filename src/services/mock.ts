@@ -1,12 +1,12 @@
 /**
  * 全部数据
  */
-const allData = {};
+const allData: { [url: string]: (params: any) => any } = {};
 
 /**
  * 导出mock 数据
  */
-export function getMockData(url, params = {}) {
+export function getMockData(url: string, params: any = {}): any {
   if (allData[url]) {
     return allData[url](params);
   }
@@ -16,9 +16,10 @@ export function getMockData(url, params = {}) {
 }
 
 export default class MockJs {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static setup = (config?: { timeout: number }) => {};
 
-  static mock = (url, responseFunc) => {
+  static mock = (url: string, responseFunc: (params: any) => any) => {
     allData[url] = responseFunc;
   };
 }

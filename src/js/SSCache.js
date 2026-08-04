@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * 缓存服务
  */
@@ -24,13 +25,13 @@ class SSCacheProtrol {
   }
 }
 
-class SSMemboryCache extends SSCacheProtrol {
+class SSMemoryCache extends SSCacheProtrol {
   /**
    * @type {Map}
    */
   _dataMap = null;
 
-  destory() {
+  destroy() {
     this._dataMap?.clear();
     this._dataMap = null;
   }
@@ -41,7 +42,7 @@ class SSMemboryCache extends SSCacheProtrol {
   }
 
   has(key) {
-    return this._dataMap.has[key];
+    return this._dataMap.has(key);
   }
 
   get(key) {
@@ -96,7 +97,7 @@ class SSDiskCache extends SSCacheProtrol {
 
 class SSCache {
   /**
-   * @type {SSMemboryCache}
+   * @type {SSMemoryCache}
    */
   memoryCache = null;
 
@@ -114,13 +115,13 @@ class SSCache {
   constructor(name = '') {
     this.name = name;
     this.diskCache = new SSDiskCache();
-    this.memoryCache = new SSMemboryCache();
+    this.memoryCache = new SSMemoryCache();
   }
 
-  destory() {
+  destroy() {
     this.name = null;
     this.diskCache = null;
-    this.memoryCache.destory();
+    this.memoryCache.destroy();
     this.memoryCache = null;
   }
 
@@ -146,6 +147,7 @@ class SSCache {
     if (this.diskCache.has(key)) {
       return this.diskCache.get(key);
     }
+    return undefined;
   }
 
   /**

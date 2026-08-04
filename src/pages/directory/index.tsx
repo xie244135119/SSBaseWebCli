@@ -7,13 +7,17 @@ import ProjectConfig from '../../../config/project.config';
 
 function Index() {
   const navigate = useNavigate();
-  const getPath = (items = []) =>
+  const getPath = (items: RouteConfigItem[] = []) =>
     items.reduce((prev, cur) => {
       const text = path.join(prev, cur.path || '');
       return text;
     }, '');
   //
-  const recursive = (items: RouteConfigItem[], index = 0, parentItems = []) =>
+  const recursive = (
+    items: RouteConfigItem[],
+    index: number = 0,
+    parentItems: RouteConfigItem[] = []
+  ): React.ReactNode[] =>
     items.map((item, key) => {
       if (item.redirect) {
         return null;
@@ -22,9 +26,9 @@ function Index() {
         return null;
       }
       const itemPath = getPath([...parentItems, item]);
-      return item.children?.length > 0 ? (
+      return (item.children?.length ?? 0) > 0 ? (
         <div
-          key={`${item.path + key}`}
+          key={`${(item.path ?? '') + key}`}
           style={{ display: 'flex', flexDirection: 'column', marginLeft: index * 15 }}
         >
           <div className={styles.row}>
@@ -38,12 +42,12 @@ function Index() {
             </span>
             <span className={styles.filetitle}>{path.join('src', item.component || '')}</span>
           </div>
-          {recursive(item.children, index + 1, [...parentItems, item])}
+          {recursive(item.children ?? [], index + 1, [...parentItems, item])}
         </div>
       ) : (
         <div key={item.path} className={styles.row}>
           <span
-            key={`${item.path + key}`}
+            key={`${(item.path ?? '') + key}`}
             className={styles.pagetitle}
             style={{ marginLeft: index * 15 }}
             onClick={() => {

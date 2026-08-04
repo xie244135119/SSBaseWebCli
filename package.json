@@ -11,11 +11,14 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "lint": "eslint src --ext js,jsx,ts,tsx --report-unused-disable-directives --fix",
+    "lint:check": "eslint src --ext js,jsx,ts,tsx --report-unused-disable-directives",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "publish": "node ./scripts/publish.cjs",
     "publishs": "node ./scripts/publish.cjs --env sandbox",
-    "rollback": "node ./scripts/rollback.cjs"
+    "rollback": "node ./scripts/rollback.cjs",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
@@ -29,7 +32,7 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "5.3.0",
+    "@ant-design/icons": "5.5.1",
     "antd": "5.14.2",
     "axios": "1.6.2",
     "dayjs": "1.11.10",
@@ -44,8 +47,11 @@
     "xlsx": "0.18.5"
   },
   "devDependencies": {
-    "@types/react": "18.2.67",
-    "@types/react-dom": "18.2.22",
+    "@types/lodash": "^4.17.24",
+    "@types/prop-types": "^15.7.15",
+    "@types/qs": "^6.15.1",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "@vitejs/plugin-legacy": "4.1.1",
@@ -58,6 +64,7 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
+    "husky": "8.0.3",
     "less": "4.2.0",
     "node-ssh": "13.1.0",
     "path-browserify": "1.0.1",

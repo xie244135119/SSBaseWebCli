@@ -46,6 +46,22 @@ const SSH_STATUS = {
   DEPLOYING: '正在部署...'
 };
 
+/**
+ * 路径白名单校验：只允许字母/数字/下划线/连字符/点/斜杠，防止 shell 注入。
+ * 含空格/分号/反引号等 shell 元字符的值一律拒绝。
+ */
+function assertSafePath(value, field = 'path') {
+  if (typeof value !== 'string' || value.length === 0) {
+    throw new Error(`配置项 ${field} 为空，请在 server.config.json 中配置`);
+  }
+  if (!/^[\w./-]+$/.test(value)) {
+    throw new Error(
+      `配置项 ${field} 含非法字符（仅允许字母、数字、_、-、.、/）：${value}，疑似命令注入风险`
+    );
+  }
+  return value;
+}
+
 // 初始化配置
 const findEnvIndex = process.argv.indexOf('--env');
 let enviromentConfig = serverConfig.deploy;
@@ -134,6 +150,13 @@ function formatSize(bytes) {
 
 async function main() {
   try {
+    // 安全校验：所有拼进 shell 命令的路径必须通过白名单校验
+    assertSafePath(enviromentConfig.serverWebDist, 'serverWebDist');
+    assertSafePath(enviromentConfig.serverWebPath, 'serverWebPath');
+    (enviromentConfig.splitIncludes || []).forEach((e) =>
+      assertSafePath(e, 'splitIncludes')
+    );
+
     const newVersion = bumpVersion();
     output.final(`📌 版本号已更新: ${newVersion}`);
 

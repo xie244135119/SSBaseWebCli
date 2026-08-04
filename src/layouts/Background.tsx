@@ -10,7 +10,6 @@ import styles from './Background.module.less';
 import RouterConfig, { getRouteByPathName } from '../../config/router.config';
 import ProjectConfig from '../../config/project.config';
 import api from '@/services/api';
-import { RouteConfigItem } from '@/types';
 
 dayjs.locale(zhCn);
 
@@ -20,7 +19,7 @@ dayjs.locale(zhCn);
  * @param {*} params
  * @returns
  */
-function BreadcrumbRoute({ route }) {
+function BreadcrumbRoute({ route }: { route: RouteConfigItem }) {
   const { title = '', path = '' } = route;
   return (
     <a href={path} key={path} style={{ color: 'unset' }}>
@@ -41,14 +40,17 @@ export default function BackgroundLayout() {
   //
   const location = useLocation();
   const navigate = useNavigate();
-  const backgroundElementRef = useRef<HTMLDivElement>();
+  const backgroundElementRef = useRef<HTMLDivElement | null>(null);
   // 加载的层级路由
   const [routes, setRoutes] = useState<RouteConfigItem[]>([]);
   // 左侧菜单
   const [menus, setMenus] = useState<RouteConfigItem[]>([]);
 
   // 滑块菜单配置
-  const [sliderMenuConfig, setSliderMenuConfig] = useState({
+  const [sliderMenuConfig, setSliderMenuConfig] = useState<{
+    selectKeys: string[];
+    openKeys: string[];
+  }>({
     selectKeys: [],
     openKeys: []
   });
@@ -57,7 +59,7 @@ export default function BackgroundLayout() {
    * 面包屑
    */
   const BreadcrumbRenderItem = useCallback(
-    (route) => (
+    (route: RouteConfigItem) => (
       <a key={route.path} href={route.path} style={{ color: 'unset', fontSize: 16 }}>
         {route.title}
       </a>
@@ -72,42 +74,47 @@ export default function BackgroundLayout() {
     const openRoutes = [...routes];
     openRoutes.pop();
     setSliderMenuConfig({
-      openKeys: openRoutes.map((item) => item.fullPath),
-      selectKeys: routes.map((item) => item.fullPath)
+      openKeys: openRoutes.map((item) => item.fullPath ?? ''),
+      selectKeys: routes.map((item) => item.fullPath ?? '')
     });
   }, [location.pathname]);
 
   useEffect(() => {
     const route = RouterConfig.find((item) => item.name === '系统');
-    setMenus(route.children || []);
+    setMenus(route?.children ?? []);
   }, []);
 
   /**
    * 渲染菜单Items
    */
-  const getMenuItems = (menus: RouteConfigItem[], target: RouteConfigItem[] = []) =>
+  const getMenuItems = (menus: RouteConfigItem[], target: RouteConfigItem[] = []): any[] =>
     menus
       .filter((item) => item.name && !item.hideInMenu)
-      .map((item) =>
-        item.children?.filter((item) => item.name && !item.hideInMenu).length > 0
-          ? {
+      .map((item) => {
+        const visibleChildren = item.children?.filter(
+          (child: RouteConfigItem) => child.name && !child.hideInMenu
+        );
+        if ((visibleChildren?.length ?? 0) > 0) {
+          return {
             key: item.fullPath,
             icon:
-                (sliderMenuConfig.selectKeys.includes(item.fullPath) && item.selectIcon) ||
-                item.icon,
+              (sliderMenuConfig.selectKeys.includes(item.fullPath ?? '') && item.selectIcon) ||
+              item.icon,
             label: item.name,
-            children: getMenuItems(item.children, [...target, item])
-          }
-          : {
-            key: item.fullPath,
-            icon:
-                (sliderMenuConfig.selectKeys.includes(item.fullPath) && item.selectIcon) ||
-                item.icon,
-            label: item.name
-          }
-      );
+            children: getMenuItems(item.children ?? [], [...target, item])
+          };
+        }
+        return {
+          key: item.fullPath,
+          icon:
+            (sliderMenuConfig.selectKeys.includes(item.fullPath ?? '') && item.selectIcon) ||
+            item.icon,
+          label: item.name
+        };
+      });
 
-  const userDropdownItems = [
+  // antd icons 在当前 @types/react 下偶有事件类型不兼容，icon 字段用 any 规避
+  const userDropdownItems: any[] = [
     {
       key: 'logout',
       label: '退出系统',
@@ -164,7 +171,7 @@ export default function BackgroundLayout() {
                 onOpenChange={(keys) => {
                   setSliderMenuConfig({
                     ...sliderMenuConfig,
-                    openKeys: keys
+                    openKeys: keys as string[]
                   });
                 }}
               />
