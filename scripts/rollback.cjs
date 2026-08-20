@@ -8,7 +8,7 @@ const shelljs = require('shelljs');
 const fs = require('fs');
 const os = require('os');
 const { NodeSSH } = require('node-ssh');
-const serverConfig = require('../config/server.config.json');
+const serverConfig = require('./server.config.cjs');
 
 class DynamicOutput {
   constructor() {
@@ -44,7 +44,7 @@ const ssh = new NodeSSH();
  */
 function assertSafePath(value, field = 'path') {
   if (typeof value !== 'string' || value.length === 0) {
-    throw new Error(`配置项 ${field} 为空，请在 server.config.json 中配置`);
+    throw new Error(`配置项 ${field} 为空，请在 server.config.cjs 中配置`);
   }
   if (!/^[\w./-]+$/.test(value)) {
     throw new Error(
@@ -67,7 +67,7 @@ function buildSSHConfig(config) {
   const usePrivateKey = keyIndex !== -1 || config.authMode === 'privateKey';
   if (!usePrivateKey) {
     if (!config.password) {
-      throw new Error('未配置登录凭证：请在 server.config.json 中配置 authMode=password + password，或 authMode=privateKey + privateKey');
+      throw new Error('未配置登录凭证：请在 server.config.cjs 中配置 authMode=password + password，或 authMode=privateKey + privateKey');
     }
     return { ...baseConfig, password: config.password };
   }
@@ -77,7 +77,7 @@ function buildSSHConfig(config) {
     keyIndex !== -1 ? process.argv[keyIndex + 1] : config.privateKey?.privateKeyPath;
 
   if (!privateKeyPath) {
-    throw new Error('秘钥登录缺少 privateKeyPath：请在 server.config.json 的 privateKey.privateKeyPath 中配置，或通过命令行 --key 传入');
+    throw new Error('秘钥登录缺少 privateKeyPath：请在 server.config.cjs 的 privateKey.privateKeyPath 中配置，或通过命令行 --key 传入');
   }
 
   // 支持 ~ 开头的家目录路径
