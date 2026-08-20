@@ -32,7 +32,7 @@ src/.umi
 .playwright-mcp
 .claude
 
-# 部署配置含服务器凭据，禁止入库；请基于 server.config.example.cjs 复制填写
+# 部署配置含服务器凭据，禁止入库；scripts/server.config.cjs 请在本机自行填写
 scripts/server.config.cjs
 
 # 统一使用 pnpm，忽略其他包管理器 lockfile
